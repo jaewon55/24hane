@@ -1,27 +1,31 @@
 package com.hane24.hoursarenotenough24.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.hane24.hoursarenotenough24.App
 
-class SharedPreferenceUtils(private val context: Context) {
-    fun getAccessToken(): String? {
-        val sharedPreferences = context.getSharedPreferences("accessToken", Context.MODE_PRIVATE)
+class SharedPreferenceUtils {
+    companion object {
+        val sharedPreferences by lazy { init(App.instance.applicationContext) }
 
-        return sharedPreferences.getString("accessToken", "")
-    }
+        fun init(context: Context): SharedPreferences {
+            return context.getSharedPreferences("accessToken", Context.MODE_PRIVATE)
+        }
 
-    fun saveAccessToken(accessToken: String) {
-        val sharedPreferences = context.getSharedPreferences(
-            "accessToken",
-            AppCompatActivity.MODE_PRIVATE
-        )
-        val editor = sharedPreferences.edit()
+        fun getAccessToken(): String? {
+            return sharedPreferences.getString("accessToken", "")
+        }
 
-        Log.i("data", "accessToken: $accessToken")
-        editor.putString("accessToken", "Bearer $accessToken")
-        editor.apply()
-        Log.i("data", "preference: ${sharedPreferences?.getString("accessToken", "")}")
+        fun saveAccessToken(accessToken: String) {
+            val editor = sharedPreferences.edit()
+
+            Log.i("data", "accessToken: $accessToken")
+            editor.putString("accessToken", "Bearer $accessToken")
+            editor.apply()
+            Log.i("data", "preference: ${sharedPreferences?.getString("accessToken", "")}")
+        }
     }
 }
 
