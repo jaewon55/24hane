@@ -12,11 +12,10 @@ class NetworkErrorDialog: DialogFragment() {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.setMessage("네트워크가 연결되지 않았습니다.\nWi-Fi 또는 데이터를 활성화 해주세요.")
-                .setPositiveButton("다시시도",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            val parent = activity as SplashActivity
-                            parent.checkLogin()
-                    })
+                .setPositiveButton("다시시도") { _, id ->
+                    val parent = activity as SplashActivity
+                    parent.checkLogin()
+                }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
