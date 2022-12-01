@@ -18,11 +18,11 @@
 
             <include
                 android:id="@+id/app_bar"
-                layout="@layout/app_bar_main" />
+                layout="@layout/activity_main_app_bar" />
 
             <include
                 android:id="@+id/content_main"
-                layout="@layout/content_main" />
+                layout="@layout/activity_main_content" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/navigation_header"
+            app:headerLayout="@layout/activity_main_navigation_header"
             app:itemIconTint="@color/black"
             app:itemTextColor="@color/on_text_color"
             app:menu="@menu/drawer_body">
