@@ -1,0 +1,71 @@
+package com.hane24.hoursarenotenough24.login
+
+import android.content.Intent
+import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.webkit.*
+import com.hane24.hoursarenotenough24.MainActivity
+import com.hane24.hoursarenotenough24.data.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.databinding.ActivityLoginBinding
+
+class LoginActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+    private val cookieManager: CookieManager = CookieManager.getInstance()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        Log.i("login", "Login activity called")
+
+        val loginState = intent.getSerializableExtra("loginState") as LoginState
+        Log.i("login", "$loginState")
+
+        val loginUri: Uri = createLoginUri()
+
+        cookieManager.setAcceptCookie(true)
+        cookieManager.setAcceptThirdPartyCookies(binding.loginWebView, true)
+        binding.loginWebView.webViewClient = CustomWebViewClient()
+        binding.loginWebView.loadUrl(loginUri.toString())
+    }
+
+    private fun createLoginUri() = Uri.Builder().scheme("https").authority("api.24hoursarenotenough.42seoul.kr")
+        .appendPath("user")
+        .appendPath("login")
+        .appendPath("42")
+        .appendQueryParameter("redirect", "app://hane42")
+        .build()
+
+    inner class CustomWebViewClient: WebViewClient() {
+        override fun shouldOverrideUrlLoading(
+            view: WebView?,
+            request: WebResourceRequest?
+        ): Boolean {
+            if (!URLUtil.isValidUrl(request?.url.toString())) {
+                return try {
+                    redirectToMain()
+                    true
+                } catch (e: java.lang.Exception) {
+                    Log.i("login", "redirect 실패! ${e.message}")
+                    false
+                }
+            }
+            return false
+        }
+
+        private fun redirectToMain() {
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent).also {
+                val accessToken = parseAccessToken()
+                SharedPreferenceUtils.saveAccessToken(accessToken)
+                this@LoginActivity.finish()
+            }
+        }
+
+        private fun parseAccessToken(): String = cookieManager.getCookie("https://api.24hoursarenotenough.42seoul.kr/user/login/callback/42")
+            .substringAfter(' ').split('=')[1]
+    }
+}
