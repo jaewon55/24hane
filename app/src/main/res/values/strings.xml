@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">24hane</string>
+    <string name="android_github">androidGithub</string>
+    <string name="ios_github">iOSGithub</string>
+    <string name="page_guide">지원금 정책</string>
+    <string name="inquiry">문의하기</string>
+    <string name="logout">로그아웃</string>
+    <string name="open_source_license">OpenSourceLicense</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
