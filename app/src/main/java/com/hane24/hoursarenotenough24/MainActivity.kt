@@ -8,7 +8,13 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
+import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
+import com.hane24.hoursarenotenough24.overview.OverViewFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -20,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         setStatusAndNavigationBar()
         setToolbar()
+        setViewPager()
     }
 
     override fun onBackPressed() {
@@ -89,6 +96,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setViewPager() {
+        val adapter = PagerAdapter(this)
+        pager.adapter = adapter
+        TabLayoutMediator(binding.contentMain.pagerTabLayout, pager)
+        { _, _ -> }.attach()
+    }
+
     private fun deleteToken() {}
 
     private fun licenseFunc() {}
@@ -100,15 +114,15 @@ class MainActivity : AppCompatActivity() {
         private const val NUM_PAGES = 2
     }
 
-//    private inner class PagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-//        override fun getItemCount(): Int = NUM_PAGES
-//
-//        override fun createFragment(position: Int): Fragment {
-//            return when (position) {
-//                0 -> MainFragment()
-//                else -> MonthRecordFragment()
-//            }
-//        }
-//    }
+    private inner class PagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+        override fun getItemCount(): Int = NUM_PAGES
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> OverViewFragment()
+                else -> LogListFragment()
+            }
+        }
+    }
 
 }

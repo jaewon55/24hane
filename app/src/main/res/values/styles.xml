@@ -16,25 +16,41 @@
         <item name="android:textColor">@color/off_text_color</item>
     </style>
 
+    <style name="OnOverViewAppTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:text">@string/_24hoursarenotenough</item>
+        <item name="android:textColor">@color/on_title_color</item>
+    </style>
+
+    <style name="OffOverViewAppTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:text">@string/_24hoursarenotenough</item>
+        <item name="android:textColor">@color/off_title_color</item>
+    </style>
+
     <style name="OnCardViewTitleText" parent="OnTextView">
-        <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">15dp</item>
     </style>
 
     <style name="OffCardViewTitleText" parent="OffTextView">
-        <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">15dp</item>
     </style>
 
     <style name="OnCardViewTimeText" parent="OnTextView">
-        <item name="android:textSize">30dp</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">35dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="OffCardViewTimeText" parent="OffTextView">
@@ -45,22 +61,32 @@
     </style>
 
     <style name="OnProgress" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:indeterminate">false</item>
         <item name="android:max">100</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:progressDrawable">@drawable/progress_circle</item>
         <item name="android:progressBackgroundTint">@color/on_progress_back</item>
         <item name="android:progressTint">@color/on_progress_front</item>
     </style>
 
     <style name="OffProgress" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:indeterminate">false</item>
         <item name="android:max">100</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:progressDrawable">@drawable/progress_circle</item>
         <item name="android:progressBackgroundTint">@color/off_progress_back</item>
         <item name="android:progressTint">@color/off_progress_front</item>
     </style>
 
     <style name="ProgressPercentageText" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/progress_text</item>
-        <item name="android:textSize">24dp</item>
+        <item name="android:textSize">30dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
