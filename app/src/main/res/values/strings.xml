@@ -7,4 +7,6 @@
     <string name="logout">로그아웃</string>
     <string name="open_source_license">OpenSourceLicense</string>
     <string name="_24hoursarenotenough">24HoursAreNotEnough</string>
+    <string name="today_card_title">Today</string>
+    <string name="month_card_title">Month</string>
 </resources>

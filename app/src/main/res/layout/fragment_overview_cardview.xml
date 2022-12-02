@@ -4,9 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!--        <variable-->
-        <!--            name="viewModel"-->
-        <!--            type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />-->
+
+        <variable
+            name="inOutState"
+            type="Boolean" />
+
+        <variable
+            name="acTime"
+            type="String" />
+
+        <variable
+            name="targetTime"
+            type="String" />
+
+        <variable
+            name="progressPercent"
+            type="int" />
+
+        <variable
+            name="percentText"
+            type="String" />
 
     </data>
 
@@ -17,7 +34,8 @@
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
         tools:layout_height="210dp"
-        tools:layout_margin="20dp">
+        tools:layout_margin="15dp"
+        tools:layout_width="380dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,17 +44,19 @@
 
             <TextView
                 android:id="@+id/accumulate_title"
-                style="@style/OnCardViewTitleText"
-                android:text="오늘 누적 시간"
+                style="@style/CardViewSubTitleText"
+                android:text="누적 시간"
+                android:textColor="@{inOutState ? @color/on_text_color : @color/off_text_color}"
                 app:layout_constraintBottom_toTopOf="@id/accumulate_time"
                 app:layout_constraintEnd_toStartOf="@id/card_view_divider"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/accumulate_time"
-                style="@style/OnCardViewTimeText"
+                style="@style/CardViewTimeText"
                 android:layout_marginBottom="10dp"
-                android:text="12:00"
+                android:text="@{acTime}"
+                android:textColor="@{inOutState ? @color/on_text_color : @color/off_text_color}"
                 app:layout_constraintBottom_toTopOf="@id/card_view_guideline"
                 app:layout_constraintEnd_toStartOf="@id/card_view_divider"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -50,18 +70,20 @@
 
             <TextView
                 android:id="@+id/target_title"
-                style="@style/OnCardViewTitleText"
+                style="@style/CardViewSubTitleText"
                 android:layout_marginTop="10dp"
-                android:text="오늘 목표 시간"
-                app:layout_constraintBottom_toTopOf="@id/target_time"
+                android:text="목표 시간"
+                android:textColor="@{inOutState ? @color/on_text_color : @color/off_text_color}"
+                app:layout_constraintBottom_toTopOf="@id/target_time_view"
                 app:layout_constraintEnd_toStartOf="@id/card_view_divider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_view_guideline" />
 
             <TextView
-                android:id="@+id/target_time"
-                style="@style/OnCardViewTimeText"
-                android:text="120:00"
+                android:id="@+id/target_time_view"
+                style="@style/CardViewTimeText"
+                android:text="@{targetTime}"
+                android:textColor="@{inOutState ? @color/on_text_color : @color/off_text_color}"
                 app:layout_constraintEnd_toEndOf="@id/accumulate_time"
                 app:layout_constraintTop_toBottomOf="@id/target_title" />
 
@@ -69,9 +91,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_picker_button"
-                app:layout_constraintBottom_toBottomOf="@id/target_time"
-                app:layout_constraintStart_toEndOf="@id/target_time"
-                app:layout_constraintTop_toTopOf="@id/target_time"
+                app:layout_constraintBottom_toBottomOf="@id/target_time_view"
+                app:layout_constraintStart_toEndOf="@id/target_time_view"
+                app:layout_constraintTop_toTopOf="@id/target_time_view"
                 app:tint="@color/picker_button" />
 
             <View
@@ -85,27 +107,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <ProgressBar
                 android:id="@+id/card_view_progress"
-                style="@style/OnProgress"
-                android:progress="100"
+                style="@style/Progress"
+                android:progress="@{progressPercent}"
+                isStateOn="@{inOutState}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/card_view_divider"
                 app:layout_constraintTop_toTopOf="parent" />
-            <!--                    android:progress="@{viewModel.progressPercent}"/>-->
 
             <TextView
                 android:id="@+id/card_view_progress_text"
                 style="@style/ProgressPercentageText"
-                android:text="100%"
+                android:text="@{percentText}"
                 app:layout_constraintBottom_toBottomOf="@id/card_view_progress"
                 app:layout_constraintEnd_toEndOf="@id/card_view_progress"
                 app:layout_constraintStart_toStartOf="@id/card_view_progress"
                 app:layout_constraintTop_toTopOf="@id/card_view_progress" />
-
-            <!--            android:text="@{viewModel.progressPercentString}"-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

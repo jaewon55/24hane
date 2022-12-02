@@ -19,6 +19,8 @@ import com.hane24.hoursarenotenough24.overview.OverViewFragment
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val pager by lazy { binding.contentMain.viewpager }
+    private val overViewFragment = OverViewFragment()
+    private val logListFragment = LogListFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,8 +121,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> OverViewFragment()
-                else -> LogListFragment()
+                0 -> overViewFragment
+                else -> logListFragment
             }
         }
     }
