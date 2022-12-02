@@ -6,8 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.webkit.*
+import androidx.core.view.WindowInsetsControllerCompat
 import com.hane24.hoursarenotenough24.MainActivity
-import com.hane24.hoursarenotenough24.data.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setStatusAndNavigationBar()
         Log.i("login", "Login activity called")
 
         val loginState = intent.getSerializableExtra("loginState") as LoginState
@@ -31,14 +33,22 @@ class LoginActivity : AppCompatActivity() {
         binding.loginWebView.loadUrl(loginUri.toString())
     }
 
-    private fun createLoginUri() = Uri.Builder().scheme("https").authority("api.24hoursarenotenough.42seoul.kr")
-        .appendPath("user")
-        .appendPath("login")
-        .appendPath("42")
-        .appendQueryParameter("redirect", "app://hane42")
-        .build()
+    private fun setStatusAndNavigationBar() {
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
 
-    inner class CustomWebViewClient: WebViewClient() {
+        controller.isAppearanceLightStatusBars = true
+        controller.isAppearanceLightNavigationBars = true
+    }
+
+    private fun createLoginUri() =
+        Uri.Builder().scheme("https").authority("api.24hoursarenotenough.42seoul.kr")
+            .appendPath("user")
+            .appendPath("login")
+            .appendPath("42")
+            .appendQueryParameter("redirect", "app://hane42")
+            .build()
+
+    inner class CustomWebViewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(
             view: WebView?,
             request: WebResourceRequest?
@@ -65,7 +75,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        private fun parseAccessToken(): String = cookieManager.getCookie("https://api.24hoursarenotenough.42seoul.kr/user/login/callback/42")
-            .substringAfter(' ').split('=')[1]
+        private fun parseAccessToken(): String =
+            cookieManager.getCookie("https://api.24hoursarenotenough.42seoul.kr/user/login/callback/42")
+                .substringAfter(' ').split('=')[1]
     }
 }
