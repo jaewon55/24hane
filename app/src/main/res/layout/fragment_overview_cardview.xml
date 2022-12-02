@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <!--        <variable-->
+        <!--            name="viewModel"-->
+        <!--            type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />-->
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/card_view_background"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        tools:layout_height="250dp"
+        tools:layout_margin="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/accumulate_title"
+                style="@style/OnCardViewTitleText"
+                android:text="오늘 누적 시간"
+                app:layout_constraintBottom_toTopOf="@id/accumulate_time"
+                app:layout_constraintEnd_toStartOf="@id/card_view_divider"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/accumulate_time"
+                style="@style/OnCardViewTimeText"
+                android:layout_marginBottom="10dp"
+                android:text="12:00"
+                app:layout_constraintBottom_toTopOf="@id/card_view_guideline"
+                app:layout_constraintEnd_toStartOf="@id/card_view_divider"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/card_view_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/target_title"
+                style="@style/OnCardViewTitleText"
+                android:layout_marginTop="10dp"
+                android:text="오늘 목표 시간"
+                app:layout_constraintBottom_toTopOf="@id/target_time"
+                app:layout_constraintEnd_toStartOf="@id/card_view_divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_view_guideline" />
+
+            <TextView
+                android:id="@+id/target_time"
+                style="@style/OnCardViewTimeText"
+                android:text="120:00"
+                app:layout_constraintEnd_toEndOf="@id/accumulate_time"
+                app:layout_constraintTop_toBottomOf="@id/target_title" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_picker_button"
+                app:layout_constraintBottom_toBottomOf="@id/target_time"
+                app:layout_constraintStart_toEndOf="@id/target_time"
+                app:layout_constraintTop_toTopOf="@id/target_time"
+                app:tint="@color/picker_button" />
+
+            <View
+                android:id="@+id/card_view_divider"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="75dp"
+                android:background="@color/division_line"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ProgressBar
+                android:id="@+id/card_view_progress"
+                style="@style/OnProgress"
+                android:progress="100"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/card_view_divider"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!--                    android:progress="@{viewModel.progressPercent}"/>-->
+
+            <TextView
+                android:id="@+id/card_view_progress_text"
+                style="@style/ProgressPercentageText"
+                android:text="100%"
+                app:layout_constraintBottom_toBottomOf="@id/card_view_progress"
+                app:layout_constraintEnd_toEndOf="@id/card_view_progress"
+                app:layout_constraintStart_toStartOf="@id/card_view_progress"
+                app:layout_constraintTop_toTopOf="@id/card_view_progress" />
+
+            <!--            android:text="@{viewModel.progressPercentString}"-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>
