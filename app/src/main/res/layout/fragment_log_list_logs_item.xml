@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:id="@+id/in_time"
+            style="@style/LogListRecyclerItemTextView"
+            android:text="11:27:18" />
+
+        <TextView
+            android:id="@+id/out_time"
+            style="@style/LogListRecyclerItemTextView"
+            android:text="17:27:18" />
+
+        <TextView
+            android:id="@+id/duration_time"
+            style="@style/LogListRecyclerItemTextView"
+            android:text="06:00:00" />
+
+    </LinearLayout>
+</layout>

@@ -53,4 +53,51 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
+    <style name="LogCalendarButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">none</item>
+    </style>
+
+    <style name="LogCalendarDateText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/main_info_text_color</item>
+    </style>
+
+    <style name="LogListSubTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/main_info_text_color</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <style name="LogListTimeText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/time_text_color</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LogListHeaderTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="LogListRecyclerItemTextView" parent="LogListHeaderTextView">
+        <item name="android:textColor">@color/time_text_color</item>
+    </style>
+
+
 </resources>

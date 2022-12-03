@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
-import com.hane24.hoursarenotenough24.login.SplashViewModel
 
 class OverViewFragment : Fragment() {
     lateinit var binding: FragmentOverviewBinding
@@ -17,10 +16,14 @@ class OverViewFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        initBinding(inflater, container)
+        return binding.root
+    }
+
+    private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        return binding.root
     }
 }
