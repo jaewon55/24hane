@@ -11,7 +11,7 @@ import com.hane24.hoursarenotenough24.network.Hane42Apis
 import kotlinx.coroutines.launch
 
 
-class SplashViewModel: ViewModel() {
+class SplashViewModel : ViewModel() {
 
     private val accessToken = SharedPreferenceUtils.getAccessToken()
     private val _loginState = MutableLiveData<LoginState?>()

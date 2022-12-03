@@ -30,5 +30,6 @@
     <color name="time_text_color">#5A5C57</color>
     <color name="main_info_text_color">#959595</color>
     <color name="sub_info_text_color">#CC959595</color>
+    <color name="red">#FF0000</color>
 
 </resources>
