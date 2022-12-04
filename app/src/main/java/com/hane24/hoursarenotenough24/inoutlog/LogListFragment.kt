@@ -13,6 +13,7 @@ import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
     private val viewModel by lazy { ViewModelProvider(this)[LogListViewModel::class.java] }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -21,7 +22,7 @@ class LogListFragment : Fragment() {
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_log_list, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
     }

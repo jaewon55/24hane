@@ -1,7 +1,7 @@
 package com.hane24.hoursarenotenough24.network
 
 import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
-import com.hane24.hoursarenotenough24.data.InOutTimeInfo
+import com.hane24.hoursarenotenough24.data.InOutTimeContainer
 import com.hane24.hoursarenotenough24.data.MainInfo
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -34,14 +34,14 @@ interface hane42Api {
         @Query("year") year: Int,
         @Query("month") month: Int,
         @Query("day") day: Int
-    ): InOutTimeInfo
+    ): InOutTimeContainer
 
     @GET("/v1/tag-log/permonth")
     suspend fun getInOutInfoPerMonth(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,
         @Query("month") month: Int,
-    ): InOutTimeInfo
+    ): InOutTimeContainer
 
     @GET("/v1/tag-log/accumulationTimes")
     suspend fun getAccumulationTime(
