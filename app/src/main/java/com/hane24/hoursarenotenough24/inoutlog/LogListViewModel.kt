@@ -59,12 +59,15 @@ class LogListViewModel : ViewModel() {
     val tableItemList: LiveData<List<LogTableItem>>
         get() = _tableItemList
 
+
+
+
     init {
         viewModelScope.launch {
             useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
             setCalendarItemList()
-            setTableItemList()
             _selectedDay.value = TodayCalendarUtils.day
+            setTableItemList()
         }
         setCalendarDateText()
     }

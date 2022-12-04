@@ -10,12 +10,13 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/calendar_item"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
@@ -28,7 +29,7 @@
             app:cornerRadius="0dp"
             app:rippleColor="@color/white"
             app:strokeColor="@color/red"
-            tools:text="1" />
+            tools:text="29" />
 
     </FrameLayout>
 </layout>
