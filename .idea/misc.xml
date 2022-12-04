@@ -3,10 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/custom_circle_progress.xml" value="0.1265" />
+        <entry key="app/src/main/res/drawable/ic_24hane.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/ic_42logo.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/ic_github.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.1265" />
+        <entry key="app/src/main/res/drawable/ic_widget_refresh.xml" value="0.1265" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.24947916666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main_app_bar.xml" value="0.24947916666666667" />
-        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/basic_widget.xml" value="0.25" />
       </map>
     </option>
   </component>
