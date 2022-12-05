@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils

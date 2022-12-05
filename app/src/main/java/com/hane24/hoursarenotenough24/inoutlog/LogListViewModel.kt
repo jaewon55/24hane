@@ -60,8 +60,6 @@ class LogListViewModel : ViewModel() {
         get() = _tableItemList
 
 
-
-
     init {
         viewModelScope.launch {
             useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
@@ -101,12 +99,18 @@ class LogListViewModel : ViewModel() {
 
     private fun setCalendarItemList() {
         val calendar = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, 1) }
-        _calendarItemList.value = monthLogList[monthLogListIndex].getCalendarList(calendar)
+        _calendarItemList.value =
+            monthLogList[monthLogListIndex].getCalendarList(calendar)
     }
 
     private fun setTableItemList() {
         _tableItemList.value =
             monthLogList[monthLogListIndex].getLogTableList(selectedDay.value ?: 1)
+    }
+
+    fun changeSelectedDay(day: Int) {
+        _selectedDay.value = day
+        setTableItemList()
     }
 
     fun List<CalendarItem>.getDayAccumulationTime(day: Int): Long =

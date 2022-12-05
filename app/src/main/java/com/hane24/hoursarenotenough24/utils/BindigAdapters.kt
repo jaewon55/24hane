@@ -49,11 +49,16 @@ fun bindCalendarRecyclerView(
     adapter.submitList(data)
 }
 
-@BindingAdapter("setCalendarItem")
+@BindingAdapter("item")
 fun setCalendarItem(
     button: MaterialButton,
-    item: CalendarItem
+    item: CalendarItem,
 ) {
     button.text = item.day.toString()
     button.backgroundTintList = ColorStateList.valueOf(getColorHelper(button.context, item.color))
+    if (item.isNextDay) {
+        button.setTextColor(getColorHelper(button.context, R.color.next_day_text))
+    } else {
+        button.setTextColor(getColorHelper(button.context, R.color.black))
+    }
 }

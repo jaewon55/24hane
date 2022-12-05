@@ -33,7 +33,10 @@ class LogListFragment : Fragment() {
         binding.calendarRecycler.layoutManager = object : GridLayoutManager(context, 7) {
             override fun canScrollVertically(): Boolean = false
         }
-        binding.calendarRecycler.adapter = LogCalendarAdapter()
+        binding.calendarRecycler.adapter = LogCalendarAdapter(
+            LogCalendarAdapter.OnClickListener {
+                viewModel.changeSelectedDay(it)
+            })
     }
 
 }

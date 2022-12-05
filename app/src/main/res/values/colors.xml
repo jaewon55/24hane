@@ -37,5 +37,8 @@
     <color name="calendar_color2">#7BD6FF</color>
     <color name="calendar_color3">#3FC3FF</color>
     <color name="calendar_color4">#0097DC</color>
+    <color name="next_day_background">#FAFAFA</color>
+    <color name="next_day_text">#D4D4D4</color>
+    <color name="calendar_item_stroke_default">#E1E1E1</color>
 
 </resources>

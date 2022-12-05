@@ -1,19 +1,19 @@
 package com.hane24.hoursarenotenough24.data
 
-import android.view.View
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
 import java.util.*
 
 
 data class CalendarItem(
     val day: Int,
-    val durationTime: Long
+    val durationTime: Long,
+    val isNextDay: Boolean,
 ) {
-    val dayString
-        get() = day.toString()
     val color
         get() = when {
+            isNextDay -> R.color.next_day_background
             durationTime == 0L -> R.color.white
             durationTime <= 3L * 3600 -> R.color.calendar_color1
             durationTime <= 6L * 3600 -> R.color.calendar_color2
@@ -54,11 +54,17 @@ fun MonthTimeLogContainer.getLogTableList(day: Int): List<LogTableItem> {
 fun MonthTimeLogContainer.getCalendarList(calendar: Calendar): List<CalendarItem> {
     val newList = mutableListOf<CalendarItem>()
     for (i in 1 until calendar.get(Calendar.DAY_OF_WEEK)) {
-        newList.add(CalendarItem(0, 0))
+        newList.add(CalendarItem(0, 0, false))
     }
     for (i in 1..calendar.calculateDaysOfMonth()) {
         val durationTime = monthLog.filter { it.day == i }.sumOf { it.durationTime }
-        newList.add(CalendarItem(i, durationTime))
+        val isNextDay = when {
+            calendar.get(Calendar.YEAR) < TodayCalendarUtils.year -> false
+            calendar.get(Calendar.MONTH) + 1 < TodayCalendarUtils.month -> false
+            i > TodayCalendarUtils.day -> true
+            else -> false
+        }
+        newList.add(CalendarItem(i, durationTime, isNextDay))
     }
     return newList
 }
