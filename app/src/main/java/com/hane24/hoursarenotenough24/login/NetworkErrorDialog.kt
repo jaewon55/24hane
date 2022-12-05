@@ -13,7 +13,6 @@ class NetworkErrorDialog: DialogFragment() {
         val onclick = DialogInterface.OnClickListener { dialog, id ->
             val parent = activity as SplashActivity
             parent.checkLogin()
-            dialog.cancel()
         }
 
         return activity?.let {

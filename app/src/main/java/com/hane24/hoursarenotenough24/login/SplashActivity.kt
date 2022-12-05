@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
 
-enum class LoginState {
+enum class State {
     ERROR,
     SUCCESS,
     FAIL,
@@ -26,9 +26,9 @@ class SplashActivity : AppCompatActivity() {
 
         setStatusAndNavigationBar()
         checkLogin()
-        Log.i("login", "state ${viewModel.loginState.value}")
-        viewModel.loginState.observe(this) { loginState ->
-            Log.i("login", "state2 ${viewModel.loginState.value}")
+        Log.i("login", "state ${viewModel.state.value}")
+        viewModel.state.observe(this) { loginState ->
+            Log.i("login", "state2 ${viewModel.state.value}")
             loginState?.let { checkLoginState(it) }
         }
     }
@@ -37,21 +37,21 @@ class SplashActivity : AppCompatActivity() {
         viewModel.checkLogin()
     }
 
-    private fun checkLoginState(loginState: LoginState) {
-        when (loginState) {
-            LoginState.SUCCESS -> {
+    private fun checkLoginState(state: State) {
+        when (state) {
+            State.SUCCESS -> {
                 Log.i("login", "success condition")
 
                 goToMain()
             }
 
-            LoginState.FAIL -> {
+            State.FAIL -> {
                 Log.i("login", "fail condition")
 
-                goToLogin(loginState)
+                goToLogin(state)
             }
 
-            LoginState.ERROR -> {
+            State.ERROR -> {
                 Log.i("login", "error condition")
 
                 NetworkErrorDialog.showNetworkErrorDialog(this)
@@ -65,9 +65,9 @@ class SplashActivity : AppCompatActivity() {
         startActivity(intent).also { finish() }
     }
 
-    private fun goToLogin(loginState: LoginState) {
+    private fun goToLogin(state: State) {
         val intent = Intent(this, LoginActivity::class.java)
-            .putExtra("loginState", loginState)
+            .putExtra("loginState", state)
 
         startActivity(intent).also { finish() }
     }

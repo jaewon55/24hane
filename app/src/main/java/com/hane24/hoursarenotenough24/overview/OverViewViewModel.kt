@@ -2,11 +2,16 @@ package com.hane24.hoursarenotenough24.overview
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
 
 class OverViewViewModel : ViewModel() {
+
+    private val _state = MutableLiveData<State?>(null)
+    val state: LiveData<State?>
+        get() = _state
 
     private val _intraId = MutableLiveData("")
     val intraId: LiveData<String>
@@ -65,8 +70,11 @@ class OverViewViewModel : ViewModel() {
                 getProgressPercent(accumulationTime.todayAccumulationTime, _dayTargetTime.value)
             _monthProgressPercent.value =
                 getProgressPercent(accumulationTime.monthAccumulationTime, _monthTargetTime.value)
+            _state.value = State.SUCCESS
         } catch (e: Exception) {
             //networkError 처리
+            Log.i("state", "message: ${e.message}")
+            _state.value = State.ERROR
         }
     }
 
@@ -75,8 +83,11 @@ class OverViewViewModel : ViewModel() {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
             _intraId.value = mainInfo.login
             _inOutState.value = mainInfo.inoutState == "IN"
+            _state.value = State.SUCCESS
         } catch (e: Exception) {
             //networkError 처리
+            Log.i("state", "message: ${e.message}")
+            _state.value = State.ERROR
         }
     }
 

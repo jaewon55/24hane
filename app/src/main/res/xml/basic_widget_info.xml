@@ -5,8 +5,10 @@
     android:initialLayout="@layout/basic_widget"
     android:minWidth="110dp"
     android:minHeight="40dp"
+    android:maxResizeWidth="180dp"
+    android:maxResizeHeight="110dp"
     android:previewImage="@drawable/example_appwidget_preview"
     android:previewLayout="@layout/basic_widget"
-    android:resizeMode="vertical"
+    android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen" />

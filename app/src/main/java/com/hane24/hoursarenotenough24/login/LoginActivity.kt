@@ -24,8 +24,8 @@ class LoginActivity : AppCompatActivity() {
         setStatusAndNavigationBar()
         Log.i("login", "Login activity called")
 
-        val loginState = intent.getSerializableExtra("loginState") as LoginState
-        Log.i("login", "$loginState")
+        val state = intent.getSerializableExtra("loginState") as State
+        Log.i("login", "$state")
 
         val loginUri: Uri = createLoginUri()
 
