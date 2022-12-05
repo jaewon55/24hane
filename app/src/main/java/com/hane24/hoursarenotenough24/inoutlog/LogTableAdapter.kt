@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hane24.hoursarenotenough24.data.LogTableItem
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListLogsItemBinding
 
-class LogTableAdapter() :
+class LogTableAdapter :
     ListAdapter<LogTableItem, LogTableAdapter.LogTableViewHolder>(DiffCallback) {
 
     class LogTableViewHolder(private val binding: FragmentLogListLogsItemBinding) :

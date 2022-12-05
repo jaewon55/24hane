@@ -1,6 +1,7 @@
 package com.hane24.hoursarenotenough24.data
 
 import android.view.View
+import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
 import java.util.*
 
@@ -8,7 +9,18 @@ import java.util.*
 data class CalendarItem(
     val day: Int,
     val durationTime: Long
-)
+) {
+    val dayString: String
+        get() = day.toString()
+    val color: Int
+        get() = when {
+            durationTime == 0L -> R.color.white
+            durationTime <= 3L * 3600 -> R.color.calendar_color1
+            durationTime <= 6L * 3600 -> R.color.calendar_color2
+            durationTime <= 9L * 3600 -> R.color.calendar_color3
+            else -> R.color.calendar_color4
+        }
+}
 
 data class LogTableItem(
     val inTime: String,

@@ -7,7 +7,9 @@ import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.data.LogTableItem
+import com.hane24.hoursarenotenough24.inoutlog.LogCalendarAdapter
 import com.hane24.hoursarenotenough24.inoutlog.LogTableAdapter
 
 fun getColorHelper(context: Context, id: Int) =
@@ -35,4 +37,13 @@ fun bindTableRecyclerView(
 ) {
     val adapter = recyclerView.adapter as LogTableAdapter
     adapter.submitList(data?.reversed())
+}
+
+@BindingAdapter("calendarGrid")
+fun bindCalendarRecyclerView(
+    recyclerView: RecyclerView,
+    data: List<CalendarItem>?
+) {
+    val adapter = recyclerView.adapter as LogCalendarAdapter
+    adapter.submitList(data)
 }
