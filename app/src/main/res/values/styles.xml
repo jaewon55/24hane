@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="splash_text_style">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/main_color</item>
+    </style>
+
+    <style name="Widget.24hane.AppWidget.Container" parent="android:Widget">
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">?android:attr/colorBackground</item>
+    </style>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/white</item>
