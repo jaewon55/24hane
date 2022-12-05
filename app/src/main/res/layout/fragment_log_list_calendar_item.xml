@@ -24,21 +24,22 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginHorizontal="3dp"
-            android:layout_marginBottom="3dp"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
             android:letterSpacing="0"
             android:padding="0dp"
-            android:text="@{item.dayString}"
             android:textColor="@color/black"
             android:textSize="17dp"
             android:textStyle="bold"
             app:cornerRadius="0dp"
             app:rippleColor="@color/white"
-            tools:text="29" />
+            app:setCalendarItem="@{item}"
+            app:strokeWidth="0.1dp"
+            app:strokeColor="#E1E1E1"
+            tools:text="29"
+            android:backgroundTint="@color/calendar_color1"/>
 
 
     </FrameLayout>

@@ -10,9 +10,9 @@ data class CalendarItem(
     val day: Int,
     val durationTime: Long
 ) {
-    val dayString: String
+    val dayString
         get() = day.toString()
-    val color: Int
+    val color
         get() = when {
             durationTime == 0L -> R.color.white
             durationTime <= 3L * 3600 -> R.color.calendar_color1

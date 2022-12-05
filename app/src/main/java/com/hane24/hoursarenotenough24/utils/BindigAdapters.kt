@@ -6,6 +6,7 @@ import android.os.Build
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.data.LogTableItem
@@ -46,4 +47,13 @@ fun bindCalendarRecyclerView(
 ) {
     val adapter = recyclerView.adapter as LogCalendarAdapter
     adapter.submitList(data)
+}
+
+@BindingAdapter("setCalendarItem")
+fun setCalendarItem(
+    button: MaterialButton,
+    item: CalendarItem
+) {
+    button.text = item.day.toString()
+    button.backgroundTintList = ColorStateList.valueOf(getColorHelper(button.context, item.color))
 }
