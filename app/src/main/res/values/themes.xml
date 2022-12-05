@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.24hane" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -13,7 +15,6 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-<<<<<<< HEAD
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
@@ -31,6 +32,4 @@
         <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
         <item name="appWidgetPadding">16dp</item>
     </style>
-=======
->>>>>>> aaa2efe836814d1b49a4b04f111c1331a389ab07
 </resources>

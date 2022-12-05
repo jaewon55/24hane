@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="splash_text_style">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textColor">@color/main_color</item>
     </style>
 
-<<<<<<< HEAD
     <style name="Widget.24hane.AppWidget.Container" parent="android:Widget">
         <item name="android:id">@android:id/background</item>
         <item name="android:background">?android:attr/colorBackground</item>
-=======
+    </style>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
+
     <style name="OverViewAppTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -60,7 +66,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">5dp</item>
-        <item name="android:background">none</item>
+<!--        <item name="android:background">none</item>-->
     </style>
 
     <style name="LogCalendarDateText">
@@ -100,7 +106,6 @@
 
     <style name="LogListRecyclerItemTextView" parent="LogListHeaderTextView">
         <item name="android:textColor">@color/time_text_color</item>
->>>>>>> aaa2efe836814d1b49a4b04f111c1331a389ab07
     </style>
 
 

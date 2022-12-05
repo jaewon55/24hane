@@ -4,8 +4,8 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
-import com.hane24.hoursarenotenough24.data.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 
 internal fun updateRefreshAnimationOn(views: RemoteViews, progressId: Int, buttonId: Int) {
     views.setViewVisibility(progressId, View.VISIBLE)

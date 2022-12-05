@@ -1,9 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.24hane.AppWidget.Container"
     android:id="@+id/widget_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:theme="@style/Theme.24hane.AppWidgetContainer"
     android:backgroundTint="@color/white">
 
@@ -25,19 +27,16 @@
     <RelativeLayout
         android:id="@+id/widget_success_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/widget_today_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
-            android:textSize="10dp"
             android:text="Today"
-            android:textColor="#1E3C5F" />
+            android:textColor="#1E3C5F"
+            android:textSize="10dp" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -53,7 +52,7 @@
                 android:layout_height="10dp"
                 android:indeterminate="true"
                 android:progressDrawable="@drawable/custom_circle_progress"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
             <ImageButton
                 android:id="@+id/widget_refresh_button"
@@ -65,76 +64,79 @@
 
         <TextView
             android:id="@+id/widget_accumulation_today_text"
-            android:layout_below="@id/widget_today_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:textSize="15dp"
-            android:textStyle="bold"
+            android:layout_below="@id/widget_today_text"
             android:fontFamily="@font/roboto_medium"
+            android:paddingStart="8dp"
+            android:text="12 : 00"
             android:textColor="#1E3C5F"
-            android:text="12 : 00"/>
+            android:textSize="18dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/widget_month_text"
-            android:layout_below="@id/widget_accumulation_today_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/widget_accumulation_today_text"
             android:fontFamily="@font/roboto_medium"
-            android:textSize="10dp"
+            android:text="This Month"
             android:textColor="#1E3C5F"
-            android:text="This Month"/>
+            android:textSize="10dp" />
 
         <TextView
             android:id="@+id/widget_accumulation_month_text"
-            android:layout_below="@id/widget_month_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:textSize="15dp"
-            android:textStyle="bold"
+            android:layout_below="@id/widget_month_text"
             android:fontFamily="@font/roboto_medium"
+            android:paddingStart="8dp"
+            android:text="120 : 00"
             android:textColor="#1E3C5F"
-            android:text="120 : 00"/>
+            android:textSize="18dp"
+            android:textStyle="bold" />
 
         <FrameLayout
             android:id="@+id/widget_progress_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/widget_accumulation_month_text"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp">
+            android:layout_toEndOf="@id/widget_accumulation_month_text">
+
             <TextView
                 android:id="@+id/widget_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="6dp"
-                android:textStyle="bold"
                 android:fontFamily="@font/roboto_medium"
+                android:text="75%"
                 android:textColor="#1E3C5F"
                 android:textSize="13dp"
-                android:text="75%"/>
+                android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:paddingTop="13dp"
                 android:paddingStart="6dp"
-                app:tint="#5185C2"
-                android:src="@drawable/wave_remove"/>
+                android:paddingTop="13dp"
+                android:src="@drawable/wave_remove"
+                app:tint="#5185C2" />
+
             <ProgressBar
                 android:id="@+id/widget_progressbar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:max="100"
                 android:indeterminate="false"
+                android:max="100"
                 android:progress="75"
-                android:progressTint="#5185C2"
                 android:progressBackgroundTint="#C3CFDD"
-                android:progressDrawable="@drawable/custom_circle_progress" />
+                android:progressDrawable="@drawable/custom_circle_progress"
+                android:progressTint="#5185C2" />
         </FrameLayout>
     </RelativeLayout>
-</RelativeLayout>
+</FrameLayout>
