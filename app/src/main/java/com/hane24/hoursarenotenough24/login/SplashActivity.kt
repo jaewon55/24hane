@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
@@ -23,6 +24,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setStatusAndNavigationBar()
         checkLogin()
         Log.i("login", "state ${viewModel.loginState.value}")
         viewModel.loginState.observe(this) { loginState ->
@@ -68,5 +70,12 @@ class SplashActivity : AppCompatActivity() {
             .putExtra("loginState", loginState)
 
         startActivity(intent).also { finish() }
+    }
+
+    private fun setStatusAndNavigationBar() {
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+
+        controller.isAppearanceLightStatusBars = true
+        controller.isAppearanceLightNavigationBars = true
     }
 }
