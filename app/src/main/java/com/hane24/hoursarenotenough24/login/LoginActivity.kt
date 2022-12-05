@@ -1,10 +1,12 @@
 package com.hane24.hoursarenotenough24.login
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.webkit.*
 import androidx.core.view.WindowInsetsControllerCompat
 import com.hane24.hoursarenotenough24.MainActivity
@@ -63,6 +65,18 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             return false
+        }
+
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            binding.loadingLayout.visibility = View.VISIBLE
+            binding.loginWebView.visibility = View.GONE
+        }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            binding.loadingLayout.visibility = View.GONE
+            binding.loginWebView.visibility = View.VISIBLE
         }
 
         private fun redirectToMain() {
