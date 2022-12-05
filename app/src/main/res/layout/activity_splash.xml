@@ -7,7 +7,7 @@
 
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -17,8 +17,16 @@
             android:id="@+id/splash_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:tint="@color/black"
-            android:src="@drawable/ic_launcher_foreground" />
-    </FrameLayout>
+            android:layout_margin="8dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_24hane" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/splash_image"
+            android:text="@string/splash_text"
+            style="@style/splash_text_style" />
+    </RelativeLayout>
 </layout>

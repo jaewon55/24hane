@@ -1,11 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">24hane</string>
+    <string name="splash_text">24HoursAreNotEnough</string>
     <string name="android_github">androidGithub</string>
     <string name="ios_github">iOSGithub</string>
     <string name="page_guide">지원금 정책</string>
     <string name="inquiry">문의하기</string>
     <string name="logout">로그아웃</string>
     <string name="open_source_license">OpenSourceLicense</string>
+    <string name="widget_error">연결된 네트워크가 없어요.</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="app_widget_description">This is an app widget description</string>
     <string name="_24hoursarenotenough">24HoursAreNotEnough</string>
     <string name="today_card_title">Today</string>
     <string name="month_card_title">Month</string>
