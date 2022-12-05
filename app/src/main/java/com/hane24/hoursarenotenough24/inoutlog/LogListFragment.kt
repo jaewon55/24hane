@@ -21,9 +21,8 @@ class LogListFragment : Fragment() {
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_log_list, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
     }
-
 }

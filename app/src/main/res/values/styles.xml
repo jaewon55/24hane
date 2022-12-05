@@ -108,5 +108,4 @@
         <item name="android:textColor">@color/time_text_color</item>
     </style>
 
-
 </resources>
