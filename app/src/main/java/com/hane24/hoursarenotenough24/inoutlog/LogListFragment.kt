@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 
@@ -17,13 +18,25 @@ class LogListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         initBinding(inflater, container)
+        setRecyclerAdapter()
         return binding.root
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_log_list, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun setRecyclerAdapter() {
+        binding.tableRecycler.adapter = LogTableAdapter()
+        binding.calendarRecycler.layoutManager = object : GridLayoutManager(context, 7) {
+            override fun canScrollVertically(): Boolean = false
+        }
+        binding.calendarRecycler.adapter = LogCalendarAdapter(
+            LogCalendarAdapter.OnClickListener {
+                viewModel.changeSelectedDay(it)
+            })
     }
 
 }

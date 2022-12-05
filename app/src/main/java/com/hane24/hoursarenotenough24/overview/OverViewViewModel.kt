@@ -1,12 +1,13 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
 
 class OverViewViewModel : ViewModel() {
+
+    private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
 
     private val _intraId = MutableLiveData("")
     val intraId: LiveData<String>
@@ -44,15 +45,12 @@ class OverViewViewModel : ViewModel() {
     val inOutState: LiveData<Boolean>
         get() = _inOutState
 
-    private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
-
     init {
         _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
         _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
         viewModelScope.launch {
-            // accumulationTime : month/day AccumulationTime, ProgressPercent
-            useGetAccumulationInfoApi()
             useGetMainInfoApi()
+            useGetAccumulationInfoApi()
         }
     }
 

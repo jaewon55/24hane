@@ -26,10 +26,11 @@
         <TextView
             android:id="@+id/calendar_date"
             style="@style/LogCalendarDateText"
-            android:text="Nov 2022"
+            android:text="@{viewModel.calendarDateText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dec 2022" />
 
         <ImageButton
             android:id="@+id/calender_right_button"
@@ -41,29 +42,36 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calendar_recycler"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="4dp"
+            android:paddingHorizontal="8dp"
+            app:calendarGrid="@{viewModel.calendarItemList}"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/calendar_date"
-            tools:layout_marginHorizontal="16dp"
-            tools:layout_width="match_parent" />
+            app:spanCount="7"
+            tools:itemCount="31"
+            tools:listitem="@layout/fragment_log_list_calendar_item" />
 
         <TextView
             android:id="@+id/date_text"
             style="@style/LogListSubTitleText"
-            android:text="Date: 2022.11.5"
+            android:text="@{viewModel.selectedDateText}"
             app:layout_constraintStart_toStartOf="@id/calendar_recycler"
-            app:layout_constraintTop_toBottomOf="@id/calendar_recycler" />
+            app:layout_constraintTop_toBottomOf="@id/calendar_recycler"
+            tools:text="Date: 2022.11.5" />
 
         <TextView
             android:id="@+id/day_accumulation_time"
             style="@style/LogListTimeText"
-            android:text="7h 45m"
+            android:text="@{viewModel.dayAccumulationTimeText}"
             app:layout_constraintEnd_toStartOf="@id/log_list_guideline"
             app:layout_constraintStart_toStartOf="@id/date_text"
-            app:layout_constraintTop_toBottomOf="@id/date_text" />
+            app:layout_constraintTop_toBottomOf="@id/date_text"
+            tools:text="7h 45m" />
 
         <TextView
             android:id="@+id/day_text"
@@ -85,14 +93,17 @@
             android:id="@+id/month_accumulation_time"
             style="@style/LogListTimeText"
             android:layout_marginTop="0dp"
-            android:text="119h 45m"
+            android:text="@{viewModel.monthAccumulationTimeText}"
+            app:layout_constraintBottom_toBottomOf="@id/day_accumulation_time"
             app:layout_constraintEnd_toEndOf="@id/calendar_recycler"
             app:layout_constraintStart_toEndOf="@id/log_list_guideline"
-            app:layout_constraintTop_toTopOf="@id/day_accumulation_time" />
+            app:layout_constraintTop_toTopOf="@id/day_accumulation_time"
+            tools:text="119h 45m" />
 
         <TextView
             android:id="@+id/month_text"
             style="@style/LogListSubTitleText"
+            android:layout_marginTop="0dp"
             android:text="Month"
             app:layout_constraintEnd_toEndOf="@id/month_accumulation_time"
             app:layout_constraintStart_toStartOf="@id/month_accumulation_time"
@@ -109,9 +120,9 @@
             android:id="@+id/logs_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingVertical="8dp"
             android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
+            android:paddingVertical="8dp"
             app:layout_constraintEnd_toEndOf="@id/calendar_recycler"
             app:layout_constraintStart_toStartOf="@id/calendar_recycler"
             app:layout_constraintTop_toBottomOf="@id/logs_text">
@@ -130,13 +141,21 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/table_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="16dp"
+            android:fadeScrollbars="false"
+            android:scrollbarSize="3dp"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/logs_header"
+            app:layout_constraintHeight_max="500dp"
             app:layout_constraintStart_toStartOf="@id/logs_header"
-            app:layout_constraintTop_toBottomOf="@id/logs_header" />
+            app:layout_constraintTop_toBottomOf="@id/logs_header"
+            app:tableList="@{viewModel.tableItemList}"
+            tools:itemCount="40"
+            tools:listitem="@layout/fragment_log_list_logs_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

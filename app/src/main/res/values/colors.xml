@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
 
     <color name="card_view_background">#F3F2F9</color>
     <color name="division_line">#969494</color>
@@ -33,6 +34,14 @@
     <color name="time_text_color">#5A5C57</color>
     <color name="main_info_text_color">#959595</color>
     <color name="sub_info_text_color">#CC959595</color>
-    <color name="red">#FF0000</color>
+    <color name="none">#00000000</color>
+
+    <color name="calendar_color1">#D1EDFA</color>
+    <color name="calendar_color2">#7BD6FF</color>
+    <color name="calendar_color3">#3FC3FF</color>
+    <color name="calendar_color4">#0097DC</color>
+    <color name="next_day_background">#FAFAFA</color>
+    <color name="next_day_text">#D4D4D4</color>
+    <color name="calendar_item_stroke_default">#E1E1E1</color>
 
 </resources>
