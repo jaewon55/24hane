@@ -6,29 +6,39 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.hane24.hoursarenotenough24.data.CalendarItem" />
+
     </data>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:visibility="@{item.day == 0 ? View.INVISIBLE : View.VISIBLE}">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/calendar_item"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/white"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
             android:letterSpacing="0"
-            android:padding="0dp"
-            android:textColor="@color/black"
+            android:padding="1dp"
             android:textSize="17dp"
             android:textStyle="bold"
             app:cornerRadius="0dp"
+            app:item="@{item}"
             app:rippleColor="@color/white"
-            app:strokeColor="@color/red"
-            tools:text="1" />
+            tools:text="29" />
+
 
     </FrameLayout>
 </layout>

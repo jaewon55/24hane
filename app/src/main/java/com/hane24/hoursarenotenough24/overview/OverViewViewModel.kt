@@ -13,6 +13,8 @@ class OverViewViewModel : ViewModel() {
     val state: LiveData<State?>
         get() = _state
 
+    private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
+
     private val _intraId = MutableLiveData("")
     val intraId: LiveData<String>
         get() = _intraId
@@ -49,15 +51,12 @@ class OverViewViewModel : ViewModel() {
     val inOutState: LiveData<Boolean>
         get() = _inOutState
 
-    private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
-
     init {
         _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
         _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
         viewModelScope.launch {
-            // accumulationTime : month/day AccumulationTime, ProgressPercent
-            useGetAccumulationInfoApi()
             useGetMainInfoApi()
+            useGetAccumulationInfoApi()
         }
     }
 
