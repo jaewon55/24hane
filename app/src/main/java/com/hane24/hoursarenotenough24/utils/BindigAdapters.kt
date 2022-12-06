@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Build
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -33,6 +34,61 @@ fun ProgressBar.isStateOn(state: Boolean) {
             ColorStateList.valueOf(getColorHelper(context, R.color.off_progress_back))
     }
 }
+
+@BindingAdapter("logoColor")
+fun bindLogoColor(
+    view: ImageView,
+    state: Boolean
+) {
+    view.imageTintList = if (state) {
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.on_icon_color))
+    } else {
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.off_icon_color))
+    }
+}
+
+@BindingAdapter("isEnabled")
+fun bindRefreshClickable(
+    view: ImageView,
+    state: Boolean
+) {
+    view.isEnabled = state
+}
+
+@BindingAdapter("overViewLoading", "listViewLoading")
+fun bindRefreshVisible(
+    view: ImageView,
+    overViewState: Boolean,
+    listViewState: Boolean
+) {
+    view.visibility = if (overViewState || listViewState) {
+        View.INVISIBLE
+    } else {
+        View.VISIBLE
+    }
+}
+
+@BindingAdapter("overViewLoading", "listViewLoading")
+fun bindProgressVisible(
+    view: ProgressBar,
+    overViewState: Boolean,
+    listViewState: Boolean
+) {
+    view.visibility = if (overViewState || listViewState) {
+        View.VISIBLE
+    } else {
+        View.INVISIBLE
+    }
+}
+
+@BindingAdapter("isEnabled")
+fun bindDrawerClickable(
+    view: ImageButton,
+    state: Boolean
+) {
+    view.isEnabled = state
+}
+
 
 @BindingAdapter("buttonState")
 fun bindLeftButtonState(

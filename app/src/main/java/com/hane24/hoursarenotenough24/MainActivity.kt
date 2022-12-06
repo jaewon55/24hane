@@ -1,30 +1,32 @@
 package com.hane24.hoursarenotenough24
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
+import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
-import com.hane24.hoursarenotenough24.utils.getColorHelper
+import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
+    }
     private val pager by lazy { binding.contentMain.viewpager }
-    private val overViewFragment = OverViewFragment()
-    private val logListFragment = LogListFragment()
+    private val overViewViewModel: OverViewViewModel by viewModels()
+    private val logListViewModel: LogListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,19 +36,14 @@ class MainActivity : AppCompatActivity() {
         setToolbar()
         setViewPager()
         setRefreshButtonListener()
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.let {
-            setIntraId(it.getStringExtra("intraId"))
-            setLogoColor(it.getBundleExtra("inOutState")?.getBoolean("inOutState"))
-        }
+        setFragmentsViewModel()
     }
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerVisible(binding.navView)) {
             binding.drawerLayout.closeDrawers()
+        } else if (pager.currentItem != 0) {
+            pager.currentItem--
         } else {
             super.onBackPressed()
         }
@@ -65,32 +62,19 @@ class MainActivity : AppCompatActivity() {
         setNavigationItemListener()
     }
 
-    private fun setIntraId(intraId: String?) {
-        if (intraId == null) return
-        binding.navView.getHeaderView(0)
-            .findViewById<TextView>(R.id.nav_header_text).text = intraId
-        binding.contentMain.loadingLayout.visibility = View.INVISIBLE
-        binding.contentMain.mainLayout.visibility = View.VISIBLE
-    }
-
-    private fun setLogoColor(inOutState: Boolean?) {
-        if (inOutState == null) return
-        if (inOutState) {
-            binding.appBar.haneLogo.imageTintList =
-                ColorStateList.valueOf(getColorHelper(this, R.color.on_icon_color))
-        } else {
-            binding.appBar.haneLogo.imageTintList =
-                ColorStateList.valueOf(getColorHelper(this, R.color.off_icon_color))
+    private fun setRefreshButtonListener() {
+        binding.appBar.refreshButton.setOnClickListener {
+            overViewViewModel.refreshButtonOnClick()
+            logListViewModel.refreshButtonOnClick()
         }
     }
 
-    private fun setRefreshButtonListener() {
-        binding.appBar.refreshButton.setOnClickListener {
-            it.visibility = View.INVISIBLE
-            binding.appBar.refreshProgressbar.visibility = View.VISIBLE
-
-            binding.appBar.refreshProgressbar.visibility = View.INVISIBLE
-            it.visibility = View.VISIBLE
+    private fun setFragmentsViewModel() {
+        binding.overViewViewModel = overViewViewModel
+        binding.appBar.logListViewModel = logListViewModel
+        overViewViewModel.intraId.observe(this) {
+            binding.navView.getHeaderView(0)
+                .findViewById<TextView>(R.id.nav_header_text).text = it
         }
     }
 
@@ -169,8 +153,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> overViewFragment
-                else -> logListFragment
+                0 -> OverViewFragment()
+                else -> LogListFragment()
             }
         }
     }

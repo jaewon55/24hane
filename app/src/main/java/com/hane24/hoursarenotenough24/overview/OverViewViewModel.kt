@@ -49,6 +49,10 @@ class OverViewViewModel : ViewModel() {
     val initState: LiveData<Boolean>
         get() = _initState
 
+    private val _refreshLoading = MutableLiveData(false)
+    val refreshLoading: LiveData<Boolean>
+        get() = _refreshLoading
+
     init {
         _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
         _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
@@ -83,18 +87,27 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
+    fun refreshButtonOnClick() {
+        _refreshLoading.value = true
+        viewModelScope.launch {
+            useGetMainInfoApi()
+            useGetAccumulationInfoApi()
+            _refreshLoading.value = false
+        }
+    }
+
     private fun getProgressPercent(time: Long, targetTime: Long?): Int {
         val targetDouble: Double = targetTime?.toDouble() ?: 0.0
         val percent = (time / targetDouble * 100).toInt()
         if (percent >= 100) return 100
         return percent
     }
-}
 
-fun parseTime(time: Long): String {
-    var second = time
-    val hour = second / 3600
-    second -= hour * 3600
-    val min = second / 60
-    return String.format("%d:%02d", hour, min)
+    private fun parseTime(time: Long): String {
+        var second = time
+        val hour = second / 3600
+        second -= hour * 3600
+        val min = second / 60
+        return String.format("%d:%02d", hour, min)
+    }
 }
