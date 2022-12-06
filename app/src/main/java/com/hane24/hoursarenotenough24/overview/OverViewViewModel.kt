@@ -45,12 +45,17 @@ class OverViewViewModel : ViewModel() {
     val inOutState: LiveData<Boolean>
         get() = _inOutState
 
+    private val _initState = MutableLiveData(false)
+    val initState: LiveData<Boolean>
+        get() = _initState
+
     init {
         _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
         _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
         viewModelScope.launch {
             useGetMainInfoApi()
             useGetAccumulationInfoApi()
+            _initState.value = true
         }
     }
 

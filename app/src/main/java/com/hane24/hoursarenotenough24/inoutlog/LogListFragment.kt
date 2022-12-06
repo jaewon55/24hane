@@ -1,6 +1,7 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,15 @@ class LogListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        Log.d("test", "onCreateView")
         initBinding(inflater, container)
         setRecyclerAdapter()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("test", "onViewCreated")
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {

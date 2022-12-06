@@ -1,20 +1,24 @@
 package com.hane24.hoursarenotenough24
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
+import com.hane24.hoursarenotenough24.utils.getColorHelper
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -29,6 +33,15 @@ class MainActivity : AppCompatActivity() {
         setStatusAndNavigationBar()
         setToolbar()
         setViewPager()
+        setRefreshButtonListener()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            setIntraId(it.getStringExtra("intraId"))
+            setLogoColor(it.getBundleExtra("inOutState")?.getBoolean("inOutState"))
+        }
     }
 
     override fun onBackPressed() {
@@ -50,6 +63,35 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBar.toolbar)
         setDrawerLayout()
         setNavigationItemListener()
+    }
+
+    private fun setIntraId(intraId: String?) {
+        if (intraId == null) return
+        binding.navView.getHeaderView(0)
+            .findViewById<TextView>(R.id.nav_header_text).text = intraId
+        binding.contentMain.loadingLayout.visibility = View.INVISIBLE
+        binding.contentMain.mainLayout.visibility = View.VISIBLE
+    }
+
+    private fun setLogoColor(inOutState: Boolean?) {
+        if (inOutState == null) return
+        if (inOutState) {
+            binding.appBar.haneLogo.imageTintList =
+                ColorStateList.valueOf(getColorHelper(this, R.color.on_icon_color))
+        } else {
+            binding.appBar.haneLogo.imageTintList =
+                ColorStateList.valueOf(getColorHelper(this, R.color.off_icon_color))
+        }
+    }
+
+    private fun setRefreshButtonListener() {
+        binding.appBar.refreshButton.setOnClickListener {
+            it.visibility = View.INVISIBLE
+            binding.appBar.refreshProgressbar.visibility = View.VISIBLE
+
+            binding.appBar.refreshProgressbar.visibility = View.INVISIBLE
+            it.visibility = View.VISIBLE
+        }
     }
 
     private fun setDrawerLayout() {
@@ -103,6 +145,12 @@ class MainActivity : AppCompatActivity() {
         pager.adapter = adapter
         TabLayoutMediator(binding.contentMain.pagerTabLayout, pager)
         { _, _ -> }.attach()
+        createAllFragment()
+    }
+
+    private fun createAllFragment() {
+        pager.currentItem = NUM_PAGES - 1
+        while (pager.currentItem != 0) pager.currentItem--
     }
 
     private fun deleteToken() {}

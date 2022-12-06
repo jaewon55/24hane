@@ -18,10 +18,10 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
+                    android:id="@+id/hane_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_toStartOf="@id/menu_button"
                     android:padding="5dp"
                     android:src="@drawable/ic_refresh" />
@@ -55,6 +55,7 @@
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/menu_selector"
                     android:padding="5dp"
+                    android:paddingEnd="16dp"
                     android:src="@drawable/ic_menu" />
 
             </RelativeLayout>

@@ -37,7 +37,7 @@ class LogListViewModel : ViewModel() {
             }
         }
 
-    private val _selectedDay = MutableLiveData(1)
+    private val _selectedDay = MutableLiveData(TodayCalendarUtils.day)
     val selectedDay: LiveData<Int>
         get() = _selectedDay
 
@@ -82,9 +82,7 @@ class LogListViewModel : ViewModel() {
         viewModelScope.launch {
             _loadingState.value = true
             useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
-            setCalendarItemList()
             _selectedDay.value = TodayCalendarUtils.day
-            setTableItemList()
             _loadingState.value = false
         }
         setCalendarDateText()
@@ -98,8 +96,11 @@ class LogListViewModel : ViewModel() {
                     .asDomainModel()
             monthLogList.add(MonthTimeLogContainer(year, month, monthTimeLog))
             monthLogListIndex++
+            setCalendarItemList()
+            setTableItemList()
         } catch (e: Exception) {
             //networkError 처리
+            throw IllegalArgumentException("InOutInfoPerMonthApi Fail")
         }
     }
 
@@ -135,10 +136,14 @@ class LogListViewModel : ViewModel() {
 
     private fun getNewMonthData() {
         viewModelScope.launch {
-            useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
-            setCalendarItemList()
-            setTableItemList()
-            _selectedDay.value = 1
+            try {
+                useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
+                _selectedDay.value = 1
+            } catch (e: Exception) {
+                selectedMonth++
+                setButtonState()
+                setCalendarDateText()
+            }
             _loadingState.value = false
         }
     }
@@ -154,7 +159,6 @@ class LogListViewModel : ViewModel() {
         selectedMonth--
         setButtonState()
         setCalendarDateText()
-        _selectedDay.value = 1
         if (monthLogList.lastIndex == monthLogListIndex) {
             getNewMonthData()
         } else {
