@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 
 class SplashViewModel : ViewModel() {
@@ -37,8 +38,12 @@ class SplashViewModel : ViewModel() {
                 State.SUCCESS
             else
                 State.FAIL
-        } catch (err: Exception) {
-            Log.i("state", "err: ${err.message}")
+        } catch (err: HttpException) {
+            Log.i("state", "err: ${err.code()}")
+            Log.i("state", "err: ${err.message()}")
+            State.FAIL
+        } catch (exception: Exception) {
+            Log.i("state", "throw: ${exception.message}")
             State.ERROR
         }
     }
