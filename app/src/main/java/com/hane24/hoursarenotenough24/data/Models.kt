@@ -28,7 +28,11 @@ data class LogTableItem(
     val durationTime: String
 )
 
-data class MonthTimeLogContainer(val monthLog: List<TimeLogItem>)
+data class MonthTimeLogContainer(
+    val year: Int,
+    val month: Int,
+    val monthLog: List<TimeLogItem>
+)
 
 data class TimeLogItem(
     val day: Int,
@@ -51,7 +55,8 @@ fun MonthTimeLogContainer.getLogTableList(day: Int): List<LogTableItem> {
     }
 }
 
-fun MonthTimeLogContainer.getCalendarList(calendar: Calendar): List<CalendarItem> {
+fun MonthTimeLogContainer.getCalendarList(): List<CalendarItem> {
+    val calendar = Calendar.getInstance().apply { set(year, month - 1, 1) }
     val newList = mutableListOf<CalendarItem>()
     for (i in 1 until calendar.get(Calendar.DAY_OF_WEEK)) {
         newList.add(CalendarItem(0, 0, false))

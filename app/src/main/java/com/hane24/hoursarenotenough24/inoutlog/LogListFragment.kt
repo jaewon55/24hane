@@ -14,6 +14,7 @@ import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
     private val viewModel by lazy { ViewModelProvider(this)[LogListViewModel::class.java] }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -33,10 +34,8 @@ class LogListFragment : Fragment() {
         binding.calendarRecycler.layoutManager = object : GridLayoutManager(context, 7) {
             override fun canScrollVertically(): Boolean = false
         }
-        binding.calendarRecycler.adapter = LogCalendarAdapter(
-            LogCalendarAdapter.OnClickListener {
-                viewModel.changeSelectedDay(it)
-            })
+        binding.calendarRecycler.adapter =
+            LogCalendarAdapter(LogCalendarAdapter.OnClickListener { viewModel.changeSelectedDay(it) })
     }
 
 }
