@@ -51,7 +51,7 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:indeterminate="true"
-                android:progressDrawable="@drawable/custom_circle_progress"
+                android:progressDrawable="@drawable/progress_circle"
                 android:visibility="invisible" />
 
             <ImageButton
@@ -136,7 +136,7 @@
                 android:max="100"
                 android:progress="75"
                 android:progressBackgroundTint="#C3CFDD"
-                android:progressDrawable="@drawable/custom_circle_progress"
+                android:progressDrawable="@drawable/progress_circle"
                 android:progressTint="#5185C2" />
         </FrameLayout>
     </RelativeLayout>

@@ -31,7 +31,7 @@ data class LogTableItem(
 data class MonthTimeLogContainer(
     val year: Int,
     val month: Int,
-    val monthLog: List<TimeLogItem>
+    var monthLog: List<TimeLogItem>
 )
 
 data class TimeLogItem(

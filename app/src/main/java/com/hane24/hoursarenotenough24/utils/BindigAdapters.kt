@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Build
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -13,7 +14,7 @@ import com.google.android.material.button.MaterialButton
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.data.LogTableItem
-import com.hane24.hoursarenotenough24.inoutlog.LogCalendarAdapter
+import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogTableAdapter
 
 fun getColorHelper(context: Context, id: Int) =
@@ -33,6 +34,61 @@ fun ProgressBar.isStateOn(state: Boolean) {
             ColorStateList.valueOf(getColorHelper(context, R.color.off_progress_back))
     }
 }
+
+@BindingAdapter("logoColor")
+fun bindLogoColor(
+    view: ImageView,
+    state: Boolean
+) {
+    view.imageTintList = if (state) {
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.on_icon_color))
+    } else {
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.off_icon_color))
+    }
+}
+
+@BindingAdapter("isEnabled")
+fun bindRefreshClickable(
+    view: ImageView,
+    state: Boolean
+) {
+    view.isEnabled = state
+}
+
+@BindingAdapter("overViewLoading", "listViewLoading")
+fun bindRefreshVisible(
+    view: ImageView,
+    overViewState: Boolean,
+    listViewState: Boolean
+) {
+    view.visibility = if (overViewState || listViewState) {
+        View.INVISIBLE
+    } else {
+        View.VISIBLE
+    }
+}
+
+@BindingAdapter("overViewLoading", "listViewLoading")
+fun bindProgressVisible(
+    view: ProgressBar,
+    overViewState: Boolean,
+    listViewState: Boolean
+) {
+    view.visibility = if (overViewState || listViewState) {
+        View.VISIBLE
+    } else {
+        View.INVISIBLE
+    }
+}
+
+@BindingAdapter("isEnabled")
+fun bindDrawerClickable(
+    view: ImageButton,
+    state: Boolean
+) {
+    view.isEnabled = state
+}
+
 
 @BindingAdapter("buttonState")
 fun bindLeftButtonState(
@@ -65,21 +121,30 @@ fun bindCalendarRecyclerView(
     recyclerView: RecyclerView,
     data: List<CalendarItem>?
 ) {
-    val adapter = recyclerView.adapter as LogCalendarAdapter
+    val adapter = recyclerView.adapter as LogListFragment.LogCalendarAdapter
     adapter.submitList(data)
 }
 
-@BindingAdapter("item")
-fun setCalendarItem(
-    button: MaterialButton,
+@BindingAdapter("item", "selectedDay", requireAll = false)
+fun bindCalendarItem(
+    view: MaterialButton,
     item: CalendarItem,
+    selectedDay: Int
 ) {
-    button.text = item.day.toString()
-    button.backgroundTintList = ColorStateList.valueOf(getColorHelper(button.context, item.color))
-    if (item.isNextDay) {
-        button.setTextColor(getColorHelper(button.context, R.color.next_day_text))
+    view.text = item.day.toString()
+    view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
+    view.strokeWidth = 2
+    view.strokeColor = if (item.day == selectedDay) {
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.red))
     } else {
-        button.setTextColor(getColorHelper(button.context, R.color.black))
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.calendar_item_stroke_default))
+    }
+    if (item.isNextDay) {
+        view.setTextColor(getColorHelper(view.context, R.color.next_day_text))
+        view.isEnabled = false
+    } else {
+        view.setTextColor(getColorHelper(view.context, R.color.black))
+        view.isEnabled = true
     }
 }
 

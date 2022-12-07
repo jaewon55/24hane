@@ -11,7 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
@@ -20,7 +21,7 @@ import com.hane24.hoursarenotenough24.login.State
 
 class OverViewFragment : Fragment() {
     lateinit var binding: FragmentOverviewBinding
-    private val viewModel by lazy { ViewModelProvider(this)[OverViewViewModel::class.java] }
+    private val viewModel: OverViewViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -32,9 +33,12 @@ class OverViewFragment : Fragment() {
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding = DataBindingUtil.inflate<FragmentOverviewBinding?>(
+            inflater, R.layout.fragment_overview, container, false
+        ).apply {
+            lifecycleOwner = viewLifecycleOwner
+            this.viewModel = this@OverViewFragment.viewModel
+        }
     }
 
     private fun registerRefreshBroadcastReceiver() {

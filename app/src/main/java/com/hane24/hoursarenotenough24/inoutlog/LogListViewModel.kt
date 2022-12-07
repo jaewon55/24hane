@@ -20,7 +20,7 @@ class LogListViewModel : ViewModel() {
 
     private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
 
-    private val monthLogList = mutableListOf<MonthTimeLogContainer>()
+    private val monthLogContainer = mutableListOf<MonthTimeLogContainer>()
 
     private var monthLogListIndex = -1
 
@@ -40,7 +40,7 @@ class LogListViewModel : ViewModel() {
             }
         }
 
-    private val _selectedDay = MutableLiveData(1)
+    private val _selectedDay = MutableLiveData(TodayCalendarUtils.day)
     val selectedDay: LiveData<Int>
         get() = _selectedDay
 
@@ -80,6 +80,10 @@ class LogListViewModel : ViewModel() {
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _refreshLoading = MutableLiveData(false)
+    val refreshLoading: LiveData<Boolean>
+        get() = _refreshLoading
+
     private val _errorState = MutableLiveData<State?>(null)
     val errorState: LiveData<State?>
         get() = _errorState
@@ -88,9 +92,7 @@ class LogListViewModel : ViewModel() {
         viewModelScope.launch {
             _loadingState.value = true
             useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
-            setCalendarItemList()
             _selectedDay.value = TodayCalendarUtils.day
-            setTableItemList()
             _loadingState.value = false
         }
         setCalendarDateText()
@@ -113,12 +115,35 @@ class LogListViewModel : ViewModel() {
             val monthTimeLog =
                 Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, year, month)
                     .asDomainModel()
-            monthLogList.add(MonthTimeLogContainer(year, month, monthTimeLog))
+            monthLogContainer.add(MonthTimeLogContainer(year, month, monthTimeLog))
             monthLogListIndex++
+            setCalendarItemList()
+            setTableItemList()
         } catch (err: HttpException) {
             Log.i("state", "accumulationApi Error: ${err.code()}")
             Log.i("state", "accumulationApi Error: ${err.message}")
             _errorState.value = State.FAIL
+        }
+    }
+
+    private suspend fun refreshMonthLog() {
+        try {
+            val newYear = TodayCalendarUtils.year
+            val newMonth = TodayCalendarUtils.month
+            val newLogs =
+                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, newYear, newMonth)
+                    .asDomainModel()
+            val container = monthLogContainer.find { it.year == newYear && it.month == newMonth }
+            if (container == null) {
+                monthLogContainer.add(0, MonthTimeLogContainer(newYear, newMonth, newLogs))
+                monthLogListIndex++
+            } else {
+                container.monthLog = newLogs
+                if (selectedYear == newYear && selectedMonth == newMonth) {
+                    setCalendarItemList()
+                    setTableItemList()
+                }
+            }
         } catch (e: Exception) {
             //networkError 처리
             Log.i("state", "accumulationApi Error: ${e.message}")
@@ -142,12 +167,12 @@ class LogListViewModel : ViewModel() {
 
     private fun setCalendarItemList() {
         _calendarItemList.value =
-            monthLogList[monthLogListIndex].getCalendarList()
+            monthLogContainer[monthLogListIndex].getCalendarList()
     }
 
     private fun setTableItemList() {
         _tableItemList.value =
-            monthLogList[monthLogListIndex].getLogTableList(selectedDay.value ?: 1)
+            monthLogContainer[monthLogListIndex].getLogTableList(selectedDay.value ?: 1)
     }
 
     private fun setButtonState() {
@@ -158,10 +183,14 @@ class LogListViewModel : ViewModel() {
 
     private fun getNewMonthData() {
         viewModelScope.launch {
-            useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
-            setCalendarItemList()
-            setTableItemList()
-            _selectedDay.value = 1
+            try {
+                useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
+                _selectedDay.value = 1
+            } catch (e: Exception) {
+                selectedMonth++
+                setButtonState()
+                setCalendarDateText()
+            }
             _loadingState.value = false
         }
     }
@@ -173,12 +202,10 @@ class LogListViewModel : ViewModel() {
 
     fun leftButtonOnClick() {
         _loadingState.value = true
-        LogCalendarAdapter.LogCalendarViewHolder.selectDay = 1
         selectedMonth--
         setButtonState()
         setCalendarDateText()
-        _selectedDay.value = 1
-        if (monthLogList.lastIndex == monthLogListIndex) {
+        if (monthLogContainer.lastIndex == monthLogListIndex) {
             getNewMonthData()
         } else {
             monthLogListIndex++
@@ -191,7 +218,6 @@ class LogListViewModel : ViewModel() {
 
     fun rightButtonOnClick() {
         _loadingState.value = true
-        LogCalendarAdapter.LogCalendarViewHolder.selectDay = 1
         selectedMonth++
         setButtonState()
         setCalendarDateText()
@@ -201,6 +227,14 @@ class LogListViewModel : ViewModel() {
         setTableItemList()
         _selectedDay.value = 1
         _loadingState.value = false
+    }
+
+    fun refreshButtonOnClick() {
+        _refreshLoading.value = true
+        viewModelScope.launch {
+            refreshMonthLog()
+            _refreshLoading.value = false
+        }
     }
 
     private fun List<CalendarItem>.getDayAccumulationTime(day: Int): Long =

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,14 +17,18 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
+import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
+import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
+    }
     private val pager by lazy { binding.contentMain.viewpager }
-    private val overViewFragment = OverViewFragment()
-    private val logListFragment = LogListFragment()
+    private val overViewViewModel: OverViewViewModel by viewModels()
+    private val logListViewModel: LogListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +38,15 @@ class MainActivity : AppCompatActivity() {
         setStatusAndNavigationBar()
         setToolbar()
         setViewPager()
+        setRefreshButtonListener()
+        setFragmentsViewModel()
     }
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerVisible(binding.navView)) {
             binding.drawerLayout.closeDrawers()
+        } else if (pager.currentItem != 0) {
+            pager.currentItem--
         } else {
             super.onBackPressed()
         }
@@ -62,6 +72,22 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBar.toolbar)
         setDrawerLayout()
         setNavigationItemListener()
+    }
+
+    private fun setRefreshButtonListener() {
+        binding.appBar.refreshButton.setOnClickListener {
+            overViewViewModel.refreshButtonOnClick()
+            logListViewModel.refreshButtonOnClick()
+        }
+    }
+
+    private fun setFragmentsViewModel() {
+        binding.overViewViewModel = overViewViewModel
+        binding.appBar.logListViewModel = logListViewModel
+        overViewViewModel.intraId.observe(this) {
+            binding.navView.getHeaderView(0)
+                .findViewById<TextView>(R.id.nav_header_text).text = it
+        }
     }
 
     private fun setDrawerLayout() {
@@ -115,6 +141,12 @@ class MainActivity : AppCompatActivity() {
         pager.adapter = adapter
         TabLayoutMediator(binding.contentMain.pagerTabLayout, pager)
         { _, _ -> }.attach()
+        createAllFragment()
+    }
+
+    private fun createAllFragment() {
+        pager.currentItem = NUM_PAGES - 1
+        while (pager.currentItem != 0) pager.currentItem--
     }
 
     private fun deleteToken() {}
@@ -133,8 +165,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> overViewFragment
-                else -> logListFragment
+                0 -> OverViewFragment()
+                else -> LogListFragment()
             }
         }
     }

@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="overViewViewModel"
+            type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />
+
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -21,11 +25,13 @@
                 android:id="@+id/app_bar"
                 layout="@layout/activity_main_app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:overViewViewModel="@{overViewViewModel}" />
 
             <include
                 android:id="@+id/content_main"
-                layout="@layout/activity_main_content" />
+                layout="@layout/activity_main_content"
+                app:overViewViewModel="@{overViewViewModel}" />
 
         </LinearLayout>
 

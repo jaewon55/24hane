@@ -5,6 +5,12 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
+        <variable
+            name="overViewViewModel"
+            type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />
+
     </data>
 
     <FrameLayout
@@ -15,7 +21,7 @@
             android:id="@+id/loading_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="@{overViewViewModel.initState ? View.INVISIBLE : View.VISIBLE}"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -43,6 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:visibility="@{overViewViewModel.initState ? View.VISIBLE : View.INVISIBLE}"
             tools:visibility="gone">
 
             <androidx.viewpager2.widget.ViewPager2
