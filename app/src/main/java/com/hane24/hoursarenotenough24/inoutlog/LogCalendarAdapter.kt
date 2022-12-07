@@ -3,6 +3,9 @@ package com.hane24.hoursarenotenough24.inoutlog
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.ObservableInt
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,14 +17,28 @@ import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.getColorHelper
 
 class LogCalendarAdapter(private val onClickListener: OnClickListener) :
-    ListAdapter<CalendarItem, LogCalendarAdapter.LogCalendarViewHolder>(DiffCallback) {
+    ListAdapter<CalendarItem, LogCalendarAdapter.LogCalendarViewHolder>(diffUtil) {
 
     class LogCalendarViewHolder(private val binding: FragmentLogListCalendarItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CalendarItem, onClickListener: OnClickListener) {
             binding.item = item
-            checkNextDay(binding.calendarItem, item, onClickListener.clickListener)
+            checkNextDay(binding.calendarItem, item, onClickListener)
             checkSelected(binding.calendarItem, item)
+        }
+
+        private fun checkNextDay(
+            button: MaterialButton,
+            item: CalendarItem,
+            onClickListener: OnClickListener
+        ) {
+            button.isEnabled = !item.isNextDay
+            if (!button.isEnabled) return
+            button.setOnClickListener {
+                onClickListener.onClick(item.day)
+                selectDay = item.day
+                setStroke(button)
+            }
         }
 
         private fun checkSelected(button: MaterialButton, item: CalendarItem) {
@@ -33,21 +50,6 @@ class LogCalendarAdapter(private val onClickListener: OnClickListener) :
                 )
             }
         }
-
-        private fun checkNextDay(
-            button: MaterialButton,
-            item: CalendarItem,
-            onClick: (Int) -> Unit
-        ) {
-            button.isEnabled = !item.isNextDay
-            if (!button.isEnabled) return
-            button.setOnClickListener {
-                onClick(item.day)
-                selectDay = item.day
-                setStroke(button)
-            }
-        }
-
 
         private fun setStroke(newButton: MaterialButton) {
             oldButton?.let {
@@ -89,13 +91,15 @@ class LogCalendarAdapter(private val onClickListener: OnClickListener) :
         holder.bind(item, onClickListener)
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<CalendarItem>() {
-        override fun areItemsTheSame(oldItem: CalendarItem, newItem: CalendarItem): Boolean {
-            return oldItem === newItem
-        }
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<CalendarItem>() {
+            override fun areItemsTheSame(oldItem: CalendarItem, newItem: CalendarItem): Boolean {
+                return oldItem.day == newItem.day
+            }
 
-        override fun areContentsTheSame(oldItem: CalendarItem, newItem: CalendarItem): Boolean {
-            return oldItem.day == newItem.day && oldItem.color == newItem.color
+            override fun areContentsTheSame(oldItem: CalendarItem, newItem: CalendarItem): Boolean {
+                return oldItem.day == newItem.day && oldItem.color == newItem.color
+            }
         }
     }
 

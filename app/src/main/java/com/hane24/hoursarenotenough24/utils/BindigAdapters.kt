@@ -3,7 +3,10 @@ package com.hane24.hoursarenotenough24.utils
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
+import android.view.View
+import android.widget.ImageButton
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -31,13 +34,30 @@ fun ProgressBar.isStateOn(state: Boolean) {
     }
 }
 
+@BindingAdapter("buttonState")
+fun bindLeftButtonState(
+    button: ImageButton,
+    state: Boolean
+) {
+    button.isEnabled = state
+}
+
 @BindingAdapter("tableList")
 fun bindTableRecyclerView(
     recyclerView: RecyclerView,
     data: List<LogTableItem>?
 ) {
+    recyclerView.visibility = if (data?.isEmpty() != false) View.INVISIBLE else View.VISIBLE
     val adapter = recyclerView.adapter as LogTableAdapter
     adapter.submitList(data?.reversed())
+}
+
+@BindingAdapter("tableList")
+fun bindTableTextView(
+    textView: TextView,
+    data: List<LogTableItem>?
+) {
+    textView.visibility = if (data?.isEmpty() != false) View.VISIBLE else View.INVISIBLE
 }
 
 @BindingAdapter("calendarGrid")
@@ -62,3 +82,20 @@ fun setCalendarItem(
         button.setTextColor(getColorHelper(button.context, R.color.black))
     }
 }
+
+@BindingAdapter("loadingState")
+fun setCalendarVisible(
+    recyclerView: RecyclerView,
+    loadingState: Boolean
+) {
+    recyclerView.visibility = if (loadingState) View.INVISIBLE else View.VISIBLE
+}
+
+@BindingAdapter("loadingState")
+fun setProgressBarVisible(
+    progressBar: ProgressBar,
+    loadingState: Boolean
+) {
+    progressBar.visibility = if (loadingState) View.VISIBLE else View.INVISIBLE
+}
+

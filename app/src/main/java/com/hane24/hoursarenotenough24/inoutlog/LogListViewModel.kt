@@ -23,6 +23,20 @@ class LogListViewModel : ViewModel() {
 
     private var selectedYear = TodayCalendarUtils.year
     private var selectedMonth = TodayCalendarUtils.month
+        set(value) {
+            field = when {
+                value > 12 -> {
+                    selectedYear++
+                    1
+                }
+                value < 1 -> {
+                    selectedYear--
+                    12
+                }
+                else -> value
+            }
+        }
+
     private val _selectedDay = MutableLiveData(1)
     val selectedDay: LiveData<Int>
         get() = _selectedDay
@@ -59,13 +73,19 @@ class LogListViewModel : ViewModel() {
     val tableItemList: LiveData<List<LogTableItem>>
         get() = _tableItemList
 
+    private val _loadingState = MutableLiveData(true)
+    val loadingState: LiveData<Boolean>
+        get() = _loadingState
+
 
     init {
         viewModelScope.launch {
+            _loadingState.value = true
             useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
             setCalendarItemList()
             _selectedDay.value = TodayCalendarUtils.day
             setTableItemList()
+            _loadingState.value = false
         }
         setCalendarDateText()
     }
@@ -76,7 +96,7 @@ class LogListViewModel : ViewModel() {
             val monthTimeLog =
                 Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, year, month)
                     .asDomainModel()
-            monthLogList.add(MonthTimeLogContainer(monthTimeLog))
+            monthLogList.add(MonthTimeLogContainer(year, month, monthTimeLog))
             monthLogListIndex++
         } catch (e: Exception) {
             //networkError 처리
@@ -98,9 +118,8 @@ class LogListViewModel : ViewModel() {
     }
 
     private fun setCalendarItemList() {
-        val calendar = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, 1) }
         _calendarItemList.value =
-            monthLogList[monthLogListIndex].getCalendarList(calendar)
+            monthLogList[monthLogListIndex].getCalendarList()
     }
 
     private fun setTableItemList() {
@@ -108,14 +127,62 @@ class LogListViewModel : ViewModel() {
             monthLogList[monthLogListIndex].getLogTableList(selectedDay.value ?: 1)
     }
 
+    private fun setButtonState() {
+        _leftButtonState.value = selectedYear != 2022 || selectedMonth > 8
+        _rightButtonState.value =
+            selectedYear != TodayCalendarUtils.year || selectedMonth != TodayCalendarUtils.month
+    }
+
+    private fun getNewMonthData() {
+        viewModelScope.launch {
+            useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
+            setCalendarItemList()
+            setTableItemList()
+            _selectedDay.value = 1
+            _loadingState.value = false
+        }
+    }
+
     fun changeSelectedDay(day: Int) {
         _selectedDay.value = day
         setTableItemList()
     }
 
-    fun List<CalendarItem>.getDayAccumulationTime(day: Int): Long =
+    fun leftButtonOnClick() {
+        _loadingState.value = true
+        LogCalendarAdapter.LogCalendarViewHolder.selectDay = 1
+        selectedMonth--
+        setButtonState()
+        setCalendarDateText()
+        _selectedDay.value = 1
+        if (monthLogList.lastIndex == monthLogListIndex) {
+            getNewMonthData()
+        } else {
+            monthLogListIndex++
+            setCalendarItemList()
+            setTableItemList()
+            _selectedDay.value = 1
+            _loadingState.value = false
+        }
+    }
+
+    fun rightButtonOnClick() {
+        _loadingState.value = true
+        LogCalendarAdapter.LogCalendarViewHolder.selectDay = 1
+        selectedMonth++
+        setButtonState()
+        setCalendarDateText()
+        _selectedDay.value = 1
+        monthLogListIndex--
+        setCalendarItemList()
+        setTableItemList()
+        _selectedDay.value = 1
+        _loadingState.value = false
+    }
+
+    private fun List<CalendarItem>.getDayAccumulationTime(day: Int): Long =
         filter { it.day == day }.sumOf { it.durationTime }
 
-    fun List<CalendarItem>.getMonthAccumulationTime(): Long =
+    private fun List<CalendarItem>.getMonthAccumulationTime(): Long =
         sumOf { it.durationTime }
 }

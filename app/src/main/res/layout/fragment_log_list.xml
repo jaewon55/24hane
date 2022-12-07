@@ -18,6 +18,8 @@
         <ImageButton
             android:id="@+id/calender_left_button"
             style="@style/LogCalendarButton"
+            buttonState="@{viewModel.leftButtonState}"
+            android:onClick="@{() -> viewModel.leftButtonOnClick()}"
             android:src="@drawable/ic_arrow_left"
             app:layout_constraintBottom_toBottomOf="@id/calendar_date"
             app:layout_constraintEnd_toStartOf="@id/calendar_date"
@@ -35,6 +37,8 @@
         <ImageButton
             android:id="@+id/calender_right_button"
             style="@style/LogCalendarButton"
+            buttonState="@{viewModel.rightButtonState}"
+            android:onClick="@{() -> viewModel.rightButtonOnClick()}"
             android:src="@drawable/ic_arrow_right"
             app:layout_constraintBottom_toBottomOf="@id/calendar_date"
             app:layout_constraintStart_toEndOf="@id/calendar_date"
@@ -50,11 +54,25 @@
             app:calendarGrid="@{viewModel.calendarItemList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/calendar_date"
+            app:loadingState="@{viewModel.loadingState}"
             app:spanCount="7"
             tools:itemCount="31"
             tools:listitem="@layout/fragment_log_list_calendar_item" />
+
+        <ProgressBar
+            android:id="@+id/loading_progressbar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/off_progress_front"
+            app:layout_constraintBottom_toBottomOf="@id/calendar_recycler"
+            app:layout_constraintEnd_toEndOf="@id/calendar_recycler"
+            app:layout_constraintStart_toStartOf="@id/calendar_recycler"
+            app:layout_constraintTop_toTopOf="@id/calendar_recycler"
+            app:loadingState="@{viewModel.loadingState}" />
 
         <TextView
             android:id="@+id/date_text"
@@ -156,6 +174,19 @@
             app:tableList="@{viewModel.tableItemList}"
             tools:itemCount="40"
             tools:listitem="@layout/fragment_log_list_logs_item" />
+
+        <TextView
+            tableList="@{viewModel.tableItemList}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="태깅 기록이 없어요"
+            android:textAlignment="center"
+            android:paddingVertical="10dp"
+            android:textColor="@color/main_info_text_color"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="@id/logs_header"
+            app:layout_constraintStart_toStartOf="@id/logs_header"
+            app:layout_constraintTop_toBottomOf="@id/logs_header" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -34,7 +34,7 @@ class LogTableAdapter :
 
     companion object DiffCallback : DiffUtil.ItemCallback<LogTableItem>() {
         override fun areItemsTheSame(oldItem: LogTableItem, newItem: LogTableItem): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: LogTableItem, newItem: LogTableItem): Boolean {
