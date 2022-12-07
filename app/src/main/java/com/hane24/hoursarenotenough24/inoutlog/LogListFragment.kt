@@ -1,6 +1,11 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +20,9 @@ import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListCalendarItemBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
+import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.login.State
 
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
@@ -24,6 +32,8 @@ class LogListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         initBinding(inflater, container)
+        registerRefreshBroadcastReceiver()
+        observeErrorState()
         setRecyclerAdapter()
         return binding.root
     }
@@ -38,6 +48,49 @@ class LogListFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             this.viewModel = this@LogListFragment.viewModel
         }
+    }
+
+    private fun registerRefreshBroadcastReceiver() {
+        activity?.registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    "REFRESH_CLICK" -> {
+                        Log.i("refresh", "click event listen")
+                        viewModel.refreshLogic()
+                    }
+                    else -> {
+                        Log.i("refresh", "other event listen")
+                    }
+                }
+            }
+        }, IntentFilter("REFRESH_CLICK"))
+    }
+
+    private fun observeErrorState() {
+        viewModel.errorState.observe(viewLifecycleOwner) { state: State? ->
+            state?.let { handleError(it) }
+        }
+    }
+
+    private fun handleError(state: State) =
+        when (state) {
+            State.SUCCESS -> Unit
+            State.FAIL -> goToLogin(state)
+            State.ERROR -> {
+                val dialog = NetworkErrorDialog { dialog, id ->
+                    viewModel.refreshLogic()
+                }
+                requireActivity().supportFragmentManager.let {
+                    dialog.show(it, "error_dialog")
+                }
+            }
+        }
+
+    private fun goToLogin(state: State) {
+        val intent = Intent(activity, LoginActivity::class.java)
+            .putExtra("loginState", state)
+
+        startActivity(intent).also { requireActivity().finish() }
     }
 
     private fun setRecyclerAdapter() {
@@ -93,56 +146,4 @@ class LogListFragment : Fragment() {
         }
 
     }
-
-//        class OnClickListener(val clickListener: (day: Int) -> Unit) {
-//            fun onClick(day: Int) = clickListener(day)
-//        }
-
-//        private fun checkNextDay(
-//            button: MaterialButton,
-//            item: CalendarItem,
-//            onClickListener: LogCalendarAdapter.OnClickListener
-//        ) {
-//            button.isEnabled = !item.isNextDay
-//            if (!button.isEnabled) return
-//            button.setOnClickListener {
-//                onClickListener.onClick(item.day)
-//                selectDay = item.day
-//                setStroke(button)
-//            }
-//        }
-
-//        private fun checkSelected(button: MaterialButton, item: CalendarItem) {
-//            if (selectDay == item.day) return setStroke(button)
-//            button.apply {
-//                strokeWidth = 1
-//                strokeColor = ColorStateList.valueOf(
-//                    getColorHelper(context, R.color.calendar_item_stroke_default)
-//                )
-//            }
-//        }
-
-//        private fun setStroke(newButton: MaterialButton) {
-//            oldButton?.let {
-//                it.strokeWidth = 1
-//                it.strokeColor = ColorStateList.valueOf(
-//                    getColorHelper(
-//                        it.context,
-//                        R.color.calendar_item_stroke_default
-//                    )
-//                )
-//            }
-//            newButton.let {
-//                it.strokeWidth = 2
-//                it.strokeColor = ColorStateList.valueOf(getColorHelper(it.context, R.color.red))
-//            }
-//            oldButton = newButton
-//        }
-
-//        companion object {
-//            var oldButton: MaterialButton? = null
-//            var selectDay: Int = TodayCalendarUtils.day
-//        }
-
-
 }

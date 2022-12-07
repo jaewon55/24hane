@@ -59,7 +59,8 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:src="@drawable/ic_widget_refresh"
-                app:tint="#1E3C5F" />
+                app:tint="#1E3C5F"
+                android:backgroundTint="@color/white"/>
         </FrameLayout>
 
         <TextView
@@ -71,7 +72,7 @@
             android:paddingStart="8dp"
             android:text="12 : 00"
             android:textColor="#1E3C5F"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <TextView
@@ -93,14 +94,14 @@
             android:paddingStart="8dp"
             android:text="120 : 00"
             android:textColor="#1E3C5F"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <FrameLayout
             android:id="@+id/widget_progress_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@id/widget_accumulation_month_text">
 
@@ -117,10 +118,10 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="52dp"
+                android:layout_width="51dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:paddingStart="6dp"
+                android:paddingStart="5dp"
                 android:paddingTop="13dp"
                 android:src="@drawable/wave_remove"
                 app:tint="#5185C2" />

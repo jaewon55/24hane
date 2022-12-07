@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -19,6 +20,7 @@ import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
+import com.hane24.hoursarenotenough24.widget.BasicWidget
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        refreshWidget()
         setStatusAndNavigationBar()
         setToolbar()
         setViewPager()
@@ -49,6 +52,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun refreshWidget() = this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
+        this.action = "REFRESH"
+    })
+
     private fun setStatusAndNavigationBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
 
@@ -57,6 +64,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
+        binding.appBar.refreshButton.setOnClickListener {
+            Log.i("refresh", "button clicked")
+            this.sendBroadcast(Intent("REFRESH_CLICK"))
+            refreshWidget()
+        }
         setSupportActionBar(binding.appBar.toolbar)
         setDrawerLayout()
         setNavigationItemListener()
