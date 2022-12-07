@@ -11,23 +11,34 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
+import com.hane24.hoursarenotenough24.error.NetworkObserver
+import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.widget.BasicWidget
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val pager by lazy { binding.contentMain.viewpager }
     private val overViewFragment = OverViewFragment()
     private val logListFragment = LogListFragment()
+    private lateinit var networkObserver: NetworkObserver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        networkObserver = NetworkObserverImpl(applicationContext)
+
+        networkObserver.observe().onEach {
+            Log.i("network", "$it")
+        }.launchIn(lifecycleScope)
         refreshWidget()
         setStatusAndNavigationBar()
         setToolbar()

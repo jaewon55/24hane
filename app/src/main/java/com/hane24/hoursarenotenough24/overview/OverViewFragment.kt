@@ -17,6 +17,7 @@ import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import kotlinx.coroutines.flow.callbackFlow
 
 class OverViewFragment : Fragment() {
     lateinit var binding: FragmentOverviewBinding
@@ -28,6 +29,7 @@ class OverViewFragment : Fragment() {
         initBinding(inflater, container)
         registerRefreshBroadcastReceiver()
         observeErrorState()
+
         return binding.root
     }
 
@@ -72,7 +74,6 @@ class OverViewFragment : Fragment() {
                 }
             }
         }
-
 
     private fun goToLogin(state: State) {
         val intent = Intent(activity, LoginActivity::class.java)
