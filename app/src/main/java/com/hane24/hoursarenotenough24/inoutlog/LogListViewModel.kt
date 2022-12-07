@@ -1,15 +1,18 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.*
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -77,6 +80,9 @@ class LogListViewModel : ViewModel() {
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _errorState = MutableLiveData<State?>(null)
+    val errorState: LiveData<State?>
+        get() = _errorState
 
     init {
         viewModelScope.launch {
@@ -90,6 +96,17 @@ class LogListViewModel : ViewModel() {
         setCalendarDateText()
     }
 
+    fun refreshLogic() {
+        viewModelScope.launch {
+            _loadingState.value = true
+            useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
+            setCalendarItemList()
+            _selectedDay.value = TodayCalendarUtils.day
+            setTableItemList()
+            _loadingState.value = false
+        }
+        setCalendarDateText()
+    }
 
     private suspend fun useGetInOutInfoPerMonthApi(year: Int, month: Int) {
         try {
@@ -98,8 +115,14 @@ class LogListViewModel : ViewModel() {
                     .asDomainModel()
             monthLogList.add(MonthTimeLogContainer(year, month, monthTimeLog))
             monthLogListIndex++
+        } catch (err: HttpException) {
+            Log.i("state", "accumulationApi Error: ${err.code()}")
+            Log.i("state", "accumulationApi Error: ${err.message}")
+            _errorState.value = State.FAIL
         } catch (e: Exception) {
             //networkError 처리
+            Log.i("state", "accumulationApi Error: ${e.message}")
+            _errorState.value = State.ERROR
         }
     }
 

@@ -26,7 +26,18 @@ class OverViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         initBinding(inflater, container)
+        registerRefreshBroadcastReceiver()
+        observeErrorState()
+        return binding.root
+    }
 
+    private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun registerRefreshBroadcastReceiver() {
         activity?.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
@@ -40,11 +51,12 @@ class OverViewFragment : Fragment() {
                 }
             }
         }, IntentFilter("REFRESH_CLICK"))
+    }
 
+    private fun observeErrorState() {
         viewModel.state.observe(viewLifecycleOwner) { state: State? ->
             state?.let { handleError(it) }
         }
-        return binding.root
     }
 
     private fun handleError(state: State) =
@@ -67,11 +79,5 @@ class OverViewFragment : Fragment() {
             .putExtra("loginState", state)
 
         startActivity(intent).also { requireActivity().finish() }
-    }
-
-    private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
     }
 }
