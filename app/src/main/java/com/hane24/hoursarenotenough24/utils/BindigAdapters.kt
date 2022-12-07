@@ -14,7 +14,7 @@ import com.google.android.material.button.MaterialButton
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.data.LogTableItem
-import com.hane24.hoursarenotenough24.inoutlog.LogCalendarAdapter
+import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogTableAdapter
 
 fun getColorHelper(context: Context, id: Int) =
@@ -121,21 +121,30 @@ fun bindCalendarRecyclerView(
     recyclerView: RecyclerView,
     data: List<CalendarItem>?
 ) {
-    val adapter = recyclerView.adapter as LogCalendarAdapter
+    val adapter = recyclerView.adapter as LogListFragment.LogCalendarAdapter
     adapter.submitList(data)
 }
 
-@BindingAdapter("item")
-fun setCalendarItem(
-    button: MaterialButton,
+@BindingAdapter("item", "selectedDay", requireAll = false)
+fun bindCalendarItem(
+    view: MaterialButton,
     item: CalendarItem,
+    selectedDay: Int
 ) {
-    button.text = item.day.toString()
-    button.backgroundTintList = ColorStateList.valueOf(getColorHelper(button.context, item.color))
-    if (item.isNextDay) {
-        button.setTextColor(getColorHelper(button.context, R.color.next_day_text))
+    view.text = item.day.toString()
+    view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
+    view.strokeWidth = 2
+    view.strokeColor = if (item.day == selectedDay) {
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.red))
     } else {
-        button.setTextColor(getColorHelper(button.context, R.color.black))
+        ColorStateList.valueOf(getColorHelper(view.context, R.color.calendar_item_stroke_default))
+    }
+    if (item.isNextDay) {
+        view.setTextColor(getColorHelper(view.context, R.color.next_day_text))
+        view.isEnabled = false
+    } else {
+        view.setTextColor(getColorHelper(view.context, R.color.black))
+        view.isEnabled = true
     }
 }
 

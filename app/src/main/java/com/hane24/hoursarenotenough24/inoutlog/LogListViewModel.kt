@@ -121,7 +121,10 @@ class LogListViewModel : ViewModel() {
                 monthLogListIndex++
             } else {
                 container.monthLog = newLogs
-                if (selectedYear == newYear && selectedMonth == newMonth) setCalendarItemList()
+                if (selectedYear == newYear && selectedMonth == newMonth) {
+                    setCalendarItemList()
+                    setTableItemList()
+                }
             }
         } catch (e: Exception) {
             //networkError 처리
@@ -179,7 +182,6 @@ class LogListViewModel : ViewModel() {
 
     fun leftButtonOnClick() {
         _loadingState.value = true
-        LogCalendarAdapter.LogCalendarViewHolder.selectDay = 1
         selectedMonth--
         setButtonState()
         setCalendarDateText()
@@ -196,7 +198,6 @@ class LogListViewModel : ViewModel() {
 
     fun rightButtonOnClick() {
         _loadingState.value = true
-        LogCalendarAdapter.LogCalendarViewHolder.selectDay = 1
         selectedMonth++
         setButtonState()
         setCalendarDateText()
