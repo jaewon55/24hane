@@ -16,6 +16,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".error.ErrorActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".widget.BasicWidget"
             android:exported="false">

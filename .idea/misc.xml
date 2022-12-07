@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.1265" />
         <entry key="app/src/main/res/drawable/ic_widget_refresh.xml" value="0.1265" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.140625" />
+        <entry key="app/src/main/res/layout/activity_error.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.24947916666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main_app_bar.xml" value="0.24947916666666667" />

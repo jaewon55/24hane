@@ -6,6 +6,7 @@ import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class OverViewViewModel : ViewModel() {
 
@@ -60,6 +61,15 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
+    fun refreshLogic() {
+        _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
+        _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
+        viewModelScope.launch {
+            useGetMainInfoApi()
+            useGetAccumulationInfoApi()
+        }
+    }
+
     private suspend fun useGetAccumulationInfoApi() {
         try {
             val accumulationTime = Hane42Apis.hane42ApiService.getAccumulationTime(accessToken)
@@ -70,9 +80,13 @@ class OverViewViewModel : ViewModel() {
             _monthProgressPercent.value =
                 getProgressPercent(accumulationTime.monthAccumulationTime, _monthTargetTime.value)
             _state.value = State.SUCCESS
+        } catch (err: HttpException) {
+            Log.i("state", "accumulationApi Error: ${err.code()}")
+            Log.i("state", "accumulationApi Error: ${err.message}")
+            _state.value = State.FAIL
         } catch (e: Exception) {
             //networkError 처리
-            Log.i("state", "message: ${e.message}")
+            Log.i("state", "accumulationApi Error: ${e.message}")
             _state.value = State.ERROR
         }
     }
@@ -83,9 +97,13 @@ class OverViewViewModel : ViewModel() {
             _intraId.value = mainInfo.login
             _inOutState.value = mainInfo.inoutState == "IN"
             _state.value = State.SUCCESS
+        } catch (err: HttpException) {
+            Log.i("state", "mainInfoApi Error: ${err.code()}")
+            Log.i("state", "mainInfoApi Error: ${err.message}")
+            _state.value = State.FAIL
         } catch (e: Exception) {
             //networkError 처리
-            Log.i("state", "message: ${e.message}")
+            Log.i("state", "mainInfoApi Error: ${e.message}")
             _state.value = State.ERROR
         }
     }

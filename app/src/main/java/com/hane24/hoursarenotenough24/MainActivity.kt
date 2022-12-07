@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
+        binding.appBar.refreshButton.setOnClickListener {
+            Log.i("refresh", "button clicked")
+            this.sendBroadcast(Intent("REFRESH_CLICK"))
+        }
         setSupportActionBar(binding.appBar.toolbar)
         setDrawerLayout()
         setNavigationItemListener()

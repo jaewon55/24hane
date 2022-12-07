@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.login
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 
 enum class State {
     ERROR,
@@ -53,14 +55,13 @@ class SplashActivity : AppCompatActivity() {
 
             State.ERROR -> {
                 Log.i("login", "error condition")
-
-                NetworkErrorDialog.showNetworkErrorDialog(this)
+                showErrorDialog()
             }
         }
     }
 
     private fun goToMain() {
-        intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
 
         startActivity(intent).also { finish() }
     }
@@ -70,6 +71,16 @@ class SplashActivity : AppCompatActivity() {
             .putExtra("loginState", state)
 
         startActivity(intent).also { finish() }
+    }
+
+    private fun showErrorDialog() {
+        val onClick = DialogInterface.OnClickListener { dialog, id ->
+            checkLogin()
+        }
+        val newDialog = NetworkErrorDialog(onClick)
+        supportFragmentManager.let {
+            newDialog.show(it, "network_error_dialog")
+        }
     }
 
     private fun setStatusAndNavigationBar() {
