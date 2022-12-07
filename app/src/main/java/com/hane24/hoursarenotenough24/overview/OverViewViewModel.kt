@@ -1,11 +1,18 @@
 package com.hane24.hoursarenotenough24.overview
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class OverViewViewModel : ViewModel() {
+
+    private val _state = MutableLiveData<State?>(null)
+    val state: LiveData<State?>
+        get() = _state
 
     private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
 
@@ -54,6 +61,15 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
+    fun refreshLogic() {
+        _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
+        _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
+        viewModelScope.launch {
+            useGetMainInfoApi()
+            useGetAccumulationInfoApi()
+        }
+    }
+
     private suspend fun useGetAccumulationInfoApi() {
         try {
             val accumulationTime = Hane42Apis.hane42ApiService.getAccumulationTime(accessToken)
@@ -63,8 +79,15 @@ class OverViewViewModel : ViewModel() {
                 getProgressPercent(accumulationTime.todayAccumulationTime, _dayTargetTime.value)
             _monthProgressPercent.value =
                 getProgressPercent(accumulationTime.monthAccumulationTime, _monthTargetTime.value)
+            _state.value = State.SUCCESS
+        } catch (err: HttpException) {
+            Log.i("state", "accumulationApi Error: ${err.code()}")
+            Log.i("state", "accumulationApi Error: ${err.message}")
+            _state.value = State.FAIL
         } catch (e: Exception) {
             //networkError 처리
+            Log.i("state", "accumulationApi Error: ${e.message}")
+            _state.value = State.ERROR
         }
     }
 
@@ -73,8 +96,15 @@ class OverViewViewModel : ViewModel() {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
             _intraId.value = mainInfo.login
             _inOutState.value = mainInfo.inoutState == "IN"
+            _state.value = State.SUCCESS
+        } catch (err: HttpException) {
+            Log.i("state", "mainInfoApi Error: ${err.code()}")
+            Log.i("state", "mainInfoApi Error: ${err.message}")
+            _state.value = State.FAIL
         } catch (e: Exception) {
             //networkError 처리
+            Log.i("state", "mainInfoApi Error: ${e.message}")
+            _state.value = State.ERROR
         }
     }
 

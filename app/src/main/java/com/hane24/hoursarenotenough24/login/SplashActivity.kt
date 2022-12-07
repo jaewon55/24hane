@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.login
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +9,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 
-enum class LoginState {
+enum class State {
     ERROR,
     SUCCESS,
     FAIL,
@@ -26,9 +28,9 @@ class SplashActivity : AppCompatActivity() {
 
         setStatusAndNavigationBar()
         checkLogin()
-        Log.i("login", "state ${viewModel.loginState.value}")
-        viewModel.loginState.observe(this) { loginState ->
-            Log.i("login", "state2 ${viewModel.loginState.value}")
+        Log.i("login", "state ${viewModel.state.value}")
+        viewModel.state.observe(this) { loginState ->
+            Log.i("login", "state2 ${viewModel.state.value}")
             loginState?.let { checkLoginState(it) }
         }
     }
@@ -37,39 +39,48 @@ class SplashActivity : AppCompatActivity() {
         viewModel.checkLogin()
     }
 
-    private fun checkLoginState(loginState: LoginState) {
-        when (loginState) {
-            LoginState.SUCCESS -> {
+    private fun checkLoginState(state: State) {
+        when (state) {
+            State.SUCCESS -> {
                 Log.i("login", "success condition")
 
                 goToMain()
             }
 
-            LoginState.FAIL -> {
+            State.FAIL -> {
                 Log.i("login", "fail condition")
 
-                goToLogin(loginState)
+                goToLogin(state)
             }
 
-            LoginState.ERROR -> {
+            State.ERROR -> {
                 Log.i("login", "error condition")
-
-                NetworkErrorDialog.showNetworkErrorDialog(this)
+                showErrorDialog()
             }
         }
     }
 
     private fun goToMain() {
-        intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
 
         startActivity(intent).also { finish() }
     }
 
-    private fun goToLogin(loginState: LoginState) {
+    private fun goToLogin(state: State) {
         val intent = Intent(this, LoginActivity::class.java)
-            .putExtra("loginState", loginState)
+            .putExtra("loginState", state)
 
         startActivity(intent).also { finish() }
+    }
+
+    private fun showErrorDialog() {
+        val onClick = DialogInterface.OnClickListener { dialog, id ->
+            checkLogin()
+        }
+        val newDialog = NetworkErrorDialog(onClick)
+        supportFragmentManager.let {
+            newDialog.show(it, "network_error_dialog")
+        }
     }
 
     private fun setStatusAndNavigationBar() {
