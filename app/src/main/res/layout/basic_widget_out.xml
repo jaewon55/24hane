@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.24hane.AppWidget.Container"
+    android:id="@+id/widget_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.24hane.AppWidgetContainer"
+    android:backgroundTint="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/widget_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/widget_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/off_text_color"
+            android:text="@string/widget_error"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/widget_success_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/widget_today_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Today"
+            android:textColor="@color/off_text_color"
+            android:textSize="10dp" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@id/widget_today_text">
+
+            <ProgressBar
+                android:id="@+id/widget_refresh_progress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:indeterminate="true"
+                android:progressDrawable="@drawable/custom_circle_progress"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/widget_refresh_button"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/ic_widget_refresh"
+                app:tint="@color/off_icon_color"
+                android:backgroundTint="@color/white"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/widget_accumulation_today_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/widget_today_text"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingStart="8dp"
+            android:text="12 : 00"
+            android:textColor="@color/off_text_color"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/widget_accumulation_today_text"
+            android:fontFamily="@font/roboto_medium"
+            android:text="This Month"
+            android:textColor="@color/off_text_color"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/widget_accumulation_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/widget_month_text"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingStart="8dp"
+            android:text="120 : 00"
+            android:textColor="@color/off_text_color"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/widget_progress_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/widget_accumulation_month_text">
+
+            <TextView
+                android:id="@+id/widget_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="75%"
+                android:textColor="@color/off_text_color"
+                android:textSize="13dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="51dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingStart="5dp"
+                android:paddingTop="13dp"
+                android:src="@drawable/wave_remove"
+                app:tint="@color/off_progress_front" />
+
+            <ProgressBar
+                android:id="@+id/widget_progressbar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="75"
+                android:progressBackgroundTint="@color/off_progress_front"
+                android:progressDrawable="@drawable/custom_circle_progress"
+                android:progressTint="@color/off_progress_front" />
+        </FrameLayout>
+    </RelativeLayout>
+</FrameLayout>

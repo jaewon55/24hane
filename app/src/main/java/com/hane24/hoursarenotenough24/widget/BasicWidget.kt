@@ -37,7 +37,7 @@ class BasicWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
 
         context?.let {
-            val views = RemoteViews(context.packageName, R.layout.basic_widget)
+            val views = createRemoteViews(context)
             val widgetManager = AppWidgetManager.getInstance(context)
             val componentName = ComponentName(context, BasicWidget::class.java)
 
@@ -68,6 +68,10 @@ class BasicWidget : AppWidgetProvider() {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
+
+private fun createRemoteViews(context: Context)
+    = if (inOutStateData == null || inOutStateData == "OUT") RemoteViews(context.packageName, R.layout.basic_widget_out)
+    else RemoteViews(context.packageName, R.layout.basic_widget)
 
 private suspend fun getData() {
     accumulationData = getAccumulationInfo()
@@ -132,7 +136,7 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val views = RemoteViews(context.packageName, R.layout.basic_widget)
+    val views = createRemoteViews(context)
 
     CoroutineScope(Dispatchers.Default).launch {
         getData()
