@@ -18,8 +18,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
+import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 
 class MainActivity : AppCompatActivity() {
@@ -129,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.navFooterView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_item_logout -> deleteToken()
+                R.id.nav_item_logout -> logOutOnClick()
                 R.id.nav_item_license -> licenseFunc()
             }
             true
@@ -149,7 +152,13 @@ class MainActivity : AppCompatActivity() {
         while (pager.currentItem != 0) pager.currentItem--
     }
 
-    private fun deleteToken() {}
+    private fun logOutOnClick() {
+        SharedPreferenceUtils.saveAccessToken("")
+
+        val intent = Intent(this, LoginActivity::class.java)
+            .putExtra("loginState", State.FAIL)
+        startActivity(intent).also { finish() }
+    }
 
     private fun licenseFunc() {}
 
