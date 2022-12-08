@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-//        App().observeNetworkState(lifecycleScope)
         refreshWidget()
         setStatusAndNavigationBar()
         setToolbar()

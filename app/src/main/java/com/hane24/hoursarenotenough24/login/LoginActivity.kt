@@ -85,7 +85,13 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent).also {
                 val accessToken = parseAccessToken()
                 SharedPreferenceUtils.saveAccessToken(accessToken)
-                cookieManager.flush()
+                cookieManager.removeAllCookies {
+                    if (it) {
+                        Log.i("login", "cookie deleted")
+                    } else {
+                        Log.i("login", "cookie not deleted")
+                    }
+                }
                 this@LoginActivity.finish()
             }
         }
