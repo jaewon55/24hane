@@ -8,10 +8,8 @@ import com.hane24.hoursarenotenough24.App
 object SharedPreferenceUtils {
     private val accessTokenSharedPreferences
             by lazy { init(App.instance.applicationContext, "accessToken") }
-    private val dayTargetTimeSharedPreferences
-            by lazy { init(App.instance.applicationContext, "dayTargetTime") }
-    private val monthTargetTimeSharedPreferences
-            by lazy { init(App.instance.applicationContext, "monthTargetTime") }
+    private val targetTimeSharedPreferences
+            by lazy { init(App.instance.applicationContext, "targetTime") }
 
     private fun init(context: Context, key: String): SharedPreferences =
         context.getSharedPreferences(key, Context.MODE_PRIVATE)
@@ -24,18 +22,18 @@ object SharedPreferenceUtils {
         editor.apply()
     }
 
-    fun getDayTargetTime() = dayTargetTimeSharedPreferences.getLong("dayTargetTime", 10 * 3600)
+    fun getDayTargetTime() = targetTimeSharedPreferences.getLong("dayTargetTime", 5 * 3600)
 
     fun saveDayTargetTime(time: Long) {
-        val editor = dayTargetTimeSharedPreferences.edit()
+        val editor = targetTimeSharedPreferences.edit()
         editor.putLong("dayTargetTime", time)
         editor.apply()
     }
 
-    fun getMonthTargetTime() = dayTargetTimeSharedPreferences.getLong("monthTargetTime", 80 * 3600)
+    fun getMonthTargetTime() = targetTimeSharedPreferences.getLong("monthTargetTime", 80 * 3600)
 
     fun saveMonthTargetTime(time: Long) {
-        val editor = dayTargetTimeSharedPreferences.edit()
+        val editor = targetTimeSharedPreferences.edit()
         editor.putLong("monthTargetTime", time)
         editor.apply()
     }

@@ -190,8 +190,10 @@ class LogListViewModel : ViewModel() {
                 selectedMonth++
                 setButtonState()
                 setCalendarDateText()
+            } finally {
+                setButtonState()
+                _loadingState.value = false
             }
-            _loadingState.value = false
         }
     }
 
@@ -201,9 +203,10 @@ class LogListViewModel : ViewModel() {
     }
 
     fun leftButtonOnClick() {
+        _leftButtonState.value = false
+        _rightButtonState.value = false
         _loadingState.value = true
         selectedMonth--
-        setButtonState()
         setCalendarDateText()
         if (monthLogContainer.lastIndex == monthLogListIndex) {
             getNewMonthData()
@@ -212,20 +215,23 @@ class LogListViewModel : ViewModel() {
             setCalendarItemList()
             setTableItemList()
             _selectedDay.value = 1
+            setButtonState()
             _loadingState.value = false
         }
     }
 
     fun rightButtonOnClick() {
+        _leftButtonState.value = false
+        _rightButtonState.value = false
         _loadingState.value = true
         selectedMonth++
-        setButtonState()
         setCalendarDateText()
         _selectedDay.value = 1
         monthLogListIndex--
         setCalendarItemList()
         setTableItemList()
         _selectedDay.value = 1
+        setButtonState()
         _loadingState.value = false
     }
 
