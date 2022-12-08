@@ -54,7 +54,6 @@ class SplashActivity : AppCompatActivity() {
         when (networkState) {
             NetworkObserver.Status.Lost -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
             NetworkObserver.Status.Unavailable -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
-            null -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
             else -> return
         }
     }
