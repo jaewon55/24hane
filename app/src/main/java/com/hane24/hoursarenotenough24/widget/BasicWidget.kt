@@ -48,12 +48,9 @@ class BasicWidget : AppWidgetProvider() {
                     for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
                         widgetManager.updateAppWidget(appWidgetId, views)
                     }
-                    CoroutineScope(Dispatchers.Default).launch {
-                        for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
-                            updateAppWidget(context, widgetManager, appWidgetId)
-                        }
+                    for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
+                        updateAppWidget(context, widgetManager, appWidgetId)
                     }
-
                 }
                 else -> Log.i("widget", "${intent?.action} BroadCast Recv")
             }
@@ -128,7 +125,7 @@ private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
         for (widgetId in widgetManager.getAppWidgetIds(componentName)) {
             widgetManager.updateAppWidget(widgetId, views)
         }
-    }.join()
+    }
 }
 
 internal fun updateAppWidget(

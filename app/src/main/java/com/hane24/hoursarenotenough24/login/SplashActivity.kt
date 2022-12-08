@@ -44,6 +44,7 @@ class SplashActivity : AppCompatActivity() {
     private fun checkNetworkState(networkState: Boolean) {
         Log.i("login", "network: $networkState")
         val onClick = DialogInterface.OnClickListener { dialog, id ->
+            checkNetworkState(NetworkObserverImpl().isConnected())
             checkLogin()
         }
 
