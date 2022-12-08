@@ -44,4 +44,6 @@
     <color name="next_day_text">#D4D4D4</color>
     <color name="calendar_item_stroke_default">#E1E1E1</color>
 
+    <color name="dialog_color">#47B5FF</color>
+
 </resources>

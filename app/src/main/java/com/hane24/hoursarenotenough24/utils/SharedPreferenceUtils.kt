@@ -24,7 +24,7 @@ object SharedPreferenceUtils {
         editor.apply()
     }
 
-    fun getDayTargetTime() = dayTargetTimeSharedPreferences.getLong("dayTargetTime", 10 * 3600)
+    fun getDayTargetTime() = dayTargetTimeSharedPreferences.getLong("dayTargetTime", 5 * 3600)
 
     fun saveDayTargetTime(time: Long) {
         val editor = dayTargetTimeSharedPreferences.edit()

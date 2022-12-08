@@ -8,6 +8,10 @@
             name="viewModel"
             type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />
 
+        <variable
+            name="fragment"
+            type="com.hane24.hoursarenotenough24.overview.OverViewFragment" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,13 +41,15 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="50dp"
             app:acTime="@{viewModel.dayAccumulationTime}"
+            app:fragment="@{fragment}"
             app:inOutState="@{viewModel.inOutState}"
+            app:isMonth="@{false}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/overview_title"
             app:layout_constraintWidth_max="400dp"
-            app:progressPercent="@{viewModel.dayProgressPercent}"
             app:percentText="@{viewModel.dayProgressPercentText}"
+            app:progressPercent="@{viewModel.dayProgressPercent}"
             app:targetTime="@{viewModel.dayTargetTime}" />
 
         <TextView
@@ -63,13 +69,15 @@
             android:layout_marginTop="60dp"
             android:maxWidth="400dp"
             app:acTime="@{viewModel.monthAccumulationTime}"
+            app:fragment="@{fragment}"
             app:inOutState="@{viewModel.inOutState}"
+            app:isMonth="@{true}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/day_card_view"
             app:layout_constraintWidth_max="400dp"
-            app:progressPercent="@{viewModel.monthProgressPercent}"
             app:percentText="@{viewModel.monthProgressPercentText}"
+            app:progressPercent="@{viewModel.monthProgressPercent}"
             app:targetTime="@{viewModel.monthTargetTime}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
