@@ -70,8 +70,8 @@ class BasicWidget : AppWidgetProvider() {
 }
 
 private fun createRemoteViews(context: Context)
-    = if (inOutStateData == null || inOutStateData == "OUT") RemoteViews(context.packageName, R.layout.basic_widget_out)
-    else RemoteViews(context.packageName, R.layout.basic_widget)
+    = if (inOutStateData == null || inOutStateData == "IN") RemoteViews(context.packageName, R.layout.basic_widget)
+    else RemoteViews(context.packageName, R.layout.basic_widget_out)
 
 private suspend fun getData() {
     accumulationData = getAccumulationInfo()

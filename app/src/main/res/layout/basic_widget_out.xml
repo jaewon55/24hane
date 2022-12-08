@@ -123,8 +123,7 @@
                 android:layout_gravity="bottom"
                 android:paddingStart="5dp"
                 android:paddingTop="13dp"
-                android:src="@drawable/wave_remove"
-                app:tint="@color/off_progress_front" />
+                android:src="@drawable/wave_remove_gray" />
 
             <ProgressBar
                 android:id="@+id/widget_progressbar"
