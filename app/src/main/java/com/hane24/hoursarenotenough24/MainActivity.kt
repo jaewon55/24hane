@@ -174,7 +174,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun deleteToken() {
         SharedPreferenceUtils.saveAccessToken("")
-        startActivity(Intent(this, LoginActivity::class.java).putExtra("loginState", State.LOGIN_FAIL)).also { finish() }
+        startActivity(Intent(this, LoginActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            .putExtra("loginState", State.LOGIN_FAIL)).also { finish() }
     }
 
     private fun licenseFunc() {}
