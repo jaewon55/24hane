@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.*
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.hane42Api
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.launch
@@ -98,18 +99,6 @@ class LogListViewModel : ViewModel() {
         setCalendarDateText()
     }
 
-    fun refreshLogic() {
-        viewModelScope.launch {
-            _loadingState.value = true
-            useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
-            setCalendarItemList()
-            _selectedDay.value = TodayCalendarUtils.day
-            setTableItemList()
-            _loadingState.value = false
-        }
-        setCalendarDateText()
-    }
-
     private suspend fun useGetInOutInfoPerMonthApi(year: Int, month: Int) {
         try {
             val monthTimeLog =
@@ -122,7 +111,17 @@ class LogListViewModel : ViewModel() {
         } catch (err: HttpException) {
             Log.i("state", "accumulationApi Error: ${err.code()}")
             Log.i("state", "accumulationApi Error: ${err.message}")
-            _errorState.value = State.FAIL
+            val isLoginFail = err.code() == 401
+            val isServerError = err.code() == 500
+
+            when {
+                isLoginFail -> _errorState.value = State.LOGIN_FAIL
+                isServerError -> _errorState.value = State.SERVER_FAIL
+                else -> _errorState.value = State.UNKNOWN_ERROR
+            }
+        } catch (err: Exception) {
+            Log.i("state", "accumulationApi Error: ${err.message}")
+            _errorState.value = State.UNKNOWN_ERROR
         }
     }
 
@@ -144,10 +143,20 @@ class LogListViewModel : ViewModel() {
                     setTableItemList()
                 }
             }
-        } catch (e: Exception) {
-            //networkError 처리
-            Log.i("state", "accumulationApi Error: ${e.message}")
-            _errorState.value = State.ERROR
+        } catch (err: HttpException) {
+            Log.i("state", "accumulationApi Error: ${err.code()}")
+            Log.i("state", "accumulationApi Error: ${err.message}")
+            val isLoginFail = err.code() == 401
+            val isServerError = err.code() == 500
+
+            when {
+                isLoginFail -> _errorState.value = State.LOGIN_FAIL
+                isServerError -> _errorState.value = State.SERVER_FAIL
+                else -> _errorState.value = State.UNKNOWN_ERROR
+            }
+        } catch (err: Exception) {
+            Log.i("state", "accumulationApi Error: ${err.message}")
+            _errorState.value = State.UNKNOWN_ERROR
         }
     }
 
@@ -184,12 +193,18 @@ class LogListViewModel : ViewModel() {
     private fun getNewMonthData() {
         viewModelScope.launch {
             try {
-                useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
+                monthLogListIndex++
+                val monthTimeLog =
+                    Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, selectedYear, selectedMonth)
+                        .asDomainModel()
+                monthLogContainer.add(MonthTimeLogContainer(selectedYear, selectedMonth, monthTimeLog))
+                setCalendarItemList()
+                setTableItemList()
                 _selectedDay.value = 1
             } catch (e: Exception) {
                 selectedMonth++
-                setButtonState()
                 setCalendarDateText()
+                _errorState.value = State.UNKNOWN_ERROR
             } finally {
                 setButtonState()
                 _loadingState.value = false

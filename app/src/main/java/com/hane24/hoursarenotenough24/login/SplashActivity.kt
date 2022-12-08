@@ -7,14 +7,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
+import com.hane24.hoursarenotenough24.error.NetworkObserver
+import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 
 enum class State {
-    ERROR,
+    UNKNOWN_ERROR,
     SUCCESS,
-    FAIL,
+    LOGIN_FAIL,
+    SERVER_FAIL,
 }
 
 class SplashActivity : AppCompatActivity() {
@@ -27,16 +32,34 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setStatusAndNavigationBar()
+        checkNetworkState(NetworkObserverImpl().isConnected())
         checkLogin()
-        Log.i("login", "state ${viewModel.state.value}")
-        viewModel.state.observe(this) { loginState ->
-            Log.i("login", "state2 ${viewModel.state.value}")
-            loginState?.let { checkLoginState(it) }
-        }
+        observeLoginState()
     }
 
     fun checkLogin() {
         viewModel.checkLogin()
+    }
+
+    private fun checkNetworkState(networkState: Boolean) {
+        Log.i("login", "network: $networkState")
+        val onClick = DialogInterface.OnClickListener { dialog, id ->
+            checkNetworkState(NetworkObserverImpl().isConnected())
+            checkLogin()
+        }
+
+        Log.i("login", "$networkState")
+
+        when (networkState) {
+            false -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
+            true -> return
+        }
+    }
+
+    private fun observeLoginState() {
+        viewModel.state.observe(this) { loginState ->
+            loginState?.let { checkLoginState(it) }
+        }
     }
 
     private fun checkLoginState(state: State) {
@@ -47,16 +70,13 @@ class SplashActivity : AppCompatActivity() {
                 goToMain()
             }
 
-            State.FAIL -> {
+            State.LOGIN_FAIL -> {
                 Log.i("login", "fail condition")
 
                 goToLogin(state)
             }
 
-            State.ERROR -> {
-                Log.i("login", "error condition")
-                showErrorDialog()
-            }
+            else -> return
         }
     }
 
@@ -71,16 +91,6 @@ class SplashActivity : AppCompatActivity() {
             .putExtra("loginState", state)
 
         startActivity(intent).also { finish() }
-    }
-
-    private fun showErrorDialog() {
-        val onClick = DialogInterface.OnClickListener { dialog, id ->
-            checkLogin()
-        }
-        val newDialog = NetworkErrorDialog(onClick)
-        supportFragmentManager.let {
-            newDialog.show(it, "network_error_dialog")
-        }
     }
 
     private fun setStatusAndNavigationBar() {

@@ -38,7 +38,7 @@ internal suspend fun getInOutState(): String? {
 }
 
 fun getProgressPercent(accumulationTime: Long): Int {
-    val targetDouble = 160.0 * 3600
+    val targetDouble = 80.0 * 3600
 
     val percent = (accumulationTime / targetDouble * 100).toInt()
     Log.i("data", "percent: $percent")

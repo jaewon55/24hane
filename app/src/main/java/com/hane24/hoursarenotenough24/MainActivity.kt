@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -13,9 +14,13 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
+import com.hane24.hoursarenotenough24.error.NetworkObserver
+import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.login.LoginActivity
@@ -24,12 +29,16 @@ import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.widget.BasicWidget
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
     }
     private val pager by lazy { binding.contentMain.viewpager }
+    private val overViewFragment = OverViewFragment()
+    private val logListFragment = LogListFragment()
     private val overViewViewModel: OverViewViewModel by viewModels()
     private val logListViewModel: LogListViewModel by viewModels()
 
@@ -67,11 +76,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-        binding.appBar.refreshButton.setOnClickListener {
-            Log.i("refresh", "button clicked")
-            this.sendBroadcast(Intent("REFRESH_CLICK"))
-            refreshWidget()
-        }
         setSupportActionBar(binding.appBar.toolbar)
         setDrawerLayout()
         setNavigationItemListener()
@@ -79,8 +83,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun setRefreshButtonListener() {
         binding.appBar.refreshButton.setOnClickListener {
-            overViewViewModel.refreshButtonOnClick()
-            logListViewModel.refreshButtonOnClick()
+            handleNetworkState(NetworkObserverImpl().isConnected())
+        }
+    }
+
+    private fun handleNetworkState(networkStatus: Boolean) {
+        val onClickDialog = DialogInterface.OnClickListener { dialog, id ->
+            binding.appBar.refreshButton.callOnClick()
+        }
+        when (networkStatus) {
+            false -> {
+                NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClickDialog)
+            }
+
+            true -> {
+                overViewViewModel.refreshButtonOnClick()
+                logListViewModel.refreshButtonOnClick()
+                refreshWidget()
+            }
         }
     }
 
@@ -152,11 +172,13 @@ class MainActivity : AppCompatActivity() {
         while (pager.currentItem != 0) pager.currentItem--
     }
 
+
     private fun logOutOnClick() {
         SharedPreferenceUtils.saveAccessToken("")
 
         val intent = Intent(this, LoginActivity::class.java)
-            .putExtra("loginState", State.FAIL)
+            .putExtra("loginState", State.LOGIN_FAIL)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent).also { finish() }
     }
 

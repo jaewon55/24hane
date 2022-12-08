@@ -37,7 +37,7 @@ class BasicWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
 
         context?.let {
-            val views = RemoteViews(context.packageName, R.layout.basic_widget)
+            val views = createRemoteViews(context)
             val widgetManager = AppWidgetManager.getInstance(context)
             val componentName = ComponentName(context, BasicWidget::class.java)
 
@@ -48,12 +48,9 @@ class BasicWidget : AppWidgetProvider() {
                     for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
                         widgetManager.updateAppWidget(appWidgetId, views)
                     }
-                    CoroutineScope(Dispatchers.Default).launch {
-                        for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
-                            updateAppWidget(context, widgetManager, appWidgetId)
-                        }
+                    for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
+                        updateAppWidget(context, widgetManager, appWidgetId)
                     }
-
                 }
                 else -> Log.i("widget", "${intent?.action} BroadCast Recv")
             }
@@ -68,6 +65,10 @@ class BasicWidget : AppWidgetProvider() {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
+
+private fun createRemoteViews(context: Context)
+    = if (inOutStateData == null || inOutStateData == "IN") RemoteViews(context.packageName, R.layout.basic_widget)
+    else RemoteViews(context.packageName, R.layout.basic_widget_out)
 
 private suspend fun getData() {
     accumulationData = getAccumulationInfo()
@@ -85,12 +86,9 @@ private fun setSuccessCondition(context: Context, views: RemoteViews) {
 
     views.setTextViewText(R.id.widget_accumulation_month_text, parseTimeMonth(accumulationData!!.monthAccumulationTime))
     views.setTextViewText(R.id.widget_accumulation_today_text, parseTimeToday(accumulationData!!.todayAccumulationTime))
-    views.setProgressBar(R.id.widget_progressbar, 100, getProgressPercent(accumulationData!!.monthAccumulationTime), false)
-    views.setTextViewText(R.id.widget_progress_text, "${getProgressPercent(accumulationData!!.monthAccumulationTime)}%")
     views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
+    views.setOnClickPendingIntent(R.id.widget_refresh_layout, refreshPendingIntent)
     views.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPendingIntent)
-    views.setOnClickPendingIntent(R.id.widget_today_text, refreshPendingIntent)
-    views.setOnClickPendingIntent(R.id.widget_accumulation_today_text, refreshPendingIntent)
     updateRefreshAnimationOff(views, R.id.widget_refresh_progress, R.id.widget_refresh_button)
 }
 
@@ -113,18 +111,17 @@ private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
         widgetManager.updateAppWidget(widgetId, views)
     }
     CoroutineScope(Dispatchers.IO).launch {
-        delay(3000)
+        delay(2000)
         views.setViewVisibility(R.id.widget_error_layout, View.GONE)
         views.setViewVisibility(R.id.widget_success_layout, View.VISIBLE)
         views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
+        views.setOnClickPendingIntent(R.id.widget_refresh_layout, refreshPendingIntent)
         views.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPendingIntent)
-        views.setOnClickPendingIntent(R.id.widget_today_text, refreshPendingIntent)
-        views.setOnClickPendingIntent(R.id.widget_accumulation_today_text, refreshPendingIntent)
         updateRefreshAnimationOff(views, R.id.widget_refresh_progress, R.id.widget_refresh_button)
         for (widgetId in widgetManager.getAppWidgetIds(componentName)) {
             widgetManager.updateAppWidget(widgetId, views)
         }
-    }.join()
+    }
 }
 
 internal fun updateAppWidget(
@@ -132,7 +129,7 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val views = RemoteViews(context.packageName, R.layout.basic_widget)
+    val views = createRemoteViews(context)
 
     CoroutineScope(Dispatchers.Default).launch {
         getData()

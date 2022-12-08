@@ -14,18 +14,18 @@ import retrofit2.HttpException
 class SplashViewModel : ViewModel() {
 
     private val accessToken = SharedPreferenceUtils.getAccessToken()
-    private val _State = MutableLiveData<State?>()
+    private val _state = MutableLiveData<State?>()
     val state: LiveData<State?>
-        get() = _State
+        get() = _state
 
     init {
         Log.i("login", "token $accessToken")
-        _State.value = null
+        _state.value = null
     }
 
     fun checkLogin() {
         viewModelScope.launch {
-            _State.value = isLogin(accessToken)
+            _state.value = isLogin(accessToken)
         }
     }
 
@@ -34,17 +34,14 @@ class SplashViewModel : ViewModel() {
         return try {
             val result = Hane42Apis.hane42ApiService.isLogin(accessToken)
             Log.i("state", "login : ${result.code()}")
-            if (result.isSuccessful)
-                State.SUCCESS
-            else
-                State.FAIL
+            State.SUCCESS
         } catch (err: HttpException) {
             Log.i("state", "err: ${err.code()}")
             Log.i("state", "err: ${err.message()}")
-            State.FAIL
+            State.LOGIN_FAIL
         } catch (exception: Exception) {
             Log.i("state", "throw: ${exception.message}")
-            State.ERROR
+            State.UNKNOWN_ERROR
         }
     }
 }
