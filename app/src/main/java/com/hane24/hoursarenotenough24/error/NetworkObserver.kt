@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.os.Build
 import com.hane24.hoursarenotenough24.App
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,16 @@ interface NetworkObserver {
 
 class NetworkObserverImpl(): NetworkObserver {
     private val connectivityManager = App.instance.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    fun isConnected(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork) ?: return false
+            return true
+        } else {
+            connectivityManager.activeNetworkInfo ?: return false
+            return true
+        }
+    }
 
     override fun observe(): Flow<NetworkObserver.Status> {
         return callbackFlow {

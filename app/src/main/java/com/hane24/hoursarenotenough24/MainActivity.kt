@@ -23,8 +23,11 @@ import com.hane24.hoursarenotenough24.error.NetworkObserver
 import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
+import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -43,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        App.observeNetworkState(lifecycleScope)
+//        App().observeNetworkState(lifecycleScope)
         refreshWidget()
         setStatusAndNavigationBar()
         setToolbar()
@@ -81,22 +84,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun setRefreshButtonListener() {
         binding.appBar.refreshButton.setOnClickListener {
-            handleNetworkState(App.networkState)
+            handleNetworkState(NetworkObserverImpl().isConnected())
         }
     }
 
-    private fun handleNetworkState(networkStatus: NetworkObserver.Status?) {
+    private fun handleNetworkState(networkStatus: Boolean) {
         val onClickDialog = DialogInterface.OnClickListener { dialog, id ->
             binding.appBar.refreshButton.callOnClick()
         }
         when (networkStatus) {
-            NetworkObserver.Status.Unavailable -> {
+            false -> {
                 NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClickDialog)
             }
-            NetworkObserver.Status.Lost -> {
-                NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClickDialog)
-            }
-            else -> {
+
+            true -> {
                 overViewViewModel.refreshButtonOnClick()
                 logListViewModel.refreshButtonOnClick()
                 refreshWidget()
@@ -172,7 +173,10 @@ class MainActivity : AppCompatActivity() {
         while (pager.currentItem != 0) pager.currentItem--
     }
 
-    private fun deleteToken() {}
+    private fun deleteToken() {
+        SharedPreferenceUtils.saveAccessToken("")
+        startActivity(Intent(this, LoginActivity::class.java).putExtra("loginState", State.LOGIN_FAIL)).also { finish() }
+    }
 
     private fun licenseFunc() {}
 

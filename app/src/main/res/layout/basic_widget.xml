@@ -70,7 +70,7 @@
             android:layout_below="@id/widget_today_text"
             android:fontFamily="@font/roboto_medium"
             android:paddingStart="8dp"
-            android:text="12 : 00"
+            android:text="00 : 00"
             android:textColor="#1E3C5F"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -92,7 +92,7 @@
             android:layout_below="@id/widget_month_text"
             android:fontFamily="@font/roboto_medium"
             android:paddingStart="8dp"
-            android:text="120 : 00"
+            android:text="00 : 00"
             android:textColor="#1E3C5F"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -112,7 +112,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="6dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="75%"
+                android:text="0%"
                 android:textColor="#1E3C5F"
                 android:textSize="13dp"
                 android:textStyle="bold" />
@@ -123,8 +123,7 @@
                 android:layout_gravity="bottom"
                 android:paddingStart="5dp"
                 android:paddingTop="13dp"
-                android:src="@drawable/wave_remove"
-                app:tint="#5185C2" />
+                android:src="@drawable/wave_remove" />
 
             <ProgressBar
                 android:id="@+id/widget_progressbar"
@@ -134,7 +133,7 @@
                 android:layout_gravity="center"
                 android:indeterminate="false"
                 android:max="100"
-                android:progress="75"
+                android:progress="0"
                 android:progressBackgroundTint="#C3CFDD"
                 android:progressDrawable="@drawable/progress_circle"
                 android:progressTint="#5185C2" />

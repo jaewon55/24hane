@@ -85,6 +85,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent).also {
                 val accessToken = parseAccessToken()
                 SharedPreferenceUtils.saveAccessToken(accessToken)
+                cookieManager.flush()
                 this@LoginActivity.finish()
             }
         }

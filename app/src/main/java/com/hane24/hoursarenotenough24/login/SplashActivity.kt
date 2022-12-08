@@ -31,30 +31,33 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        App.observeNetworkState(lifecycleScope)
         setStatusAndNavigationBar()
-        checkNetworkState(App.networkState)
+        checkNetworkState(NetworkObserverImpl().isConnected())
         checkLogin()
-        Log.i("login", "state ${viewModel.state.value}")
-        viewModel.state.observe(this) { loginState ->
-            Log.i("login", "state2 ${viewModel.state.value}")
-            loginState?.let { checkLoginState(it) }
-        }
+        observeLoginState()
     }
 
     fun checkLogin() {
         viewModel.checkLogin()
     }
 
-    private fun checkNetworkState(networkState: NetworkObserver.Status?) {
+    private fun checkNetworkState(networkState: Boolean) {
+        Log.i("login", "network: $networkState")
         val onClick = DialogInterface.OnClickListener { dialog, id ->
             checkLogin()
         }
 
+        Log.i("login", "$networkState")
+
         when (networkState) {
-            NetworkObserver.Status.Lost -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
-            NetworkObserver.Status.Unavailable -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
-            else -> return
+            false -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
+            true -> return
+        }
+    }
+
+    private fun observeLoginState() {
+        viewModel.state.observe(this) { loginState ->
+            loginState?.let { checkLoginState(it) }
         }
     }
 
