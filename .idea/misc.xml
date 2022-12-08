@@ -23,7 +23,7 @@
         <entry key="app/src/main/res/layout/activity_main_navigation_header.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="app/src/main/res/layout/basic_widget.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/basic_widget_out.xml" value="0.18370513916015627" />
+        <entry key="app/src/main/res/layout/basic_widget_out.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_log_list.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_log_list_calendar_item.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_log_list_logs_item.xml" value="0.11041666666666666" />

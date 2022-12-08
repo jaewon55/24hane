@@ -86,12 +86,9 @@ private fun setSuccessCondition(context: Context, views: RemoteViews) {
 
     views.setTextViewText(R.id.widget_accumulation_month_text, parseTimeMonth(accumulationData!!.monthAccumulationTime))
     views.setTextViewText(R.id.widget_accumulation_today_text, parseTimeToday(accumulationData!!.todayAccumulationTime))
-    views.setProgressBar(R.id.widget_progressbar, 100, getProgressPercent(accumulationData!!.monthAccumulationTime), false)
-    views.setTextViewText(R.id.widget_progress_text, "${getProgressPercent(accumulationData!!.monthAccumulationTime)}%")
     views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
+    views.setOnClickPendingIntent(R.id.widget_refresh_layout, refreshPendingIntent)
     views.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPendingIntent)
-    views.setOnClickPendingIntent(R.id.widget_today_text, refreshPendingIntent)
-    views.setOnClickPendingIntent(R.id.widget_accumulation_today_text, refreshPendingIntent)
     updateRefreshAnimationOff(views, R.id.widget_refresh_progress, R.id.widget_refresh_button)
 }
 
@@ -118,9 +115,8 @@ private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
         views.setViewVisibility(R.id.widget_error_layout, View.GONE)
         views.setViewVisibility(R.id.widget_success_layout, View.VISIBLE)
         views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
+        views.setOnClickPendingIntent(R.id.widget_refresh_layout, refreshPendingIntent)
         views.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPendingIntent)
-        views.setOnClickPendingIntent(R.id.widget_today_text, refreshPendingIntent)
-        views.setOnClickPendingIntent(R.id.widget_accumulation_today_text, refreshPendingIntent)
         updateRefreshAnimationOff(views, R.id.widget_refresh_progress, R.id.widget_refresh_button)
         for (widgetId in widgetManager.getAppWidgetIds(componentName)) {
             widgetManager.updateAppWidget(widgetId, views)

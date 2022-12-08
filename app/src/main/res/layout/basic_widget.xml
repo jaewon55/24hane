@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.24hane.AppWidget.Container"
     android:id="@+id/widget_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:theme="@style/Theme.24hane.AppWidgetContainer"
     android:backgroundTint="@color/white">
 
@@ -13,6 +13,7 @@
         android:id="@+id/widget_error_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:visibility="gone">
         <TextView
             android:id="@+id/widget_error_text"
@@ -20,14 +21,15 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/main_color"
+            android:textColor="@color/on_text_color"
             android:text="@string/widget_error"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/widget_success_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
 
         <TextView
             android:id="@+id/widget_today_text"
@@ -35,31 +37,32 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
             android:text="Today"
-            android:textColor="#1E3C5F"
-            android:textSize="10dp" />
+            android:textColor="@color/on_text_color"
+            android:textSize="14dp" />
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="2dp"
-            android:layout_toEndOf="@id/widget_today_text">
+            android:id="@+id/widget_refresh_layout"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true">
 
             <ProgressBar
                 android:id="@+id/widget_refresh_progress"
                 style="?android:attr/progressBarStyle"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_horizontal"
                 android:indeterminate="true"
                 android:progressDrawable="@drawable/progress_circle"
                 android:visibility="invisible" />
 
             <ImageButton
                 android:id="@+id/widget_refresh_button"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_widget_refresh"
-                app:tint="#1E3C5F"
+                app:tint="@color/on_text_color"
                 android:backgroundTint="@color/white"/>
         </FrameLayout>
 
@@ -71,8 +74,8 @@
             android:fontFamily="@font/roboto_medium"
             android:paddingStart="8dp"
             android:text="00 : 00"
-            android:textColor="#1E3C5F"
-            android:textSize="16dp"
+            android:textColor="@color/on_text_color"
+            android:textSize="20dp"
             android:textStyle="bold" />
 
         <TextView
@@ -82,8 +85,8 @@
             android:layout_below="@id/widget_accumulation_today_text"
             android:fontFamily="@font/roboto_medium"
             android:text="This Month"
-            android:textColor="#1E3C5F"
-            android:textSize="10dp" />
+            android:textColor="@color/on_text_color"
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/widget_accumulation_month_text"
@@ -93,50 +96,9 @@
             android:fontFamily="@font/roboto_medium"
             android:paddingStart="8dp"
             android:text="00 : 00"
-            android:textColor="#1E3C5F"
-            android:textSize="16dp"
+            android:textColor="@color/on_text_color"
+            android:textSize="20dp"
             android:textStyle="bold" />
 
-        <FrameLayout
-            android:id="@+id/widget_progress_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/widget_accumulation_month_text">
-
-            <TextView
-                android:id="@+id/widget_progress_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="6dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="0%"
-                android:textColor="#1E3C5F"
-                android:textSize="13dp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="51dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:paddingStart="5dp"
-                android:paddingTop="13dp"
-                android:src="@drawable/wave_remove" />
-
-            <ProgressBar
-                android:id="@+id/widget_progressbar"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_gravity="center"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressBackgroundTint="#C3CFDD"
-                android:progressDrawable="@drawable/progress_circle"
-                android:progressTint="#5185C2" />
-        </FrameLayout>
     </RelativeLayout>
 </FrameLayout>
