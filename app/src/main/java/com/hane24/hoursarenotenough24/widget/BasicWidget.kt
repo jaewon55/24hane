@@ -114,7 +114,7 @@ private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
         widgetManager.updateAppWidget(widgetId, views)
     }
     CoroutineScope(Dispatchers.IO).launch {
-        delay(3000)
+        delay(2000)
         views.setViewVisibility(R.id.widget_error_layout, View.GONE)
         views.setViewVisibility(R.id.widget_success_layout, View.VISIBLE)
         views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
