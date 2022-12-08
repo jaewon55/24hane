@@ -17,6 +17,10 @@
         <item name="android:navigationBarColor">@color/white</item>
     </style>
 
+    <style name="AppTheme.NumberPicker" parent="android:Widget">
+        <item name="colorControlNormal">@color/dialog_color</item>
+    </style>
+
     <style name="OverViewAppTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

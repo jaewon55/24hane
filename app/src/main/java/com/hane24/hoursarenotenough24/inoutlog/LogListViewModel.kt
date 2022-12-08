@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.*
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.hane42Api
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.launch
@@ -192,14 +193,22 @@ class LogListViewModel : ViewModel() {
     private fun getNewMonthData() {
         viewModelScope.launch {
             try {
-                useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
+                monthLogListIndex++
+                val monthTimeLog =
+                    Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, selectedYear, selectedMonth)
+                        .asDomainModel()
+                monthLogContainer.add(MonthTimeLogContainer(selectedYear, selectedMonth, monthTimeLog))
+                setCalendarItemList()
+                setTableItemList()
                 _selectedDay.value = 1
             } catch (e: Exception) {
                 selectedMonth++
-                setButtonState()
                 setCalendarDateText()
+                _errorState.value = State.UNKNOWN_ERROR
+            } finally {
+                setButtonState()
+                _loadingState.value = false
             }
-            _loadingState.value = false
         }
     }
 
@@ -209,9 +218,10 @@ class LogListViewModel : ViewModel() {
     }
 
     fun leftButtonOnClick() {
+        _leftButtonState.value = false
+        _rightButtonState.value = false
         _loadingState.value = true
         selectedMonth--
-        setButtonState()
         setCalendarDateText()
         if (monthLogContainer.lastIndex == monthLogListIndex) {
             getNewMonthData()
@@ -220,20 +230,23 @@ class LogListViewModel : ViewModel() {
             setCalendarItemList()
             setTableItemList()
             _selectedDay.value = 1
+            setButtonState()
             _loadingState.value = false
         }
     }
 
     fun rightButtonOnClick() {
+        _leftButtonState.value = false
+        _rightButtonState.value = false
         _loadingState.value = true
         selectedMonth++
-        setButtonState()
         setCalendarDateText()
         _selectedDay.value = 1
         monthLogListIndex--
         setCalendarItemList()
         setTableItemList()
         _selectedDay.value = 1
+        setButtonState()
         _loadingState.value = false
     }
 

@@ -28,12 +28,21 @@ class OverViewFragment : Fragment() {
         return binding.root
     }
 
+    fun targetTimeOnClick(isMonth: Boolean) {
+        val newDialog = TimeDialogFragment(isMonth)
+
+        activity?.supportFragmentManager?.let {
+            newDialog.show(it, "timeDialog")
+        }
+    }
+
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
         binding = DataBindingUtil.inflate<FragmentOverviewBinding?>(
             inflater, R.layout.fragment_overview, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
             this.viewModel = this@OverViewFragment.viewModel
+            this.fragment = this@OverViewFragment
         }
     }
 

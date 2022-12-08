@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.navFooterView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_item_logout -> deleteToken()
+                R.id.nav_item_logout -> logOutOnClick()
                 R.id.nav_item_license -> licenseFunc()
             }
             true
@@ -172,11 +172,14 @@ class MainActivity : AppCompatActivity() {
         while (pager.currentItem != 0) pager.currentItem--
     }
 
-    private fun deleteToken() {
+
+    private fun logOutOnClick() {
         SharedPreferenceUtils.saveAccessToken("")
-        startActivity(Intent(this, LoginActivity::class.java)
+
+        val intent = Intent(this, LoginActivity::class.java)
+            .putExtra("loginState", State.LOGIN_FAIL)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            .putExtra("loginState", State.LOGIN_FAIL)).also { finish() }
+        startActivity(intent).also { finish() }
     }
 
     private fun licenseFunc() {}

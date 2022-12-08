@@ -133,8 +133,26 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
+    fun changeTargetTime(time: Long, isMonth: Boolean) {
+        if (isMonth) {
+            SharedPreferenceUtils.saveMonthTargetTime(time)
+            _monthTargetTime.value = time
+            _monthProgressPercent.value =
+                getProgressPercent(_monthAccumulationTime.value ?: 0, time)
+        } else {
+            SharedPreferenceUtils.saveDayTargetTime(time)
+            _dayTargetTime.value = time
+            _dayProgressPercent.value =
+                getProgressPercent(_dayAccumulationTime.value ?: 0, time)
+        }
+    }
+
+    fun getMTargetTime() = _monthTargetTime.value
+
+    fun getDTargetTime() = _dayTargetTime.value
+
     private fun getProgressPercent(time: Long, targetTime: Long?): Int {
-        val targetDouble: Double = targetTime?.toDouble() ?: 0.0
+        val targetDouble: Double = targetTime?.toDouble() ?: 1.0
         val percent = (time / targetDouble * 100).toInt()
         if (percent >= 100) return 100
         return percent
