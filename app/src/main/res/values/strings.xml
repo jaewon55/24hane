@@ -14,5 +14,5 @@
     <string name="app_widget_description">This is an app widget description</string>
     <string name="_24hoursarenotenough">24HoursAreNotEnough</string>
     <string name="today_card_title">Today</string>
-    <string name="month_card_title">Month</string>
+    <string name="month_card_title">This Month</string>
 </resources>

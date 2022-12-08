@@ -52,21 +52,21 @@ class OverViewViewModel : ViewModel() {
     val inOutState: LiveData<Boolean>
         get() = _inOutState
 
+    private val _initState = MutableLiveData(false)
+    val initState: LiveData<Boolean>
+        get() = _initState
+
+    private val _refreshLoading = MutableLiveData(false)
+    val refreshLoading: LiveData<Boolean>
+        get() = _refreshLoading
+
     init {
         _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
         _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
         viewModelScope.launch {
             useGetMainInfoApi()
             useGetAccumulationInfoApi()
-        }
-    }
-
-    fun refreshLogic() {
-        _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
-        _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
-        viewModelScope.launch {
-            useGetMainInfoApi()
-            useGetAccumulationInfoApi()
+            _initState.value = true
         }
     }
 
@@ -83,16 +83,24 @@ class OverViewViewModel : ViewModel() {
         } catch (err: HttpException) {
             Log.i("state", "accumulationApi Error: ${err.code()}")
             Log.i("state", "accumulationApi Error: ${err.message}")
-            _state.value = State.FAIL
+
+            val isLoginFail = err.code() == 401
+            val isServerError = err.code() == 500
+
+            when {
+                isLoginFail -> _state.value = State.LOGIN_FAIL
+                isServerError -> _state.value = State.SERVER_FAIL
+                else -> _state.value = State.UNKNOWN_ERROR
+            }
         } catch (e: Exception) {
             //networkError 처리
             Log.i("state", "accumulationApi Error: ${e.message}")
-            _state.value = State.ERROR
+            _state.value = State.UNKNOWN_ERROR
         }
     }
 
     private suspend fun useGetMainInfoApi() {
-        return try {
+        try {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
             _intraId.value = mainInfo.login
             _inOutState.value = mainInfo.inoutState == "IN"
@@ -100,11 +108,28 @@ class OverViewViewModel : ViewModel() {
         } catch (err: HttpException) {
             Log.i("state", "mainInfoApi Error: ${err.code()}")
             Log.i("state", "mainInfoApi Error: ${err.message}")
-            _state.value = State.FAIL
+
+            val isLoginFail = err.code() == 401
+            val isServerError = err.code() == 500
+
+            when {
+                isLoginFail -> _state.value = State.LOGIN_FAIL
+                isServerError -> _state.value = State.SERVER_FAIL
+                else -> _state.value = State.UNKNOWN_ERROR
+            }
         } catch (e: Exception) {
             //networkError 처리
             Log.i("state", "mainInfoApi Error: ${e.message}")
-            _state.value = State.ERROR
+            _state.value = State.UNKNOWN_ERROR
+        }
+    }
+
+    fun refreshButtonOnClick() {
+        _refreshLoading.value = true
+        viewModelScope.launch {
+            useGetMainInfoApi()
+            useGetAccumulationInfoApi()
+            _refreshLoading.value = false
         }
     }
 
@@ -114,12 +139,12 @@ class OverViewViewModel : ViewModel() {
         if (percent >= 100) return 100
         return percent
     }
-}
 
-fun parseTime(time: Long): String {
-    var second = time
-    val hour = second / 3600
-    second -= hour * 3600
-    val min = second / 60
-    return String.format("%d:%02d", hour, min)
+    private fun parseTime(time: Long): String {
+        var second = time
+        val hour = second / 3600
+        second -= hour * 3600
+        val min = second / 60
+        return String.format("%d:%02d", hour, min)
+    }
 }

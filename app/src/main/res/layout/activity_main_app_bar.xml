@@ -4,6 +4,14 @@
 
     <data>
 
+        <variable
+            name="overViewViewModel"
+            type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />
+
+        <variable
+            name="logListViewModel"
+            type="com.hane24.hoursarenotenough24.inoutlog.LogListViewModel" />
+
     </data>
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,24 +26,28 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
+                    android:id="@+id/hane_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:src="@drawable/ic_24hane" />
+                    android:src="@drawable/ic_24hane"
+                    app:logoColor="@{overViewViewModel.inOutState}" />
 
                 <ImageView
                     android:id="@+id/refresh_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_toStartOf="@id/menu_button"
                     android:padding="5dp"
-                    android:src="@drawable/ic_refresh" />
+                    android:src="@drawable/ic_refresh"
+                    app:isEnabled="@{overViewViewModel.initState}"
+                    app:listViewLoading="@{logListViewModel.refreshLoading}"
+                    app:overViewLoading="@{overViewViewModel.refreshLoading}" />
 
                 <androidx.core.widget.ContentLoadingProgressBar
                     android:id="@+id/refresh_progressbar"
@@ -46,7 +58,9 @@
                     android:layout_alignEnd="@id/refresh_button"
                     android:layout_centerVertical="true"
                     android:indeterminateTint="@color/black"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    app:listViewLoading="@{logListViewModel.refreshLoading}"
+                    app:overViewLoading="@{overViewViewModel.refreshLoading}" />
 
                 <ImageButton
                     android:id="@+id/menu_button"
@@ -55,7 +69,9 @@
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/menu_selector"
                     android:padding="5dp"
-                    android:src="@drawable/ic_menu" />
+                    android:paddingEnd="16dp"
+                    android:src="@drawable/ic_menu"
+                    app:isEnabled="@{overViewViewModel.initState}" />
 
             </RelativeLayout>
 

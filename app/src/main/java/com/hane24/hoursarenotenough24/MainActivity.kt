@@ -1,11 +1,14 @@
 package com.hane24.hoursarenotenough24
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,39 +18,45 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.NetworkObserver
 import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
+import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
+import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
+    }
     private val pager by lazy { binding.contentMain.viewpager }
     private val overViewFragment = OverViewFragment()
     private val logListFragment = LogListFragment()
-    private lateinit var networkObserver: NetworkObserver
+    private val overViewViewModel: OverViewViewModel by viewModels()
+    private val logListViewModel: LogListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        networkObserver = NetworkObserverImpl(applicationContext)
-
-        networkObserver.observe().onEach {
-            Log.i("network", "$it")
-        }.launchIn(lifecycleScope)
+        App.observeNetworkState(lifecycleScope)
         refreshWidget()
         setStatusAndNavigationBar()
         setToolbar()
         setViewPager()
+        setRefreshButtonListener()
+        setFragmentsViewModel()
     }
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerVisible(binding.navView)) {
             binding.drawerLayout.closeDrawers()
+        } else if (pager.currentItem != 0) {
+            pager.currentItem--
         } else {
             super.onBackPressed()
         }
@@ -65,14 +74,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-        binding.appBar.refreshButton.setOnClickListener {
-            Log.i("refresh", "button clicked")
-            this.sendBroadcast(Intent("REFRESH_CLICK"))
-            refreshWidget()
-        }
         setSupportActionBar(binding.appBar.toolbar)
         setDrawerLayout()
         setNavigationItemListener()
+    }
+
+    private fun setRefreshButtonListener() {
+        binding.appBar.refreshButton.setOnClickListener {
+            handleNetworkState(App.networkState)
+        }
+    }
+
+    private fun handleNetworkState(networkStatus: NetworkObserver.Status?) {
+        val onClickDialog = DialogInterface.OnClickListener { dialog, id ->
+            binding.appBar.refreshButton.callOnClick()
+        }
+        when (networkStatus) {
+            NetworkObserver.Status.Unavailable -> {
+                NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClickDialog)
+            }
+            NetworkObserver.Status.Lost -> {
+                NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClickDialog)
+            }
+            else -> {
+                overViewViewModel.refreshButtonOnClick()
+                logListViewModel.refreshButtonOnClick()
+                refreshWidget()
+            }
+        }
+    }
+
+    private fun setFragmentsViewModel() {
+        binding.overViewViewModel = overViewViewModel
+        binding.appBar.logListViewModel = logListViewModel
+        overViewViewModel.intraId.observe(this) {
+            binding.navView.getHeaderView(0)
+                .findViewById<TextView>(R.id.nav_header_text).text = it
+        }
     }
 
     private fun setDrawerLayout() {
@@ -126,6 +164,12 @@ class MainActivity : AppCompatActivity() {
         pager.adapter = adapter
         TabLayoutMediator(binding.contentMain.pagerTabLayout, pager)
         { _, _ -> }.attach()
+        createAllFragment()
+    }
+
+    private fun createAllFragment() {
+        pager.currentItem = NUM_PAGES - 1
+        while (pager.currentItem != 0) pager.currentItem--
     }
 
     private fun deleteToken() {}
@@ -144,8 +188,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> overViewFragment
-                else -> logListFragment
+                0 -> OverViewFragment()
+                else -> LogListFragment()
             }
         }
     }

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.hane24.hoursarenotenough24.R
 
 class NetworkErrorDialog(private val onClick: DialogInterface.OnClickListener): DialogFragment() {
@@ -22,13 +23,11 @@ class NetworkErrorDialog(private val onClick: DialogInterface.OnClickListener): 
                 .create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
-//
-//    companion object {
-//        fun showNetworkErrorDialog(activity: Activity) {
-//            val newDialog = NetworkErrorDialog()
-//            activity.supportFragmentManager.let {
-//                newDialog.show(it, "network_error_dialog")
-//            }
-//        }
-//    }
+
+    companion object {
+        fun showNetworkErrorDialog(fragmentManager: FragmentManager, onClick: DialogInterface.OnClickListener) {
+            val newDialog = NetworkErrorDialog(onClick)
+            newDialog.show(fragmentManager, "network_error_dialog")
+        }
+    }
 }
