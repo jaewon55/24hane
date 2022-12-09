@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/widget_accumulation_today_text"
             android:fontFamily="@font/roboto_medium"
-            android:text="This Month"
+            android:text="Month"
             android:textColor="@color/on_text_color"
             android:textSize="14dp" />
 
