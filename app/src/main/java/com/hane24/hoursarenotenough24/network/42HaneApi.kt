@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.network
 
+import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.data.InOutTimeContainer
 import com.hane24.hoursarenotenough24.data.MainInfo
@@ -10,7 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-private const val BASE_URL = "https://api.24hoursarenotenough.42seoul.kr/"
+private const val BASE_URL = BuildConfig.BASE_URL
 
 val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)

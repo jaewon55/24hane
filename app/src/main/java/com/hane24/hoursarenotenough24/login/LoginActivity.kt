@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.*
 import androidx.core.view.WindowInsetsControllerCompat
+import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.databinding.ActivityLoginBinding
@@ -43,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createLoginUri() =
-        Uri.Builder().scheme("https").authority("api.24hoursarenotenough.42seoul.kr")
+        Uri.Builder().scheme("https").authority(BuildConfig.LOGIN_URL)
             .appendPath("user")
             .appendPath("login")
             .appendPath("42")
