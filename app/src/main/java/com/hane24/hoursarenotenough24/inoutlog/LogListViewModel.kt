@@ -175,13 +175,15 @@ class LogListViewModel : ViewModel() {
     }
 
     private fun setCalendarItemList() {
+        val index = if (monthLogListIndex < 0) 0 else monthLogListIndex
         _calendarItemList.value =
-            monthLogContainer[monthLogListIndex].getCalendarList()
+            monthLogContainer[index].getCalendarList()
     }
 
     private fun setTableItemList() {
+        val index = if (monthLogListIndex < 0) 0 else monthLogListIndex
         _tableItemList.value =
-            monthLogContainer[monthLogListIndex].getLogTableList(selectedDay.value ?: 1)
+            monthLogContainer[index].getLogTableList(selectedDay.value ?: 1)
     }
 
     private fun setButtonState() {
@@ -193,21 +195,21 @@ class LogListViewModel : ViewModel() {
     private fun getNewMonthData() {
         viewModelScope.launch {
             try {
-                monthLogListIndex++
                 val monthTimeLog =
                     Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, selectedYear, selectedMonth)
                         .asDomainModel()
                 monthLogContainer.add(MonthTimeLogContainer(selectedYear, selectedMonth, monthTimeLog))
+                monthLogListIndex++
+            } catch (e: Exception) {
+                selectedMonth++
+                _errorState.value = State.UNKNOWN_ERROR
+            } finally {
+                setCalendarDateText()
                 setCalendarItemList()
                 setTableItemList()
                 _selectedDay.value = 1
-            } catch (e: Exception) {
-                selectedMonth++
-                setCalendarDateText()
-                _errorState.value = State.UNKNOWN_ERROR
-            } finally {
-                setButtonState()
                 _loadingState.value = false
+                setButtonState()
             }
         }
     }
@@ -230,8 +232,8 @@ class LogListViewModel : ViewModel() {
             setCalendarItemList()
             setTableItemList()
             _selectedDay.value = 1
-            setButtonState()
             _loadingState.value = false
+            setButtonState()
         }
     }
 
@@ -246,8 +248,8 @@ class LogListViewModel : ViewModel() {
         setCalendarItemList()
         setTableItemList()
         _selectedDay.value = 1
-        setButtonState()
         _loadingState.value = false
+        setButtonState()
     }
 
     fun refreshButtonOnClick() {

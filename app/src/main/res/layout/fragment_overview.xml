@@ -36,7 +36,9 @@
                 android:text="@string/today_card_title"
                 android:textColor="@{viewModel.inOutState ? @color/on_text_color : @color/off_text_color}"
                 app:layout_constraintBottom_toTopOf="@id/day_card_view"
-                app:layout_constraintStart_toStartOf="@id/day_card_view" />
+                app:layout_constraintStart_toStartOf="@id/day_card_view"
+                app:layout_constraintTop_toBottomOf="@id/overview_title"
+                app:layout_constraintVertical_bias="0.9" />
 
             <include
                 android:id="@+id/day_card_view"
@@ -51,7 +53,7 @@
                 app:layout_constraintBottom_toTopOf="@id/month_card_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/overview_title"
+                app:layout_constraintTop_toBottomOf="@+id/overview_title"
                 app:layout_constraintWidth_max="400dp"
                 app:percentText="@{viewModel.dayProgressPercentText}"
                 app:progressPercent="@{viewModel.dayProgressPercent}"
@@ -63,7 +65,9 @@
                 android:text="@string/month_card_title"
                 android:textColor="@{viewModel.inOutState ? @color/on_text_color : @color/off_text_color}"
                 app:layout_constraintBottom_toTopOf="@id/month_card_view"
-                app:layout_constraintStart_toStartOf="@id/month_card_view" />
+                app:layout_constraintStart_toStartOf="@id/month_card_view"
+                app:layout_constraintTop_toBottomOf="@id/day_card_view"
+                app:layout_constraintVertical_bias="0.9" />
 
             <include
                 android:id="@+id/month_card_view"
