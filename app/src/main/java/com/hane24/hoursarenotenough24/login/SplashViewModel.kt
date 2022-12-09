@@ -34,7 +34,10 @@ class SplashViewModel : ViewModel() {
         return try {
             val result = Hane42Apis.hane42ApiService.isLogin(accessToken)
             Log.i("state", "login : ${result.code()}")
-            State.SUCCESS
+            if (result.code() == 204)
+                State.SUCCESS
+            else
+                State.LOGIN_FAIL
         } catch (err: HttpException) {
             Log.i("state", "err: ${err.code()}")
             Log.i("state", "err: ${err.message()}")
