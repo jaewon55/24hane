@@ -14,6 +14,8 @@
         <entry key="app/src/main/res/drawable/ic_help.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.1265" />
         <entry key="app/src/main/res/drawable/ic_widget_refresh.xml" value="0.1265" />
+        <entry key="app/src/main/res/drawable/widget_in_state.xml" value="0.1265" />
+        <entry key="app/src/main/res/drawable/widget_out_state.xml" value="0.1265" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.140625" />
         <entry key="app/src/main/res/layout/activity_error.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.24947916666666667" />
@@ -22,8 +24,8 @@
         <entry key="app/src/main/res/layout/activity_main_content.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/activity_main_navigation_header.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/basic_widget.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/basic_widget_out.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/basic_widget.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/basic_widget_out.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_log_list.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_log_list_calendar_item.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_log_list_logs_item.xml" value="0.11041666666666666" />
