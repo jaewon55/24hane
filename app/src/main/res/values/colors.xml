@@ -47,4 +47,7 @@
 
     <color name="dialog_color">#47B5FF</color>
 
+    <color name="widget_in_state_color">#09FF21</color>
+    <color name="widget_out_state_color">#D9D9D9</color>
+
 </resources>

@@ -37,7 +37,7 @@ class BasicWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
 
         context?.let {
-            val views = createRemoteViews(context)
+            val views = RemoteViews(context.packageName, R.layout.basic_widget)
             val widgetManager = AppWidgetManager.getInstance(context)
             val componentName = ComponentName(context, BasicWidget::class.java)
 
@@ -66,16 +66,13 @@ class BasicWidget : AppWidgetProvider() {
     }
 }
 
-private fun createRemoteViews(context: Context)
-    = if (inOutStateData == null || inOutStateData == "IN") RemoteViews(context.packageName, R.layout.basic_widget)
-    else RemoteViews(context.packageName, R.layout.basic_widget_out)
 
 private suspend fun getData() {
     accumulationData = getAccumulationInfo()
     inOutStateData = getInOutState()
 }
 
-private fun setSuccessCondition(context: Context, views: RemoteViews) {
+private suspend fun setSuccessCondition(context: Context, views: RemoteViews) {
     Log.i("widget", "setSuccessCondition Called")
     val refreshIntent = Intent(context, BasicWidget::class.java).also {
         it.action = "REFRESH"
@@ -83,9 +80,11 @@ private fun setSuccessCondition(context: Context, views: RemoteViews) {
     val openIntent = Intent(context, SplashActivity::class.java)
     val refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
     val openPendingIntent = PendingIntent.getActivity(context, 1, openIntent, PendingIntent.FLAG_IMMUTABLE)
+    val inOutDrawable = if (inOutStateData == null || inOutStateData == "OUT") R.drawable.widget_out_state else R.drawable.widget_in_state
 
     views.setTextViewText(R.id.widget_accumulation_month_text, parseTimeMonth(accumulationData!!.monthAccumulationTime))
     views.setTextViewText(R.id.widget_accumulation_today_text, parseTimeToday(accumulationData!!.todayAccumulationTime))
+    views.setImageViewResource(R.id.widget_inout_state_img, inOutDrawable)
     views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
     views.setOnClickPendingIntent(R.id.widget_refresh_layout, refreshPendingIntent)
     views.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPendingIntent)
@@ -129,7 +128,7 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val views = createRemoteViews(context)
+    val views = RemoteViews(context.packageName, R.layout.basic_widget)
 
     CoroutineScope(Dispatchers.Default).launch {
         getData()
