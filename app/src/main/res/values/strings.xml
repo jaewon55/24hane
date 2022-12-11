@@ -15,4 +15,5 @@
     <string name="_24hoursarenotenough">24HoursAreNotEnough</string>
     <string name="today_card_title">Today</string>
     <string name="month_card_title">This Month</string>
+    <string name="battery_optimization_text">배터리 최적화 제외</string>
 </resources>

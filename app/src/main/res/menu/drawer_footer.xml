@@ -8,6 +8,9 @@
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
         <item
+            android:id="@+id/nav_item_optimization"
+            android:title="@string/battery_optimization_text" />
+        <item
             android:id="@+id/nav_item_license"
             android:title="@string/open_source_license" />
     </group>

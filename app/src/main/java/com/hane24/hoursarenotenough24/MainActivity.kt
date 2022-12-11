@@ -3,9 +3,10 @@ package com.hane24.hoursarenotenough24
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.provider.Settings
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -14,12 +15,10 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
-import com.hane24.hoursarenotenough24.error.NetworkObserver
 import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
@@ -29,16 +28,12 @@ import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.widget.BasicWidget
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
     }
     private val pager by lazy { binding.contentMain.viewpager }
-    private val overViewFragment = OverViewFragment()
-    private val logListFragment = LogListFragment()
     private val overViewViewModel: OverViewViewModel by viewModels()
     private val logListViewModel: LogListViewModel by viewModels()
 
@@ -138,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setNavigationItemListener() {
         binding.navView.setNavigationItemSelectedListener { item ->
-            var browserIntent: Intent? = when (item.itemId) {
+            val browserIntent: Intent? = when (item.itemId) {
                 R.id.nav_item_android -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUID))
                 R.id.nav_item_ios -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUID))
                 R.id.nav_item_page_guide -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUID))
@@ -154,6 +149,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_item_logout -> logOutOnClick()
                 R.id.nav_item_license -> licenseFunc()
+                R.id.nav_item_optimization -> optimizationOnClick()
             }
             true
         }
@@ -182,7 +178,17 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent).also { finish() }
     }
 
-    private fun licenseFunc() {}
+    private fun licenseFunc() {
+
+    }
+
+    private fun optimizationOnClick() {
+        if (Build.VERSION.SDK_INT < 23) return
+        val intent = Intent()
+        intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+        intent.data = Uri.parse("package:$packageName")
+        startActivity(intent)
+    }
 
     companion object {
         private const val PAGE_GUID =
