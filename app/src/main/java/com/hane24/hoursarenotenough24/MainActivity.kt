@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleNetworkState(networkStatus: Boolean) {
-        val onClickDialog = DialogInterface.OnClickListener { dialog, id ->
+        val onClickDialog = DialogInterface.OnClickListener { _, _ ->
             binding.appBar.refreshButton.callOnClick()
         }
         when (networkStatus) {
