@@ -149,7 +149,6 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_item_logout -> logOutOnClick()
                 R.id.nav_item_license -> licenseFunc()
-                R.id.nav_item_optimization -> optimizationOnClick()
             }
             true
         }
@@ -180,14 +179,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun licenseFunc() {
 
-    }
-
-    private fun optimizationOnClick() {
-        if (Build.VERSION.SDK_INT < 23) return
-        val intent = Intent()
-        intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-        intent.data = Uri.parse("package:$packageName")
-        startActivity(intent)
     }
 
     companion object {

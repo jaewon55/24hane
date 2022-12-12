@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.*
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
@@ -56,7 +57,8 @@ class LoginActivity : AppCompatActivity() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            if (!URLUtil.isValidUrl(request?.url.toString())) {
+            Log.i("login", "url: ${request?.url}")
+            if (request?.url.toString() == "app://hane42" || request?.url.toString() == "https://profile.intra.42.fr/") {
                 return try {
                     redirectToMain()
                     true

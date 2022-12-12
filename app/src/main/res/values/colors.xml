@@ -46,6 +46,7 @@
     <color name="calendar_item_stroke_default">#E1E1E1</color>
 
     <color name="dialog_color">#47B5FF</color>
+    <color name="selected_color">#DDFF5722</color>
 
     <color name="widget_in_state_color">#09FF21</color>
     <color name="widget_out_state_color">#D9D9D9</color>
