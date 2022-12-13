@@ -11,13 +11,6 @@ import com.hane24.hoursarenotenough24.databinding.FragmentLogListLogsItemBinding
 class LogTableAdapter :
     ListAdapter<LogTableItem, LogTableAdapter.LogTableViewHolder>(DiffCallback) {
 
-    class LogTableViewHolder(private val binding: FragmentLogListLogsItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(logData: LogTableItem) {
-            binding.logData = logData
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogTableViewHolder =
         LogTableViewHolder(
             FragmentLogListLogsItemBinding.inflate(
@@ -39,6 +32,13 @@ class LogTableAdapter :
 
         override fun areContentsTheSame(oldItem: LogTableItem, newItem: LogTableItem): Boolean {
             return oldItem == newItem
+        }
+    }
+
+    class LogTableViewHolder(private val binding: FragmentLogListLogsItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(logData: LogTableItem) {
+            binding.logData = logData
         }
     }
 

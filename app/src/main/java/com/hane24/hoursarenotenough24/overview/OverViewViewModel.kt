@@ -48,6 +48,10 @@ class OverViewViewModel : ViewModel() {
     val monthProgressPercentText: LiveData<String> =
         Transformations.map(_monthProgressPercent) { "$it%" }
 
+    private val _latestTagTime = MutableLiveData("")
+    val latestTagTime: LiveData<String>
+        get() = _latestTagTime
+
     private val _inOutState = MutableLiveData(false)
     val inOutState: LiveData<Boolean>
         get() = _inOutState
@@ -103,7 +107,16 @@ class OverViewViewModel : ViewModel() {
         try {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
             _intraId.value = mainInfo.login
-            _inOutState.value = mainInfo.inoutState == "IN"
+            if (mainInfo.inoutState == "IN") {
+                _inOutState.value = true
+                _latestTagTime.value = mainInfo.tagAt
+                    .substringAfter('T')
+                    .split(":")
+                    .let { "${it[0].toInt() + 9}:${it[1]}" }
+            } else {
+                _inOutState.value = false
+                _latestTagTime.value = ""
+            }
             _state.value = State.SUCCESS
         } catch (err: HttpException) {
             Log.i("state", "mainInfoApi Error: ${err.code()}")

@@ -3,10 +3,8 @@ package com.hane24.hoursarenotenough24
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -148,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         binding.navFooterView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_item_logout -> logOutOnClick()
-                R.id.nav_item_license -> licenseFunc()
+                R.id.nav_item_license -> licenseOnClick()
             }
             true
         }
@@ -177,8 +175,11 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent).also { finish() }
     }
 
-    private fun licenseFunc() {
-
+    private fun licenseOnClick() {
+        val dialog = LicenseDialogFragment()
+        supportFragmentManager.let {
+            dialog.show(it, "OpenSourceLicenses")
+        }
     }
 
     companion object {
