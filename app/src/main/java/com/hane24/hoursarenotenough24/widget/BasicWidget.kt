@@ -12,10 +12,7 @@ import android.widget.RemoteViews
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.login.SplashActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 private var accumulationData: AccumulationTimeInfo? = null
 private var inOutStateData: String? = null
@@ -72,7 +69,7 @@ private suspend fun getData() {
     inOutStateData = getInOutState()
 }
 
-private suspend fun setSuccessCondition(context: Context, views: RemoteViews) {
+private fun setSuccessCondition(context: Context, views: RemoteViews) {
     Log.i("widget", "setSuccessCondition Called")
     val refreshIntent = Intent(context, BasicWidget::class.java).also {
         it.action = "REFRESH"
