@@ -48,6 +48,14 @@ class BasicWidget : AppWidgetProvider() {
                         updateAppWidget(context, widgetManager, appWidgetId)
                     }
                 }
+
+                "ANIM_OFF" -> {
+                    Log.i("widget", "ANIM_OFF CALLED")
+                    updateRefreshAnimationOff(views, R.id.widget_refresh_progress, R.id.widget_refresh_button)
+                    for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
+                        widgetManager.updateAppWidget(appWidgetId, views)
+                    }
+                }
                 else -> Log.i("widget", "${intent?.action} BroadCast Recv")
             }
         }
