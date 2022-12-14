@@ -85,9 +85,6 @@ class OverViewViewModel : ViewModel() {
                 getProgressPercent(accumulationTime.monthAccumulationTime, _monthTargetTime.value)
             _state.value = State.SUCCESS
         } catch (err: HttpException) {
-            Log.i("state", "accumulationApi Error: ${err.code()}")
-            Log.i("state", "accumulationApi Error: ${err.message}")
-
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
 
@@ -97,8 +94,6 @@ class OverViewViewModel : ViewModel() {
                 else -> _state.value = State.UNKNOWN_ERROR
             }
         } catch (e: Exception) {
-            //networkError 처리
-            Log.i("state", "accumulationApi Error: ${e.message}")
             _state.value = State.UNKNOWN_ERROR
         }
     }
@@ -119,9 +114,6 @@ class OverViewViewModel : ViewModel() {
             }
             _state.value = State.SUCCESS
         } catch (err: HttpException) {
-            Log.i("state", "mainInfoApi Error: ${err.code()}")
-            Log.i("state", "mainInfoApi Error: ${err.message}")
-
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
 
@@ -131,8 +123,6 @@ class OverViewViewModel : ViewModel() {
                 else -> _state.value = State.UNKNOWN_ERROR
             }
         } catch (e: Exception) {
-            //networkError 처리
-            Log.i("state", "mainInfoApi Error: ${e.message}")
             _state.value = State.UNKNOWN_ERROR
         }
     }

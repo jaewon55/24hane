@@ -19,7 +19,6 @@ class SplashViewModel : ViewModel() {
         get() = _state
 
     init {
-        Log.i("login", "token $accessToken")
         _state.value = null
     }
 
@@ -30,20 +29,16 @@ class SplashViewModel : ViewModel() {
     }
 
     suspend fun isLogin(accessToken: String?): State {
-        Log.i("login", "isLogin called")
         return try {
             val result = Hane42Apis.hane42ApiService.isLogin(accessToken)
-            Log.i("state", "login : ${result.code()}")
+
             if (result.code() == 204)
                 State.SUCCESS
             else
                 State.LOGIN_FAIL
         } catch (err: HttpException) {
-            Log.i("state", "err: ${err.code()}")
-            Log.i("state", "err: ${err.message()}")
             State.LOGIN_FAIL
         } catch (exception: Exception) {
-            Log.i("state", "throw: ${exception.message}")
             State.UNKNOWN_ERROR
         }
     }

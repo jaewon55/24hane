@@ -24,10 +24,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setStatusAndNavigationBar()
-        Log.i("login", "Login activity called")
 
         val state = intent.getSerializableExtra("loginState") as State
-        Log.i("login", "$state")
 
         val loginUri: Uri = createLoginUri()
 
@@ -58,27 +56,16 @@ class LoginActivity : AppCompatActivity() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            Log.i("login", "url: ${request?.url}")
             if (request?.url.toString() == "app://hane42" || request?.url.toString() == "https://profile.intra.42.fr/") {
                 return try {
                     redirectToMain()
                     true
                 } catch (e: java.lang.Exception) {
-                    Log.i("login", "redirect 실패! ${e.message}")
                     false
                 }
             }
             return false
         }
-
-//        override fun onProgressChanged(view: WebView?, newProgress: Int) {
-//            super.onProgressChanged(view, newProgress)
-//
-//            if (newProgress == 100) {
-//                binding.loginWebView.visibility = View.VISIBLE
-//                binding.loadingLayout.visibility = View.GONE
-//            }
-//        }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
@@ -98,13 +85,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent).also {
                 val accessToken = parseAccessToken()
                 SharedPreferenceUtils.saveAccessToken(accessToken)
-                cookieManager.removeAllCookies {
-                    if (it) {
-                        Log.i("login", "cookie deleted")
-                    } else {
-                        Log.i("login", "cookie not deleted")
-                    }
-                }
+                cookieManager.removeAllCookies { }
                 this@LoginActivity.finish()
             }
         }
