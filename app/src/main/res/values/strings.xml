@@ -4,7 +4,7 @@
     <string name="app_name">24HANE</string>
     <string name="splash_text">24HoursAreNotEnough</string>
     <string name="latest_time_format">최근 입실 시간 %s</string>
-    <string name="how_to_use">앱 사용 가이드</string>
+    <string name="use_guide">사용 가이드</string>
     <string name="page_guide">지원금 지침 안내</string>
     <string name="inquiry_attendance">출입기록 문의사항</string>
     <string name="inquiry_mobile">앱 문의사항</string>
