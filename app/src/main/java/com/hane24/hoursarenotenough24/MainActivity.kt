@@ -132,10 +132,12 @@ class MainActivity : AppCompatActivity() {
     private fun setNavigationItemListener() {
         binding.navView.setNavigationItemSelectedListener { item ->
             val browserIntent: Intent? = when (item.itemId) {
-                R.id.nav_item_android -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUID))
-                R.id.nav_item_ios -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUID))
-                R.id.nav_item_page_guide -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUID))
-                R.id.nav_item_inquire -> Intent(Intent.ACTION_VIEW, Uri.parse(INQUIRE_PAGE))
+                R.id.nav_item_use_guide -> Intent(Intent.ACTION_VIEW, Uri.parse(APP_GUIDE))
+                R.id.nav_item_subsidy_guide -> Intent(Intent.ACTION_VIEW, Uri.parse(PAGE_GUIDE))
+                R.id.nav_item_inquire_mobile ->
+                    Intent(Intent.ACTION_VIEW, Uri.parse(INQUIRE_MOBILE))
+                R.id.nav_item_inquire_attendance ->
+                    Intent(Intent.ACTION_VIEW, Uri.parse(INQUIRE_ATTENDANCE))
                 else -> null
             }
             browserIntent?.let {
@@ -183,9 +185,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val PAGE_GUID =
-            "https://spot-tomato-468.notion.site/2022-42-SEOUL-bf0513c7197f4f71b4be968b8a2cd75a"
-        private const val INQUIRE_PAGE = "https://forms.gle/SfSoaTcmyiPdMSCp9"
+        private const val APP_GUIDE = BuildConfig.APP_GUIDE
+        private const val PAGE_GUIDE = BuildConfig.PAGE_GUIDE
+        private const val INQUIRE_ATTENDANCE = BuildConfig.INQUIRY_ATTENDANCE
+        private const val INQUIRE_MOBILE = BuildConfig.INQUIRY_MOBILE
         private const val NUM_PAGES = 2
     }
 

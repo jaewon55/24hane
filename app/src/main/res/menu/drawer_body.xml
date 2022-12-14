@@ -5,21 +5,21 @@
 
     <group>
         <item
-            android:id="@+id/nav_item_android"
-            android:icon="@drawable/ic_github"
-            android:title="@string/android_github" />
-        <item
-            android:id="@+id/nav_item_ios"
-            android:icon="@drawable/ic_github"
-            android:title="@string/ios_github" />
-        <item
-            android:id="@+id/nav_item_page_guide"
+            android:id="@+id/nav_item_use_guide"
             android:icon="@drawable/ic_notion"
+            android:title="@string/how_to_use" />
+        <item
+            android:id="@+id/nav_item_subsidy_guide"
+            android:icon="@drawable/ic_42logo"
             android:title="@string/page_guide" />
         <item
-            android:id="@+id/nav_item_inquire"
+            android:id="@+id/nav_item_inquire_mobile"
             android:icon="@drawable/ic_help"
-            android:title="@string/inquiry" />
+            android:title="@string/inquiry_mobile" />
+        <item
+            android:id="@+id/nav_item_inquire_attendance"
+            android:icon="@drawable/ic_help"
+            android:title="@string/inquiry_attendance" />
     </group>
 
 </menu>

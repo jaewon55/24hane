@@ -4,10 +4,10 @@
     <string name="app_name">24HANE</string>
     <string name="splash_text">24HoursAreNotEnough</string>
     <string name="latest_time_format">최근 입실 시간 %s</string>
-    <string name="android_github">androidGithub</string>
-    <string name="ios_github">iOSGithub</string>
+    <string name="how_to_use">앱 사용 가이드</string>
     <string name="page_guide">지원금 지침 안내</string>
-    <string name="inquiry">문의하기</string>
+    <string name="inquiry_attendance">출입기록 문의사항</string>
+    <string name="inquiry_mobile">앱 문의사항</string>
     <string name="logout">로그아웃</string>
     <string name="open_source_license">OpenSourceLicense</string>
     <string name="widget_error">연결된 네트워크가 없어요.</string>
