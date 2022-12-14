@@ -9,7 +9,7 @@
     android:maxResizeHeight="110dp"
     android:targetCellHeight="1"
     android:targetCellWidth="1"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/ic_24hane"
     android:previewLayout="@layout/basic_widget"
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="3600000"
