@@ -42,13 +42,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkNetworkState(networkState: Boolean) {
-        Log.i("login", "network: $networkState")
         val onClick = DialogInterface.OnClickListener { _, _ ->
             checkNetworkState(NetworkObserverImpl().isConnected())
             checkLogin()
         }
-
-        Log.i("login", "$networkState")
 
         when (networkState) {
             false -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
@@ -65,14 +62,10 @@ class SplashActivity : AppCompatActivity() {
     private fun checkLoginState(state: State) {
         when (state) {
             State.SUCCESS -> {
-                Log.i("login", "success condition")
-
                 goToMain()
             }
 
             State.LOGIN_FAIL -> {
-                Log.i("login", "fail condition")
-
                 goToLogin(state)
             }
 

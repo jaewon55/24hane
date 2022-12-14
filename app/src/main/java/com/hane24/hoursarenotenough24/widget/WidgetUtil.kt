@@ -19,20 +19,16 @@ internal fun updateRefreshAnimationOff(views: RemoteViews, progressId: Int, butt
 
 internal suspend fun getAccumulationInfo(): AccumulationTimeInfo? {
     return try {
-        Log.i("widget", "getAccumulation success")
         Hane42Apis.hane42ApiService.getAccumulationTime(SharedPreferenceUtils.getAccessToken())
     } catch (err: Exception) {
-        Log.i("widget", "getAccumulation error: ${err.message}")
         null
     }
 }
 
 internal suspend fun getInOutState(): String? {
     return try {
-        Log.i("widget", "getInOutState success")
         Hane42Apis.hane42ApiService.getMainInfo(SharedPreferenceUtils.getAccessToken()).inoutState
     } catch (err: Exception) {
-        Log.i("widget", "getInOutState error: ${err.message}")
         null
     }
 }
@@ -41,7 +37,6 @@ fun getProgressPercent(accumulationTime: Long): Int {
     val targetDouble = 80.0 * 3600
 
     val percent = (accumulationTime / targetDouble * 100).toInt()
-    Log.i("data", "percent: $percent")
     if (percent >= 100) return 100
     return percent
 }

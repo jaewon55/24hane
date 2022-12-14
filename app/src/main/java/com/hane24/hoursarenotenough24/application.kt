@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.onEach
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        Log.i("login", "App Created")
 
         instance = this
     }

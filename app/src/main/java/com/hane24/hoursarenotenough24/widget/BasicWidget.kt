@@ -40,7 +40,6 @@ class BasicWidget : AppWidgetProvider() {
 
             when (intent?.action) {
                 "REFRESH" -> {
-                    Log.i("widget", "REFRESH BroadCast Recv")
                     updateRefreshAnimationOn(views, R.id.widget_refresh_progress, R.id.widget_refresh_button)
                     for (appWidgetId in widgetManager.getAppWidgetIds(componentName)) {
                         widgetManager.updateAppWidget(appWidgetId, views)
@@ -70,7 +69,6 @@ private suspend fun getData() {
 }
 
 private fun setSuccessCondition(context: Context, views: RemoteViews) {
-    Log.i("widget", "setSuccessCondition Called")
     val refreshIntent = Intent(context, BasicWidget::class.java).also {
         it.action = "REFRESH"
     }
@@ -89,7 +87,6 @@ private fun setSuccessCondition(context: Context, views: RemoteViews) {
 }
 
 private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
-    Log.i("widget", "setErrorCondition Called")
     val widgetManager = AppWidgetManager.getInstance(context)
     val componentName = ComponentName(context, BasicWidget::class.java)
     val refreshIntent = Intent(context, BasicWidget::class.java).also {

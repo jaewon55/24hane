@@ -109,8 +109,6 @@ class LogListViewModel : ViewModel() {
             setCalendarItemList()
             setTableItemList()
         } catch (err: HttpException) {
-            Log.i("state", "accumulationApi Error: ${err.code()}")
-            Log.i("state", "accumulationApi Error: ${err.message}")
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
 
@@ -120,7 +118,6 @@ class LogListViewModel : ViewModel() {
                 else -> _errorState.value = State.UNKNOWN_ERROR
             }
         } catch (err: Exception) {
-            Log.i("state", "accumulationApi Error: ${err.message}")
             _errorState.value = State.UNKNOWN_ERROR
         }
     }
@@ -144,8 +141,6 @@ class LogListViewModel : ViewModel() {
                 }
             }
         } catch (err: HttpException) {
-            Log.i("state", "accumulationApi Error: ${err.code()}")
-            Log.i("state", "accumulationApi Error: ${err.message}")
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
 
@@ -155,7 +150,6 @@ class LogListViewModel : ViewModel() {
                 else -> _errorState.value = State.UNKNOWN_ERROR
             }
         } catch (err: Exception) {
-            Log.i("state", "accumulationApi Error: ${err.message}")
             _errorState.value = State.UNKNOWN_ERROR
         }
     }
