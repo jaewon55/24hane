@@ -8,6 +8,7 @@ data class MainInfo(
     val login: String,
     val profileImage: String,
     val inoutState: String,
+    val tagAt: String
 )
 
 data class AccumulationTimeInfo(
