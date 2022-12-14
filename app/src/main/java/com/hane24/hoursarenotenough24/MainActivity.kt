@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -45,6 +46,13 @@ class MainActivity : AppCompatActivity() {
         setViewPager()
         setRefreshButtonListener()
         setFragmentsViewModel()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
+            this.action = "ANIM_OFF"
+        })
     }
 
     override fun onBackPressed() {
