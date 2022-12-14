@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
         cookieManager.setAcceptCookie(true)
         cookieManager.setAcceptThirdPartyCookies(binding.loginWebView, true)
         binding.loginWebView.webViewClient = CustomWebViewClient()
+        binding.loginWebView.settings.javaScriptEnabled = true
         binding.loginWebView.loadUrl(loginUri.toString())
     }
 
@@ -69,6 +70,15 @@ class LoginActivity : AppCompatActivity() {
             }
             return false
         }
+
+//        override fun onProgressChanged(view: WebView?, newProgress: Int) {
+//            super.onProgressChanged(view, newProgress)
+//
+//            if (newProgress == 100) {
+//                binding.loginWebView.visibility = View.VISIBLE
+//                binding.loadingLayout.visibility = View.GONE
+//            }
+//        }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
