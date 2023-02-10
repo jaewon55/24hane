@@ -107,7 +107,11 @@ class OverViewViewModel : ViewModel() {
                 _latestTagTime.value = mainInfo.tagAt
                     .substringAfter('T')
                     .split(":")
-                    .let { "${it[0].toInt() + 9}:${it[1]}" }
+                    .let {
+                        var hour = it[0].toInt() + 9
+                        if (hour > 23) hour -= 24
+                        "$hour:${it[1]}"
+                    }
             } else {
                 _inOutState.value = false
                 _latestTagTime.value = ""
