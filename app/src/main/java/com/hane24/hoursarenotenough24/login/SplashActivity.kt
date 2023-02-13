@@ -31,7 +31,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        setStatusAndNavigationBar()
+//        setStatusAndNavigationBar()
         checkNetworkState(NetworkObserverImpl().isConnected())
         checkLogin()
         observeLoginState()
