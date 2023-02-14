@@ -6,6 +6,7 @@ import android.animation.LayoutTransition
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,12 +16,17 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.MainActivity
 
 import com.hane24.hoursarenotenough24.R
@@ -32,6 +38,7 @@ import kotlin.math.min
 
 class OverViewFragment : Fragment() {
     private lateinit var binding: FragmentOverviewBinding
+    private val pager by lazy { binding.overviewGraphViewpager }
     private var minHeight = Int.MIN_VALUE
     private var maxHeight = Int.MIN_VALUE
     private val viewModel: OverViewViewModel by activityViewModels()
@@ -39,10 +46,11 @@ class OverViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         initBinding(inflater, container)
-
+        initViewPager()
         binding.overviewTodayCard.measure(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         minHeight = binding.overviewTodayCard.measuredHeight
         Log.i("data", "${binding.overviewTodayCard.measuredHeight}")
+
 
         binding.overviewTodayCard.setOnClickListener {
             if (!isMeasuredMaxHeight() || !isChildViewVisible(it))
@@ -77,6 +85,15 @@ class OverViewFragment : Fragment() {
         observeErrorState()
 
         return binding.root
+    }
+
+    private fun initViewPager() {
+        val adapter = GraphViewPagerAdapter(requireActivity())
+
+        pager.adapter = adapter
+        TabLayoutMediator(binding.overviewGraphTab, pager) { tab, position ->
+//            tab.setIcon(R.drawable.tab_selector)
+        }.attach()
     }
 
     private fun isChildViewVisible(view: View): Boolean {
@@ -170,5 +187,21 @@ class OverViewFragment : Fragment() {
             .putExtra("loginState", state)
 
         startActivity(intent).also { requireActivity().finish() }
+    }
+    class GraphViewPagerAdapter(activity: FragmentActivity): FragmentStateAdapter(activity) {
+        override fun getItemCount() = 2
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    val data = Bundle().apply { putInt("data", 0) }
+                    OverViewGraphFragment().apply { arguments = data }
+                }
+                else -> {
+                    val data = Bundle().apply { putInt("data", 1) }
+                    OverViewGraphFragment().apply { arguments = data }
+                }
+            }
+        }
     }
 }

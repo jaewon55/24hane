@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        tools:context=".overview.OverViewGraphFragment">
+
+
+        <TextView
+            android:id="@+id/overview_graph_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="최근 주간 그래프"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/overview_graph_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(6주)"
+            app:layout_constraintBottom_toBottomOf="@+id/overview_graph_name"
+            app:layout_constraintStart_toEndOf="@+id/overview_graph_name"
+            app:layout_constraintTop_toTopOf="@+id/overview_graph_name" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/overview_graph_name">
+
+            <ImageView
+                android:id="@+id/overview_graph1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/graph"
+                tools:layout_height="87dp"
+                tools:layout_width="25dp" />
+
+            <ImageView
+                android:id="@+id/overview_graph2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/graph"
+                tools:layout_height="87dp"
+                tools:layout_width="25dp" />
+
+            <ImageView
+                android:id="@+id/overview_graph3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/graph"
+                tools:layout_height="87dp"
+                tools:layout_width="25dp" />
+
+            <ImageView
+                android:id="@+id/overview_graph4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/graph"
+                tools:layout_height="87dp"
+                tools:layout_width="25dp" />
+
+            <ImageView
+                android:id="@+id/overview_graph5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/graph"
+                tools:layout_height="87dp"
+                tools:layout_width="25dp" />
+
+            <ImageView
+                android:id="@+id/overview_graph6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/graph"
+                tools:layout_height="87dp"
+                tools:layout_width="25dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

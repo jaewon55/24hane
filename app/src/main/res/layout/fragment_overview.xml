@@ -22,8 +22,37 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
+
+            <ImageView
+                android:id="@+id/overview_profile_image"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_github" />
+
+            <TextView
+                android:id="@+id/overview_profile_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="seongjki 님"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/overview_profile_image"
+                app:layout_constraintStart_toEndOf="@+id/overview_profile_image"
+                app:layout_constraintTop_toTopOf="@+id/overview_profile_image" />
+
+            <ImageView
+                android:id="@+id/overview_announce_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/overview_profile_id"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/overview_profile_id"
+                app:srcCompat="@drawable/ic_announce_empty" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/overview_month_card"
@@ -34,7 +63,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="578dp">
+                app:layout_constraintTop_toBottomOf="@+id/overview_today_card">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/overview_month_layout"
@@ -114,9 +143,8 @@
                 android:layout_margin="20dp"
                 app:cardCornerRadius="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="462dp">
+                app:layout_constraintTop_toBottomOf="@+id/overview_profile_image">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/overview_today_layout"
@@ -190,13 +218,44 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="97dp"
-                android:layout_height="84dp"
-                app:srcCompat="@drawable/ic_github"
-                tools:layout_editor_absoluteX="31dp"
-                tools:layout_editor_absoluteY="226dp" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/overview_graph_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_month_card">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/overview_graph_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/overview_graph_tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:tabBackground="@drawable/tab_selector"
+                        app:tabGravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/overview_graph_viewpager"
+                        app:layout_constraintEnd_toEndOf="@id/overview_graph_viewpager"
+                        app:tabIndicatorFullWidth="true" />
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/overview_graph_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toTopOf="@id/overview_graph_tab"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </androidx.viewpager2.widget.ViewPager2>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
