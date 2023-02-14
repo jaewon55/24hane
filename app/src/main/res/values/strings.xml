@@ -30,5 +30,7 @@ See the License for the specific language governing permissions and
 limitations under the License.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="target_time">목표 시간</string>
+    <string name="accumulate_time">이용 시간</string>
 
 </resources>
