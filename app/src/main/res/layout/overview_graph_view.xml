@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="20dp"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:background="#00000000"
+            tools:context=".overview.OverViewGraphFragment">
+
+
+            <TextView
+                android:id="@+id/overview_graph_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="최근 주간 그래프"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/overview_graph_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(6주)"
+                app:layout_constraintBottom_toBottomOf="@+id/overview_graph_name"
+                app:layout_constraintStart_toEndOf="@+id/overview_graph_name"
+                app:layout_constraintTop_toTopOf="@+id/overview_graph_name" />
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="#00000000"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_graph_name">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="#00000000"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/overview_graph1"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:src="@drawable/graph"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.1" />
+
+                    <ImageView
+                        android:id="@+id/overview_graph2"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_graph1"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+                    <ImageView
+                        android:id="@+id/overview_graph3"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_graph2"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+                    <ImageView
+                        android:id="@+id/overview_graph4"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_graph3"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+                    <ImageView
+                        android:id="@+id/overview_graph5"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_graph4"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+                    <ImageView
+                        android:id="@+id/overview_graph6"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_graph5"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/overview_white_graph1"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/overview_white_guideline2"
+                        app:tint="@color/white" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/overview_white_guideline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.1" />
+
+                    <ImageView
+                        android:id="@+id/overview_white_graph2"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_white_graph1"
+                        app:layout_constraintTop_toTopOf="@+id/overview_white_guideline2"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/overview_white_graph3"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_white_graph2"
+                        app:layout_constraintTop_toTopOf="@+id/overview_white_guideline2"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/overview_white_graph4"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_white_graph3"
+                        app:layout_constraintTop_toTopOf="@+id/overview_white_guideline2"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/overview_white_graph5"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_white_graph4"
+                        app:layout_constraintTop_toTopOf="@+id/overview_white_guideline2"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/overview_white_graph6"
+                        android:layout_width="25dp"
+                        android:layout_height="87dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/graph"
+                        app:layout_constraintStart_toEndOf="@id/overview_white_graph5"
+                        app:layout_constraintTop_toTopOf="@+id/overview_white_guideline2"
+                        app:tint="@color/white" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/overview_graph_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/frameLayout"
+                app:layout_constraintStart_toStartOf="@+id/frameLayout"
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>
+
+

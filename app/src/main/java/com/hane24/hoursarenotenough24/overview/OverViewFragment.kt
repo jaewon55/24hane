@@ -23,14 +23,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.MainActivity
 
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
+import com.hane24.hoursarenotenough24.databinding.OverviewGraphViewBinding
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
@@ -88,12 +92,28 @@ class OverViewFragment : Fragment() {
     }
 
     private fun initViewPager() {
-        val adapter = GraphViewPagerAdapter(requireActivity())
+        val monthlyTimeInfo = TimeInfo(listOf(20L, 30L, 40L, 50L, 60L, 70L), 1)
+        val weeklyTimeInfo = TimeInfo(listOf(60L, 50L, 40L, 30L, 20L, 10L), 0)
+        val adapter = GraphViewPagerAdapter(listOf(weeklyTimeInfo, monthlyTimeInfo), pager)
 
         pager.adapter = adapter
-        TabLayoutMediator(binding.overviewGraphTab, pager) { tab, position ->
-//            tab.setIcon(R.drawable.tab_selector)
-        }.attach()
+        pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            }
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+            }
+        })
     }
 
     private fun isChildViewVisible(view: View): Boolean {
@@ -188,18 +208,52 @@ class OverViewFragment : Fragment() {
 
         startActivity(intent).also { requireActivity().finish() }
     }
-    class GraphViewPagerAdapter(activity: FragmentActivity): FragmentStateAdapter(activity) {
-        override fun getItemCount() = 2
 
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                0 -> {
-                    val data = Bundle().apply { putInt("data", 0) }
-                    OverViewGraphFragment().apply { arguments = data }
-                }
-                else -> {
-                    val data = Bundle().apply { putInt("data", 1) }
-                    OverViewGraphFragment().apply { arguments = data }
+    data class TimeInfo(val accumulationTimes: List<Long>, val timeType: Int)
+    class GraphViewPagerAdapter(
+        private val items: List<TimeInfo>,
+        private val viewPager: ViewPager2
+        ): RecyclerView.Adapter<GraphViewPagerAdapter.GraphViewHolder>() {
+        private val runnable = Runnable { items }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GraphViewHolder {
+            return GraphViewHolder.from(parent)
+        }
+
+        override fun onBindViewHolder(holder: GraphViewHolder, position: Int) {
+            holder.bind(items[position], viewPager)
+
+            if (position == items.size-1)
+                viewPager.post(runnable)
+        }
+
+        override fun getItemCount(): Int {
+            return 2
+        }
+
+        class GraphViewHolder private constructor (val binding: OverviewGraphViewBinding) : RecyclerView.ViewHolder(binding.root) {
+            fun getGraphHeight(percent: Long): Int {
+                val maxHeight = 87
+                val whiteHeight = maxHeight - (maxHeight * (percent * 0.01)).toInt()
+                val density = App.instance.applicationContext.resources.displayMetrics.density
+                return (whiteHeight * density).toInt()
+            }
+            fun bind(item: TimeInfo, viewPager: ViewPager2) {
+                val maxHeight = 87
+                TabLayoutMediator(binding.overviewGraphTab, viewPager) { _,_ -> }.attach()
+                binding.overviewGraphName.text = if (item.timeType == 0) "최근 주간 그래프" else "최근 월간 그래프"
+                binding.overviewGraphType.text = if (item.timeType == 0) "(6주)" else "(6달)"
+                binding.overviewWhiteGraph1.layoutParams.height = getGraphHeight(item.accumulationTimes[0])
+                binding.overviewWhiteGraph2.layoutParams.height = getGraphHeight(item.accumulationTimes[1])
+                binding.overviewWhiteGraph3.layoutParams.height = getGraphHeight(item.accumulationTimes[2])
+                binding.overviewWhiteGraph4.layoutParams.height = getGraphHeight(item.accumulationTimes[3])
+                binding.overviewWhiteGraph5.layoutParams.height = getGraphHeight(item.accumulationTimes[4])
+                binding.overviewWhiteGraph6.layoutParams.height = getGraphHeight(item.accumulationTimes[5])
+            }
+            companion object {
+                fun from(parent: ViewGroup): GraphViewHolder {
+                    val layoutInflater = LayoutInflater.from(parent.context)
+                    val binding = OverviewGraphViewBinding.inflate(layoutInflater, parent, false)
+                    return GraphViewHolder(binding)
                 }
             }
         }
