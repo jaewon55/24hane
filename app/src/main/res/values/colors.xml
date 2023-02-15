@@ -36,17 +36,18 @@
     <color name="sub_info_text_color">#CC959595</color>
     <color name="none">#00000000</color>
 
-    <color name="calendar_color1">#D1EDFA</color>
-    <color name="calendar_color2">#A1E8FF</color>
-    <color name="calendar_color3">#3FC3FF</color>
-    <color name="calendar_color4">#0097DC</color>
-    <color name="calendar_color5">#0070B4</color>
-    <color name="next_day_background">#FAFAFA</color>
-    <color name="next_day_text">#D4D4D4</color>
+    <color name="calendar_color1">#F1EFFE</color>
+    <color name="calendar_color2">#D5CEFB</color>
+    <color name="calendar_color3">#9D8CF6</color>
+    <color name="calendar_color4">#9D8CF6</color>
+    <color name="calendar_color5">#9D8CF6</color>
+    <color name="next_day_background">#FFFFFF</color>
+    <color name="next_day_text">#9B9797</color>
     <color name="calendar_item_stroke_default">#E1E1E1</color>
 
     <color name="dialog_color">#47B5FF</color>
-    <color name="selected_color">#DDFF5722</color>
+    <color name="selected_text_color">#FFFFFF</color>
+    <color name="selected_background_color">#735BF2</color>
 
     <color name="widget_in_state_color">#09FF21</color>
     <color name="widget_out_state_color">#D9D9D9</color>

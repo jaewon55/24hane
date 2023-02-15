@@ -146,12 +146,13 @@ fun bindCalendarItem(
     selectedDay: Int
 ) {
     view.text = item.day.toString()
-    view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
     view.strokeWidth = 0
     if (item.day == selectedDay) {
-        view.setTextColor(getColorHelper(view.context, R.color.selected_color))
+        view.setTextColor(getColorHelper(view.context, R.color.selected_text_color))
+        view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, R.color.selected_background_color))
     } else {
         view.setTextColor(getColorHelper(view.context, R.color.black))
+        view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
 //        ColorStateList.valueOf(getColorHelper(view.context, R.color.calendar_item_stroke_default))
     }
     if (item.isNextDay) {
