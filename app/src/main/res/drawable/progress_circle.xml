@@ -24,8 +24,8 @@
                 android:shape="ring">
                 <gradient
                     android:type="linear"
-                    android:angle="180"
-                    android:startColor="#0ABABC0A"
+                    android:angle="225"
+                    android:startColor="#8EF2F3"
                     android:endColor="#735BF2"/>
             </shape>
         </rotate>

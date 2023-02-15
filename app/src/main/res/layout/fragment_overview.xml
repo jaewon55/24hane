@@ -323,12 +323,13 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
                 android:layout_marginVertical="20dp"
+                app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/overview_curr_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_month_card">
+
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
@@ -341,6 +342,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clipToPadding="false" />
+
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/overview_graph_tab"
                         android:layout_width="match_parent"
@@ -354,35 +356,36 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/overview_gaepo_card"
-                app:cardCornerRadius="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
+                app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" >
+                app:layout_constraintEnd_toStartOf="@+id/overview_seocho_card"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="28dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="28dp">
 
                     <TextView
                         android:id="@+id/overview_gaepo_title"
+                        style="@style/overview_population_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/overview_gaepo_title"
-                        style="@style/overview_population_title"/>
+                        android:text="@string/overview_gaepo_title" />
 
                     <TextView
                         android:id="@+id/overview_gaepo_population"
+                        style="@style/overview_population_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="34dp"
                         android:layout_weight="1"
-                        android:text="@string/overview_population_default"
-                        style="@style/overview_population_text"/>
+                        android:text="@string/overview_population_default" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
