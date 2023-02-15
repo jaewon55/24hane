@@ -2,4 +2,7 @@
 <resources>
     <dimen name="tab_selected_size">6dp</dimen>
     <dimen name="tab_default_size">5dp</dimen>
+    <dimen name="day_of_week_text_size">13dp</dimen>
+    <dimen name="calendar_common_radius">10dp</dimen>
+    <dimen name="calendar_selected_radius">20dp</dimen>
 </resources>

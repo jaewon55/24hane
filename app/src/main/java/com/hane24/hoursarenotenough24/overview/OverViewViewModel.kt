@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
@@ -22,11 +21,11 @@ class OverViewViewModel : ViewModel() {
 
     private val _dayAccumulationTime = MutableLiveData(0L)
     val dayAccumulationTime: LiveData<String> =
-        Transformations.map(_dayAccumulationTime) { parseTime(it) }
+        Transformations.map(_dayAccumulationTime) { parseTime(it, false) }
 
     private val _dayTargetTime = MutableLiveData(0L)
     val dayTargetTime: LiveData<String> =
-        Transformations.map(_dayTargetTime) { parseTime(it) }
+        Transformations.map(_dayTargetTime) { parseTime(it, true) }
 
     private val _dayProgressPercent = MutableLiveData(0)
     val dayProgressPercent: LiveData<Int>
@@ -36,11 +35,11 @@ class OverViewViewModel : ViewModel() {
 
     private val _monthAccumulationTime = MutableLiveData(0L)
     val monthAccumulationTime: LiveData<String> =
-        Transformations.map(_monthAccumulationTime) { parseTime(it) }
+        Transformations.map(_monthAccumulationTime) { parseTime(it, false) }
 
     private val _monthTargetTime = MutableLiveData(0L)
     val monthTargetTime: LiveData<String> =
-        Transformations.map(_monthTargetTime) { parseTime(it) }
+        Transformations.map(_monthTargetTime) { parseTime(it, true) }
 
     private val _monthProgressPercent = MutableLiveData(0)
     val monthProgressPercent: LiveData<Int>
@@ -160,16 +159,16 @@ class OverViewViewModel : ViewModel() {
 
     private fun getProgressPercent(time: Long, targetTime: Long?): Int {
         val targetDouble: Double = targetTime?.toDouble() ?: 1.0
-        val percent = (time / targetDouble * 100).toInt()
-        if (percent >= 100) return 100
-        return percent
+        return (time / targetDouble * 100).toInt()
     }
 
-    private fun parseTime(time: Long): String {
+    private fun parseTime(time: Long, isTargetTime: Boolean): String {
         var second = time
         val hour = second / 3600
+        if (isTargetTime)
+            return String.format("%d시간", hour)
         second -= hour * 3600
         val min = second / 60
-        return String.format("%d:%02d", hour, min)
+        return String.format("%d시간%d분", hour, min)
     }
 }
