@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title=""
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_home_selector"
         android:id="@+id/bottom_navigation_home_menu" />
     <item android:title=""
-        android:icon="@drawable/ic_calendar"
+        android:icon="@drawable/ic_calendar_selector"
         android:id="@+id/bottom_navigation_calendar_menu"/>
     <item android:title=""
-        android:icon="@drawable/ic_menu"
+        android:icon="@drawable/ic_menu_selector"
         android:id="@+id/bottom_navigation_setting_menu"/>
 </menu>

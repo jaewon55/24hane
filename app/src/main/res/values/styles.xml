@@ -79,22 +79,22 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginTop">24dp</item>
         <item name="android:textSize">20dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/main_info_text_color</item>
+        <item name="android:textColor">#333333</item>
     </style>
 
     <style name="LogListSubTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/main_info_text_color</item>
+        <item name="android:textColor">#707070</item>
         <item name="android:textSize">15dp</item>
         <item name="android:layout_marginTop">16dp</item>
     </style>
 
     <style name="LogListTimeText">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/time_text_color</item>
         <item name="android:textSize">30dp</item>
@@ -102,15 +102,28 @@
     </style>
 
     <style name="LogListHeaderTextView">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#333333</item>
     </style>
 
-    <style name="LogListRecyclerItemTextView" parent="LogListHeaderTextView">
-        <item name="android:textColor">@color/time_text_color</item>
+    <style name="CalendarDayOfWeekTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">#9B9797</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="LogListRecyclerItemTextView">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">#333333</item>
     </style>
 
     <style name="overview_time_title">

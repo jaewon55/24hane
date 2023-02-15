@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,29 +10,40 @@
             type="com.hane24.hoursarenotenough24.data.LogTableItem" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:paddingVertical="8dp">
 
         <TextView
             android:id="@+id/in_time"
             style="@style/LogListRecyclerItemTextView"
+            android:gravity="start"
             android:text="@{logData.inTime}"
+            app:layout_constraintBottom_toBottomOf="@id/out_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/out_time"
             tools:text="11:27:18" />
 
         <TextView
             android:id="@+id/out_time"
             style="@style/LogListRecyclerItemTextView"
             android:text="@{logData.outTime}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="17:27:18" />
 
         <TextView
             android:id="@+id/duration_time"
             style="@style/LogListRecyclerItemTextView"
             android:text="@{logData.durationTime}"
+            app:layout_constraintBottom_toBottomOf="@id/out_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/out_time"
+
             tools:text="06:00:00" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

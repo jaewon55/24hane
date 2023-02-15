@@ -59,6 +59,9 @@ fun MonthTimeLogContainer.getLogTableList(day: Int): List<LogTableItem> {
 fun MonthTimeLogContainer.getCalendarList(): List<CalendarItem> {
     val calendar = Calendar.getInstance().apply { set(year, month - 1, 1) }
     val newList = mutableListOf<CalendarItem>()
+    for (i in -7..-1) {
+        newList.add(CalendarItem(i, 0, false))
+    }
     for (i in 1 until calendar.get(Calendar.DAY_OF_WEEK)) {
         newList.add(CalendarItem(0, 0, false))
     }

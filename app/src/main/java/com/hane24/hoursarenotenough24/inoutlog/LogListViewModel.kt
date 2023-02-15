@@ -62,7 +62,8 @@ class LogListViewModel : ViewModel() {
         get() = _calendarItemList
 
     val selectedDateText = Transformations.map(selectedDay) { day ->
-        "Date: $selectedYear.$selectedMonth.$day"
+        val date = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, day) }.time
+        SimpleDateFormat("M.d EEEE", Locale("ko")).format(date)
     }
     val dayAccumulationTimeText = Transformations.map(selectedDay) { day ->
         val time = calendarItemList.value?.getDayAccumulationTime(day) ?: 0L
@@ -70,7 +71,7 @@ class LogListViewModel : ViewModel() {
     }
     val monthAccumulationTimeText = Transformations.map(calendarItemList) { list ->
         val time = list.getMonthAccumulationTime()
-        parseAccumulationTime(time)
+        "총 ${parseAccumulationTime(time)}"
     }
 
     private val _tableItemList = MutableLiveData(emptyList<LogTableItem>())
@@ -159,13 +160,13 @@ class LogListViewModel : ViewModel() {
         val hour = second / 3600
         second -= hour * 3600
         val min = second / 60
-        return String.format("%dh %dm", hour, min)
+        return String.format("%d시간 %d분", hour, min)
     }
 
     private fun setCalendarDateText() {
-        val date = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, 1) }.time
-        val monthName = SimpleDateFormat("MMM", Locale("en")).format(date)
-        _calendarDateText.value = "$monthName $selectedYear"
+//        val date = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, 1) }.time
+//        val monthName = SimpleDateFormat("MMM", Locale("en")).format(date)
+        _calendarDateText.value = "$selectedYear.$selectedMonth"
     }
 
     private fun setCalendarItemList() {
