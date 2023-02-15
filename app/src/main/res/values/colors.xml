@@ -52,5 +52,6 @@
     <color name="widget_out_state_color">#D9D9D9</color>
     <color name="default_text">#333333</color>
     <color name="graph_text">#9B9797</color>
+    <color name="etc_text">#707070</color>
 
 </resources>
