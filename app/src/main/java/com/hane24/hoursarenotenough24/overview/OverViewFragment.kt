@@ -8,12 +8,15 @@ import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
 import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +41,7 @@ import com.hane24.hoursarenotenough24.databinding.OverviewGraphViewBinding
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
 import kotlin.math.min
 
 class OverViewFragment : Fragment() {
@@ -53,18 +57,22 @@ class OverViewFragment : Fragment() {
         initViewPager()
         binding.overviewTodayCard.measure(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         minHeight = binding.overviewTodayCard.measuredHeight
-        Log.i("data", "${binding.overviewTodayCard.measuredHeight}")
+        Log.i("data", "${minHeight}")
 
 
         binding.overviewTodayCard.setOnClickListener {
-            if (!isMeasuredMaxHeight() || !isChildViewVisible(it))
+            if (!isMeasuredMaxHeight() && !isChildViewVisible(it)) {
+                Log.i("data", "slide Called")
                 slideCardView(it)
+            }
             else {
                 if (isToggled(it)) {
+                    Log.i("data", "collapse Called")
                     binding.overviewTodayBtn.animate().rotation(0f).apply { duration = 200 }
                     collapseAnimation(it)
                 }
                 else {
+                    Log.i("data", "expand Called")
                     binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
                     expandAnimation(it)
                 }
@@ -72,7 +80,7 @@ class OverViewFragment : Fragment() {
         }
 
         binding.overviewMonthCard.setOnClickListener {
-            if (!isMeasuredMaxHeight() || !isChildViewVisible(it))
+            if (!isMeasuredMaxHeight() && !isChildViewVisible(it))
                 slideCardView(it)
             else {
                 if (isToggled(it)) {
@@ -97,6 +105,7 @@ class OverViewFragment : Fragment() {
         val adapter = GraphViewPagerAdapter(listOf(weeklyTimeInfo, monthlyTimeInfo), pager)
 
         pager.adapter = adapter
+        TabLayoutMediator(binding.overviewGraphTab, pager) { _,_ -> }.attach()
         pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(
                 position: Int,
@@ -128,14 +137,61 @@ class OverViewFragment : Fragment() {
     private fun isMeasuredMaxHeight() = maxHeight != Int.MIN_VALUE
 
     private fun isToggled(view: View) = view.height == maxHeight
+
+    private fun reverseViewVisibility(view: View) {
+        val reverseVisibility = { view: View ->
+            view.visibility = if (view.visibility == View.VISIBLE)
+                View.GONE
+            else
+                View.VISIBLE
+        }
+        if (view == binding.overviewTodayCard) {
+            reverseVisibility(binding.overviewTodayTargetText)
+            reverseVisibility(binding.overviewTodayTargetTimeText)
+            reverseVisibility(binding.overviewTodayProgressbar)
+            reverseVisibility(binding.overviewTodayProgressbarPercent)
+            reverseVisibility(binding.overviewTodayProgressbarTarget)
+            reverseVisibility(binding.overviewTodayProgressbarTargetTime)
+        } else {
+            reverseVisibility(binding.overviewMonthTargetText)
+            reverseVisibility(binding.overviewMonthTargetTimeText)
+            reverseVisibility(binding.overviewMonthProgressbar)
+            reverseVisibility(binding.overviewMonthProgressbarPercent)
+            reverseVisibility(binding.overviewMonthProgressbarTarget)
+            reverseVisibility(binding.overviewMonthProgressbarTargetTime)
+            if (binding.overviewMonthAccumulateText.textColors == ColorStateList.valueOf(Color.WHITE)) {
+                binding.overviewMonthCard.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                binding.overviewMonthAccumulateTimeText.setTextColor(Color.BLACK)
+                binding.overviewMonthBtn.imageTintList = ColorStateList.valueOf(Color.GRAY)
+                binding.overviewMonthAccumulateText.setTextColor(Color.BLACK)
+            } else {
+                binding.overviewMonthCard.backgroundTintList = ColorStateList.valueOf(Color.argb(255, 115, 91, 242))
+                binding.overviewMonthAccumulateTimeText.setTextColor(Color.WHITE)
+                binding.overviewMonthBtn.imageTintList = ColorStateList.valueOf(Color.WHITE)
+                binding.overviewMonthAccumulateText.setTextColor(Color.WHITE)
+            }
+        }
+    }
     private fun expandAnimation(view: View) {
         val expandAnimation = object: Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
                 view.layoutParams.height =
-                    if (interpolatedTime >= 0.8f) maxHeight else (minHeight + (minHeight * interpolatedTime)).toInt()
+                    if (interpolatedTime >= 0.8f) {
+                        maxHeight
+                    } else (minHeight + (minHeight * interpolatedTime)).toInt()
                 view.requestLayout()
             }
         }.apply { duration = 200L }
+
+        val animListener = object: AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {}
+
+            override fun onAnimationEnd(p0: Animation?) {
+                reverseViewVisibility(view)
+            }
+            override fun onAnimationRepeat(p0: Animation?) {}
+        }
+        expandAnimation.setAnimationListener(animListener)
         view.startAnimation(expandAnimation)
     }
 
@@ -147,25 +203,27 @@ class OverViewFragment : Fragment() {
                 view.requestLayout()
             }
         }.apply { duration = 200L }
+        val animListener = object: AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+                reverseViewVisibility(view)
+            }
+            override fun onAnimationEnd(p0: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+        }
+        collapseAnimation.setAnimationListener(animListener)
         view.startAnimation(collapseAnimation)
     }
 
     fun slideCardView(view: View) {
         Log.i("data", "minHeight: $minHeight maxHeight: $maxHeight")
-
+        reverseViewVisibility(view)
         if (view == binding.overviewTodayCard) {
-                binding.overviewTodayBtn.animate().setDuration(200).rotation(90f)
-                binding.overviewTodayTargetText.visibility = View.VISIBLE
-                binding.overviewTodayTargetTimeText.visibility = View.VISIBLE
-                binding.overviewTodayProgressbar.visibility = View.VISIBLE
-                binding.overviewTodayCard.measure(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
-                maxHeight = binding.overviewTodayCard.measuredHeight
+            binding.overviewTodayBtn.animate().setDuration(200).rotation(90f)
+            binding.overviewTodayCard.measure(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+            maxHeight = binding.overviewTodayCard.measuredHeight
             Log.i("data", "after: ${binding.overviewTodayLayout.measuredHeight}")
         } else if (view == binding.overviewMonthCard) {
             binding.overviewMonthBtn.animate().setDuration(200).rotation(90f)
-            binding.overviewMonthTargetText.visibility = View.VISIBLE
-            binding.overviewMonthTargetTimeText.visibility = View.VISIBLE
-            binding.overviewMonthProgressbar.visibility = View.VISIBLE
             binding.overviewMonthCard.measure(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
             maxHeight = binding.overviewMonthCard.measuredHeight
         }
@@ -233,21 +291,20 @@ class OverViewFragment : Fragment() {
         class GraphViewHolder private constructor (val binding: OverviewGraphViewBinding) : RecyclerView.ViewHolder(binding.root) {
             fun getGraphHeight(percent: Long): Int {
                 val maxHeight = 87
-                val whiteHeight = maxHeight - (maxHeight * (percent * 0.01)).toInt()
+                val whiteHeight = (maxHeight * (percent * 0.01)).toInt()
                 val density = App.instance.applicationContext.resources.displayMetrics.density
                 return (whiteHeight * density).toInt()
             }
             fun bind(item: TimeInfo, viewPager: ViewPager2) {
                 val maxHeight = 87
-                TabLayoutMediator(binding.overviewGraphTab, viewPager) { _,_ -> }.attach()
                 binding.overviewGraphName.text = if (item.timeType == 0) "최근 주간 그래프" else "최근 월간 그래프"
                 binding.overviewGraphType.text = if (item.timeType == 0) "(6주)" else "(6달)"
-                binding.overviewWhiteGraph1.layoutParams.height = getGraphHeight(item.accumulationTimes[0])
-                binding.overviewWhiteGraph2.layoutParams.height = getGraphHeight(item.accumulationTimes[1])
-                binding.overviewWhiteGraph3.layoutParams.height = getGraphHeight(item.accumulationTimes[2])
-                binding.overviewWhiteGraph4.layoutParams.height = getGraphHeight(item.accumulationTimes[3])
-                binding.overviewWhiteGraph5.layoutParams.height = getGraphHeight(item.accumulationTimes[4])
-                binding.overviewWhiteGraph6.layoutParams.height = getGraphHeight(item.accumulationTimes[5])
+                binding.overviewGraph1.layoutParams.height = getGraphHeight(item.accumulationTimes[0])
+                binding.overviewGraph2.layoutParams.height = getGraphHeight(item.accumulationTimes[1])
+                binding.overviewGraph3.layoutParams.height = getGraphHeight(item.accumulationTimes[2])
+                binding.overviewGraph4.layoutParams.height = getGraphHeight(item.accumulationTimes[3])
+                binding.overviewGraph5.layoutParams.height = getGraphHeight(item.accumulationTimes[4])
+                binding.overviewGraph6.layoutParams.height = getGraphHeight(item.accumulationTimes[5])
             }
             companion object {
                 fun from(parent: ViewGroup): GraphViewHolder {
