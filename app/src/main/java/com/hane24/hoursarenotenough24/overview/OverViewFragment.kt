@@ -92,8 +92,8 @@ class OverViewFragment : Fragment() {
     }
 
     private fun initViewPager() {
-        val monthlyTimeInfo = TimeInfo(listOf(20L, 30L, 40L, 50L, 60L, 70L), 1)
-        val weeklyTimeInfo = TimeInfo(listOf(60L, 50L, 40L, 30L, 20L, 10L), 0)
+        val monthlyTimeInfo = TimeInfo(listOf(20L, 30L, 40L, 50L, 60L, 100L), 1)
+        val weeklyTimeInfo = TimeInfo(listOf(60L, 100L, 40L, 30L, 20L, 10L), 0)
         val adapter = GraphViewPagerAdapter(listOf(weeklyTimeInfo, monthlyTimeInfo), pager)
 
         pager.adapter = adapter

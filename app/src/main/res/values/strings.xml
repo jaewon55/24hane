@@ -32,5 +32,9 @@ limitations under the License.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="target_time">목표 시간</string>
     <string name="accumulate_time">이용 시간</string>
+    <string name="overview_curr_status">실시간 현황</string>
+    <string name="overview_seocho_title">서초</string>
+    <string name="overview_population_default">000명</string>
+    <string name="overview_gaepo_title">개포</string>
 
 </resources>
