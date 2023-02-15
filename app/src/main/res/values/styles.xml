@@ -55,7 +55,7 @@
         <item name="android:layout_height">0dp</item>
         <item name="android:indeterminate">false</item>
         <item name="android:max">100</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">20dp</item>
         <item name="android:progressDrawable">@drawable/progress_circle</item>
     </style>
 
@@ -112,5 +112,46 @@
     <style name="LogListRecyclerItemTextView" parent="LogListHeaderTextView">
         <item name="android:textColor">@color/time_text_color</item>
     </style>
+
+    <style name="overview_time_title">
+        <item name="android:textSize">17dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="overview_time">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="overview_population_text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/default_text</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="overview_population_title">
+        <item name="android:textSize">16dp</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textColor">@color/default_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="graph_info">
+        <item name="android:textSize">12dp</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="etc_text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/etc_text</item>
+    </style>
+
 
 </resources>

@@ -40,7 +40,6 @@
         android:layout_height="match_parent"
         app:cardBackgroundColor="@color/card_view_background"
         app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
         tools:layout_height="210dp"
         tools:layout_margin="15dp"
         tools:layout_width="380dp">

@@ -30,5 +30,27 @@ See the License for the specific language governing permissions and
 limitations under the License.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="target_time">목표 시간</string>
+    <string name="accumulate_time">이용 시간</string>
+    <string name="overview_curr_status">실시간 현황</string>
+    <string name="overview_seocho_title">서초</string>
+    <string name="overview_population_default">000명</string>
+    <string name="overview_gaepo_title">개포</string>
+    <string name="accumulate_time_default">0시간 0분</string>
+    <string name="target_time_default">0시간</string>
+    <string name="progress_default">0%</string>
+    <string name="default_progressbar_time">0H</string>
+    <string name="overview_graph_recent">최근 순</string>
+    <string name="overview_graph_old">오래된 순</string>
+    <string name="overview_month_accumulate_title">월 누적 시간</string>
+    <string name="default_graph_date">2.12(월) - 2.18(일)</string>
+    <string name="default_graph_average">평균 6.2시간</string>
+    <string name="default_graph_total">총 42시간</string>
+    <string name="etc_option_title">더보기</string>
+    <string name="card_option">카드 재발급 신청</string>
+    <string name="etc_information">지원금 지침 안내</string>
+    <string name="etc_complain">출입 기록 문의</string>
+    <string name="etc_guide">이용 가이드</string>
+    <string name="etc_feedback">앱 피드백</string>
 
 </resources>

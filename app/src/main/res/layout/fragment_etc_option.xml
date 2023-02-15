@@ -1,22 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".etcoption.EtcOptionFragment">
+        android:padding="20dp">
 
-        <!-- TODO: Update blank fragment layout -->
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="30sp"
-            android:text="더보기 레이아웃입니다." />
+            android:id="@+id/etc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/etc_option_title"
+            android:textSize="20dp"
+            android:fontFamily="@font/inter_medium"
+            android:textStyle="bold"
+            android:textColor="@color/default_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/etc_card_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_title"
+            app:srcCompat="@drawable/ic_card" />
+
+        <TextView
+            android:id="@+id/etc_card_text"
+            style="@style/etc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/card_option"
+            app:layout_constraintBottom_toBottomOf="@+id/etc_card_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/etc_card_image" />
+
+        <ImageView
+            android:id="@+id/etc_information_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_card_image"
+            app:srcCompat="@drawable/ic_book" />
+
+        <TextView
+            android:id="@+id/etc_information_text"
+            style="@style/etc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/etc_information"
+            app:layout_constraintBottom_toBottomOf="@+id/etc_information_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/etc_information_image" />
+
+        <ImageView
+            android:id="@+id/etc_complain_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_information_image"
+            app:srcCompat="@drawable/ic_complain" />
+
+        <TextView
+            android:id="@+id/etc_complain_text"
+            style="@style/etc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/etc_complain"
+            app:layout_constraintBottom_toBottomOf="@+id/etc_complain_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/etc_complain_image" />
+
+        <ImageView
+            android:id="@+id/etc_guide_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etc_complain_image"
+            app:srcCompat="@drawable/ic_guide" />
+
+        <TextView
+            android:id="@+id/etc_guide_text"
+            style="@style/etc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/etc_guide"
+            app:layout_constraintBottom_toBottomOf="@+id/etc_guide_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/etc_guide_image" />
+
+        <ImageView
+            android:id="@+id/etc_feedback_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_guide_image"
+            app:srcCompat="@drawable/ic_feedback" />
+
+        <TextView
+            android:id="@+id/etc_feedback_text"
+            style="@style/etc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/etc_feedback"
+            app:layout_constraintBottom_toBottomOf="@+id/etc_feedback_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/etc_feedback_image" />
+
+        <ImageView
+            android:id="@+id/etc_logout_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_feedback_image"
+            app:srcCompat="@drawable/ic_logout" />
+
+        <TextView
+            android:id="@+id/etc_logout_text"
+            style="@style/etc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/logout"
+            app:layout_constraintBottom_toBottomOf="@+id/etc_logout_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/etc_logout_image" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
