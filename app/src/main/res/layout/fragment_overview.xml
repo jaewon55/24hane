@@ -62,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_profile_image">
@@ -193,6 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
                 android:backgroundTint="#735BF2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.4"
@@ -325,6 +327,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/overview_curr_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -360,15 +363,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/overview_seocho_card"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="28dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:id="@+id/overview_gaepo_title"
@@ -383,7 +386,7 @@
                         style="@style/overview_population_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
+                        android:layout_marginStart="17dp"
                         android:layout_weight="1"
                         android:text="@string/overview_population_default" />
                 </LinearLayout>
@@ -392,6 +395,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/overview_seocho_card"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -399,9 +403,9 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="28dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -414,12 +418,12 @@
 
                     <TextView
                         android:id="@+id/overview_seocho_population"
+                        style="@style/overview_population_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
+                        android:layout_marginStart="17dp"
                         android:layout_weight="1"
-                        android:text="@string/overview_population_default"
-                        style="@style/overview_population_text" />
+                        android:text="@string/overview_population_default" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -428,13 +432,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="@string/overview_curr_status"
                 android:fontFamily="@font/inter_medium"
+                android:text="@string/overview_curr_status"
                 android:textColor="@color/default_text"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/overview_gaepo_card"
-                app:layout_constraintStart_toStartOf="@+id/overview_gaepo_card" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
