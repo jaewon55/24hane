@@ -145,11 +145,23 @@ fun bindCalendarItem(
     item: CalendarItem,
     selectedDay: Int
 ) {
-    view.text = item.day.toString()
-    view.strokeWidth = 0
-    if (item.day == selectedDay) {
+    view.text = when (item.day) {
+        -7 -> "일"
+        -6 -> "월"
+        -5 -> "화"
+        -4 -> "수"
+        -3 -> "목"
+        -2 -> "금"
+        -1 -> "토"
+        else -> item.day.toString()
+    }
+    if (item.day < 0) {
+        view.setTextColor(getColorHelper(view.context, R.color.calendar_week_of_day_text))
+//        view.textSize = view.context.resources.getDimension(R.dimen.day_of_week_text_size)
+    }else if (item.day == selectedDay) {
         view.setTextColor(getColorHelper(view.context, R.color.selected_text_color))
-        view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, R.color.selected_background_color))
+        view.backgroundTintList =
+            ColorStateList.valueOf(getColorHelper(view.context, R.color.selected_background_color))
     } else {
         view.setTextColor(getColorHelper(view.context, R.color.black))
         view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))

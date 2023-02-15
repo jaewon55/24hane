@@ -21,6 +21,7 @@
             buttonState="@{viewModel.leftButtonState}"
             android:layout_marginStart="30dp"
             android:onClick="@{() -> viewModel.leftButtonOnClick()}"
+            android:paddingStart="10dp"
             android:paddingEnd="80dp"
             android:src="@drawable/ic_baseline_chevron_left"
             app:layout_constraintBottom_toBottomOf="@id/calendar_date"
@@ -43,65 +44,24 @@
             android:layout_marginEnd="30dp"
             android:onClick="@{() -> viewModel.rightButtonOnClick()}"
             android:paddingStart="80dp"
+            android:paddingEnd="10dp"
             android:src="@drawable/ic_baseline_chevron_right"
             app:layout_constraintBottom_toBottomOf="@id/calendar_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/calendar_date" />
 
-        <LinearLayout
-            android:id="@+id/calendar_day_of_week"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="@id/calendar_recycler"
-            app:layout_constraintStart_toStartOf="@id/calendar_recycler"
-            app:layout_constraintTop_toBottomOf="@id/calendar_date">
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="일" />
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="월" />
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="화" />
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="수" />
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="목" />
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="금" />
-
-            <TextView
-                style="@style/CalendarDayOfWeekTextView"
-                android:text="토" />
-
-        </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calendar_recycler"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="4dp"
-            android:paddingHorizontal="16dp"
+            android:layout_marginHorizontal="30dp"
+            android:paddingStart="12dp"
             app:calendarGrid="@{viewModel.calendarItemList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_min="200dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/calendar_day_of_week"
+            app:layout_constraintTop_toBottomOf="@id/calendar_date"
             app:loadingState="@{viewModel.loadingState}"
             app:spanCount="7"
             tools:itemCount="31"
@@ -123,7 +83,7 @@
             android:id="@+id/month_accumulation_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginTop="21dp"
             android:background="@drawable/shape_round_corner"
             android:padding="8dp"
             android:text="@{viewModel.monthAccumulationTimeText}"

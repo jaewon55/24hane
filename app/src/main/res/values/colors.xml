@@ -36,6 +36,7 @@
     <color name="sub_info_text_color">#CC959595</color>
     <color name="none">#00000000</color>
 
+    <color name="calendar_week_of_day_text">#9B9797</color>
     <color name="calendar_color1">#F1EFFE</color>
     <color name="calendar_color2">#D5CEFB</color>
     <color name="calendar_color3">#9D8CF6</color>
