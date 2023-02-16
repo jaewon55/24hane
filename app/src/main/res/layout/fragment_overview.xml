@@ -20,427 +20,462 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#F5F5F5"
-            android:padding="30dp">
+            android:layout_height="match_parent">
 
-
-            <ImageView
-                android:id="@+id/overview_profile_image"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_github" />
-
-            <TextView
-                android:id="@+id/overview_profile_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="seongjki 님"
-                android:textColor="@color/default_text"
-                android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/overview_profile_image"
-                app:layout_constraintStart_toEndOf="@+id/overview_profile_image"
-                app:layout_constraintTop_toTopOf="@+id/overview_profile_image" />
-
-            <ImageView
-                android:id="@+id/overview_announce_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/overview_profile_id"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/overview_profile_id"
-                app:srcCompat="@drawable/ic_announce_empty" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/overview_today_card"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/overview_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/overview_profile_image">
+                android:layout_height="match_parent"
+                android:background="#F5F5F5"
+                android:padding="30dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/overview_today_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:padding="16dp">
+                <ImageView
+                    android:id="@+id/overview_profile_image"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_github" />
 
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/overview_today_guideline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_end="36dp" />
-
-                    <TextView
-                        android:id="@+id/overview_today_accumulate_text"
-                        style="@style/overview_time_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/accumulate_time"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/overview_today_accumulate_time_text"
-                        style="@style/overview_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.dayAccumulationTime}"
-                        app:layout_constraintEnd_toStartOf="@+id/overview_today_guideline"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="0시간00분" />
-
-                    <ImageView
-                        android:id="@+id/overview_today_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/overview_today_accumulate_time_text"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/overview_today_accumulate_time_text"
-                        app:srcCompat="@drawable/arrow" />
-
-                    <TextView
-                        android:id="@+id/overview_today_target_text"
-                        style="@style/overview_time_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/target_time"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_today_accumulate_text"
-                        app:layout_constraintStart_toStartOf="@+id/overview_today_accumulate_text"
-                        app:layout_constraintTop_toBottomOf="@+id/overview_today_accumulate_text" />
-
-                    <TextView
-                        android:id="@+id/overview_today_target_time_text"
-                        style="@style/overview_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:onClick="@{() -> fragment.targetTimeOnClick(false)}"
-                        android:text="@{viewModel.dayTargetTime}"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toStartOf="@+id/overview_today_guideline"
-                        app:layout_constraintTop_toBottomOf="@+id/overview_today_accumulate_time_text" />
-
-                    <ProgressBar
-                        android:id="@+id/overview_today_progressbar"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        android:layout_marginTop="20dp"
-                        android:indeterminate="false"
-                        android:max="100"
-                        android:progress="@{viewModel.dayProgressPercent}"
-                        android:progressDrawable="@drawable/progress_circle"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/overview_today_target_time_text" />
-
-                    <TextView
-                        android:id="@+id/overview_today_progressbar_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/target_time"
-                        android:textSize="12dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toTopOf="@+id/overview_today_progressbar_target_time"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
-                        app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar" />
-
-                    <TextView
-                        android:id="@+id/overview_today_progressbar_target_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_progressbar_time"
-                        android:textSize="12dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toTopOf="@+id/overview_today_progressbar_percent"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
-                        app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar" />
-
-                    <TextView
-                        android:id="@+id/overview_today_progressbar_percent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="30dp"
-                        android:text="@{viewModel.dayProgressPercentText}"
-                        android:textSize="32dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/overview_today_progressbar"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
-                        app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/overview_month_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#735BF2"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/overview_today_card">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/overview_month_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:padding="16dp">
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/overview_month_guideline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_end="36dp" />
-
-                    <TextView
-                        android:id="@+id/overview_month_accumulate_text"
-                        style="@style/overview_time_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/overview_month_accumulate_title"
-                        android:textColor="@color/white"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/overview_month_accumulate_time_text"
-                        style="@style/overview_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.monthAccumulationTime}"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toStartOf="@+id/overview_month_guideline"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="0시간00분" />
-
-                    <ImageView
-                        android:id="@+id/overview_month_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/overview_month_accumulate_time_text"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/overview_month_accumulate_time_text"
-                        app:srcCompat="@drawable/arrow"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:id="@+id/overview_month_target_text"
-                        style="@style/overview_time_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/target_time"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_month_accumulate_text"
-                        app:layout_constraintStart_toStartOf="@+id/overview_month_accumulate_text"
-                        app:layout_constraintTop_toBottomOf="@+id/overview_month_accumulate_text" />
-
-                    <TextView
-                        android:id="@+id/overview_month_target_time_text"
-                        style="@style/overview_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:onClick="@{() -> fragment.targetTimeOnClick(true)}"
-                        android:text="@{viewModel.monthTargetTime}"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toStartOf="@+id/overview_month_guideline"
-                        app:layout_constraintTop_toBottomOf="@+id/overview_month_accumulate_time_text" />
-
-                    <ProgressBar
-                        android:id="@+id/overview_month_progressbar"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        android:layout_marginTop="20dp"
-                        android:indeterminate="false"
-                        android:max="100"
-                        android:progress="@{viewModel.monthProgressPercent}"
-                        android:progressDrawable="@drawable/progress_circle"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/overview_month_target_time_text" />
-
-                    <TextView
-                        android:id="@+id/overview_month_progressbar_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/target_time"
-                        android:textSize="12dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toTopOf="@+id/overview_month_progressbar_target_time"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
-                        app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar" />
-
-                    <TextView
-                        android:id="@+id/overview_month_progressbar_target_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_progressbar_time"
-                        android:textSize="12dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toTopOf="@+id/overview_month_progressbar_percent"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
-                        app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar" />
-
-                    <TextView
-                        android:id="@+id/overview_month_progressbar_percent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="30dp"
-                        android:text="@{viewModel.monthProgressPercentText}"
-                        android:textSize="32dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/overview_month_progressbar"
-                        app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
-                        app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/overview_curr_status"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/overview_month_card">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#00000000"
-                    android:orientation="vertical">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/overview_graph_viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clipToPadding="false" />
-
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/overview_graph_tab"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        app:tabBackground="@drawable/tab_selector"
-                        app:tabGravity="center" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/overview_gaepo_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/overview_profile_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
+                    android:layout_marginStart="8dp"
+                    android:text="seongjki 님"
+                    android:textColor="@color/default_text"
+                    android:textSize="20dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_profile_image"
+                    app:layout_constraintStart_toEndOf="@+id/overview_profile_image"
+                    app:layout_constraintTop_toTopOf="@+id/overview_profile_image" />
 
-                    <TextView
-                        android:id="@+id/overview_gaepo_title"
-                        style="@style/overview_population_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/overview_gaepo_title" />
-
-                    <TextView
-                        android:id="@+id/overview_gaepo_population"
-                        style="@style/overview_population_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="17dp"
-                        android:layout_weight="1"
-                        android:text="@string/overview_population_default" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/overview_seocho_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/overview_announce_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_profile_id"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/overview_profile_id"
+                    app:srcCompat="@drawable/ic_announce_empty" />
 
-                    <TextView
-                        android:id="@+id/overview_seocho_title"
-                        style="@style/overview_population_title"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/overview_today_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_profile_image">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/overview_today_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:padding="16dp">
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/overview_today_guideline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_end="36dp" />
+
+                        <TextView
+                            android:id="@+id/overview_today_accumulate_text"
+                            style="@style/overview_time_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/accumulate_time"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/overview_today_accumulate_time_text"
+                            style="@style/overview_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.dayAccumulationTime}"
+                            app:layout_constraintEnd_toStartOf="@+id/overview_today_guideline"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="0시간00분" />
+
+                        <ImageView
+                            android:id="@+id/overview_today_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/overview_today_accumulate_time_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/overview_today_accumulate_time_text"
+                            app:srcCompat="@drawable/arrow" />
+
+                        <TextView
+                            android:id="@+id/overview_today_target_text"
+                            style="@style/overview_time_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/target_time"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_today_accumulate_text"
+                            app:layout_constraintStart_toStartOf="@+id/overview_today_accumulate_text"
+                            app:layout_constraintTop_toBottomOf="@+id/overview_today_accumulate_text" />
+
+                        <TextView
+                            android:id="@+id/overview_today_target_time_text"
+                            style="@style/overview_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:onClick="@{() -> fragment.targetTimeOnClick(false)}"
+                            android:text="@{viewModel.dayTargetTime}"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toStartOf="@+id/overview_today_guideline"
+                            app:layout_constraintTop_toBottomOf="@+id/overview_today_accumulate_time_text" />
+
+                        <ProgressBar
+                            android:id="@+id/overview_today_progressbar"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_marginTop="20dp"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="@{viewModel.dayProgressPercent}"
+                            android:progressDrawable="@drawable/progress_circle"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/overview_today_target_time_text" />
+
+                        <TextView
+                            android:id="@+id/overview_today_progressbar_target"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/target_time"
+                            android:textSize="12dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@+id/overview_today_progressbar_target_time"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
+                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar" />
+
+                        <TextView
+                            android:id="@+id/overview_today_progressbar_target_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_progressbar_time"
+                            android:textSize="12dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@+id/overview_today_progressbar_percent"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
+                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar" />
+
+                        <TextView
+                            android:id="@+id/overview_today_progressbar_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="30dp"
+                            android:text="@{viewModel.dayProgressPercentText}"
+                            android:textSize="32dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@+id/overview_today_progressbar"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
+                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/overview_month_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="#735BF2"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_today_card">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/overview_month_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:padding="16dp">
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/overview_month_guideline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_end="36dp" />
+
+                        <TextView
+                            android:id="@+id/overview_month_accumulate_text"
+                            style="@style/overview_time_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/overview_month_accumulate_title"
+                            android:textColor="@color/white"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/overview_month_accumulate_time_text"
+                            style="@style/overview_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.monthAccumulationTime}"
+                            android:textColor="@color/white"
+                            app:layout_constraintEnd_toStartOf="@+id/overview_month_guideline"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="0시간00분" />
+
+                        <ImageView
+                            android:id="@+id/overview_month_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/overview_month_accumulate_time_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/overview_month_accumulate_time_text"
+                            app:srcCompat="@drawable/arrow"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/overview_month_target_text"
+                            style="@style/overview_time_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/target_time"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_month_accumulate_text"
+                            app:layout_constraintStart_toStartOf="@+id/overview_month_accumulate_text"
+                            app:layout_constraintTop_toBottomOf="@+id/overview_month_accumulate_text" />
+
+                        <TextView
+                            android:id="@+id/overview_month_target_time_text"
+                            style="@style/overview_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:onClick="@{() -> fragment.targetTimeOnClick(true)}"
+                            android:text="@{viewModel.monthTargetTime}"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toStartOf="@+id/overview_month_guideline"
+                            app:layout_constraintTop_toBottomOf="@+id/overview_month_accumulate_time_text" />
+
+                        <ProgressBar
+                            android:id="@+id/overview_month_progressbar"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_marginTop="20dp"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="@{viewModel.monthProgressPercent}"
+                            android:progressDrawable="@drawable/progress_circle"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/overview_month_target_time_text" />
+
+                        <TextView
+                            android:id="@+id/overview_month_progressbar_target"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/target_time"
+                            android:textSize="12dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@+id/overview_month_progressbar_target_time"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
+                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar" />
+
+                        <TextView
+                            android:id="@+id/overview_month_progressbar_target_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_progressbar_time"
+                            android:textSize="12dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@+id/overview_month_progressbar_percent"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
+                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar" />
+
+                        <TextView
+                            android:id="@+id/overview_month_progressbar_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="30dp"
+                            android:text="@{viewModel.monthProgressPercentText}"
+                            android:textSize="32dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@+id/overview_month_progressbar"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
+                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_curr_status"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_month_card">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#00000000"
+                        android:orientation="vertical">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/overview_graph_viewpager"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false" />
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/overview_graph_tab"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            app:tabBackground="@drawable/tab_selector"
+                            app:tabGravity="center" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/overview_gaepo_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/overview_seocho_title" />
+                        android:orientation="horizontal"
+                        android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/overview_seocho_population"
-                        style="@style/overview_population_text"
+                        <TextView
+                            android:id="@+id/overview_gaepo_title"
+                            style="@style/overview_population_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/overview_gaepo_title" />
+
+                        <TextView
+                            android:id="@+id/overview_gaepo_population"
+                            style="@style/overview_population_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="17dp"
+                            android:layout_weight="1"
+                            android:text="@string/overview_population_default" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/overview_seocho_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="17dp"
-                        android:layout_weight="1"
-                        android:text="@string/overview_population_default" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:orientation="horizontal"
+                        android:padding="20dp">
 
-            <TextView
-                android:id="@+id/overview_curr_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/inter_medium"
-                android:text="@string/overview_curr_status"
-                android:textColor="@color/default_text"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/overview_gaepo_card"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/overview_seocho_title"
+                            style="@style/overview_population_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/overview_seocho_title" />
+
+                        <TextView
+                            android:id="@+id/overview_seocho_population"
+                            style="@style/overview_population_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="17dp"
+                            android:layout_weight="1"
+                            android:text="@string/overview_population_default" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/overview_curr_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/overview_curr_status"
+                    android:textColor="@color/default_text"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_gaepo_card"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/loading_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#F5F5F5"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ProgressBar
+                    android:id="@+id/loading_progressbar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/off_progress_front" />
+
+                <TextView
+                    android:id="@+id/loading_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="Loading..." />
+            </LinearLayout>
+        </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
