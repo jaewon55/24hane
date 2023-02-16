@@ -116,12 +116,4 @@ class MainActivity : AppCompatActivity() {
 //            dialog.show(it, "OpenSourceLicenses")
 //        }
 //    }
-
-    companion object {
-        private const val APP_GUIDE = BuildConfig.APP_GUIDE
-        private const val PAGE_GUIDE = BuildConfig.PAGE_GUIDE
-        private const val INQUIRE_ATTENDANCE = BuildConfig.INQUIRY_ATTENDANCE
-        private const val INQUIRE_MOBILE = BuildConfig.INQUIRY_MOBILE
-        private const val NUM_PAGES = 2
-    }
 }
