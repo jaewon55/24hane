@@ -43,9 +43,9 @@ class MainActivity : AppCompatActivity() {
         refreshWidget()
         setStatusAndNavigationBar()
         setFragmentsViewModel()
-        OverViewFragment()
+        setRefresh()
         binding.bottomNavigation.setOnItemSelectedListener {
-            val fragment = when(it.itemId) {
+            val fragment = when (it.itemId) {
                 R.id.bottom_navigation_home_menu -> OverViewFragment()
                 R.id.bottom_navigation_calendar_menu -> LogListFragment()
                 else -> EtcOptionFragment()
@@ -79,8 +79,26 @@ class MainActivity : AppCompatActivity() {
         controller.isAppearanceLightStatusBars = true
         controller.isAppearanceLightNavigationBars = true
     }
+
     private fun setFragmentsViewModel() {
         binding.overViewViewModel = overViewViewModel
+    }
+
+    private fun setRefresh() {
+        overViewViewModel.refreshLoading.observe(this) {
+            if (!it && logListViewModel.refreshLoading.value == false && binding.swipeRefreshLayout.isRefreshing) {
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
+        logListViewModel.refreshLoading.observe(this) {
+            if (!it && overViewViewModel.refreshLoading.value == false && binding.swipeRefreshLayout.isRefreshing) {
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            overViewViewModel.refreshButtonOnClick()
+            logListViewModel.refreshButtonOnClick()
+        }
     }
 
 //    private fun logOutOnClick() {

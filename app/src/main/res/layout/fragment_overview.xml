@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="seongjki 님"
+                android:text="@{viewModel.intraId}"
                 android:textColor="@color/default_text"
                 android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_profile_image"
