@@ -157,14 +157,18 @@ fun bindCalendarItem(
     }
     if (item.day < 0) {
         view.setTextColor(getColorHelper(view.context, R.color.calendar_week_of_day_text))
+        view.isEnabled = false
+        return
 //        view.textSize = view.context.resources.getDimension(R.dimen.day_of_week_text_size)
     }else if (item.day == selectedDay) {
         view.setTextColor(getColorHelper(view.context, R.color.selected_text_color))
         view.backgroundTintList =
             ColorStateList.valueOf(getColorHelper(view.context, R.color.selected_background_color))
+        view.cornerRadius = view.context.resources.getDimensionPixelSize(R.dimen.calendar_selected_radius)
     } else {
         view.setTextColor(getColorHelper(view.context, R.color.black))
         view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
+        view.cornerRadius = view.context.resources.getDimensionPixelSize(R.dimen.calendar_common_radius)
 //        ColorStateList.valueOf(getColorHelper(view.context, R.color.calendar_item_stroke_default))
     }
     if (item.isNextDay) {
