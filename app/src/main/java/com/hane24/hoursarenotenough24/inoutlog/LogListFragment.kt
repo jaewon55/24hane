@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -59,7 +61,9 @@ class LogListFragment : Fragment() {
     private fun handleError(state: State) =
         when (state) {
             State.LOGIN_FAIL -> goToLogin(state)
-            State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
+            State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(
+                requireActivity().supportFragmentManager
+            )
             else -> Unit
         }
 
@@ -119,6 +123,17 @@ class LogListFragment : Fragment() {
                 itemBinding.item = item
                 itemBinding.lifecycleOwner = viewLifecycleOwner
                 itemBinding.viewModel = viewModel
+                itemBinding.buttonParent.post {
+                    val delegateArea = Rect()
+                    val button = itemBinding.calendarItem.apply { getHitRect(delegateArea) }
+                    delegateArea.right += 30
+                    delegateArea.left -= 30
+                    delegateArea.top -= 30
+                    delegateArea.bottom += 30
+                    (button.parent as? View)?.apply {
+                        touchDelegate = TouchDelegate(delegateArea, button)
+                    }
+                }
             }
         }
 
