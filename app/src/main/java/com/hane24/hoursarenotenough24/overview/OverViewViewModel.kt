@@ -100,7 +100,7 @@ class OverViewViewModel : ViewModel() {
     private suspend fun useGetMainInfoApi() {
         try {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
-            _intraId.value = mainInfo.login
+            _intraId.value = "${mainInfo.login} 님"
             if (mainInfo.inoutState == "IN") {
                 _inOutState.value = true
                 _latestTagTime.value = mainInfo.tagAt
