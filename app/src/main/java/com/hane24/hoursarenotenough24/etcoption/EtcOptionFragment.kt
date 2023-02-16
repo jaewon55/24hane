@@ -15,6 +15,7 @@ class EtcOptionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEtcOptionBinding.inflate(layoutInflater, container, false)
+
         return binding.root
     }
 }
