@@ -83,14 +83,7 @@ class MainActivity : AppCompatActivity() {
         binding.overViewViewModel = overViewViewModel
     }
 
-//    private fun logOutOnClick() {
-//        SharedPreferenceUtils.saveAccessToken("")
-//
-//        val intent = Intent(this, LoginActivity::class.java)
-//            .putExtra("loginState", State.LOGIN_FAIL)
-//            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//        startActivity(intent).also { finish() }
-//    }
+
 //
 //    private fun licenseOnClick() {
 //        val dialog = LicenseDialogFragment()
@@ -98,12 +91,4 @@ class MainActivity : AppCompatActivity() {
 //            dialog.show(it, "OpenSourceLicenses")
 //        }
 //    }
-
-    companion object {
-        private const val APP_GUIDE = BuildConfig.APP_GUIDE
-        private const val PAGE_GUIDE = BuildConfig.PAGE_GUIDE
-        private const val INQUIRE_ATTENDANCE = BuildConfig.INQUIRY_ATTENDANCE
-        private const val INQUIRE_MOBILE = BuildConfig.INQUIRY_MOBILE
-        private const val NUM_PAGES = 2
-    }
 }
