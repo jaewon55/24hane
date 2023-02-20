@@ -34,7 +34,7 @@ fun InOutTimeContainer.asDatabaseDto(): List<TimeDatabaseDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
     return inOutLogs.map { log ->
         val date = format.format(log.inTimeStamp * 1000)
-        TimeDatabaseDto(0, date, log.inTimeStamp, log.outTimeStamp, log.durationSecond)
+        TimeDatabaseDto(0, date, log.inTimeStamp, log.outTimeStamp, log.durationSecond, System.currentTimeMillis())
     }
 }
 
