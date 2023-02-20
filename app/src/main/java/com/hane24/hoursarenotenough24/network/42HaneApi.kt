@@ -1,9 +1,6 @@
 package com.hane24.hoursarenotenough24.network
 
 import com.hane24.hoursarenotenough24.BuildConfig
-import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
-import com.hane24.hoursarenotenough24.data.InOutTimeContainer
-import com.hane24.hoursarenotenough24.data.MainInfo
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

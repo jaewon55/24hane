@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.hane24.hoursarenotenough24.R
-import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
+import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.login.SplashActivity
 import kotlinx.coroutines.*
 

@@ -1,6 +1,8 @@
-package com.hane24.hoursarenotenough24.data
+package com.hane24.hoursarenotenough24.network
 
 import com.google.gson.annotations.SerializedName
+import com.hane24.hoursarenotenough24.data.TimeLogItem
+import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,6 +29,14 @@ data class InOutTimeItem(
     val outTimeStamp: Long,
     val durationSecond: Long
 )
+
+fun InOutTimeContainer.asDatabaseDto(): List<TimeDatabaseDto> {
+    val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
+    return inOutLogs.map { log ->
+        val date = format.format(log.inTimeStamp * 1000)
+        TimeDatabaseDto(0, date, log.inTimeStamp, log.outTimeStamp, log.durationSecond)
+    }
+}
 
 fun InOutTimeContainer.asDomainModel(): List<TimeLogItem> {
     val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))

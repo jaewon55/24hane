@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -37,11 +38,14 @@ import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.MainActivity
 
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.database.TimeDatabase
+import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
 import com.hane24.hoursarenotenough24.databinding.OverviewGraphViewBinding
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.network.InOutTimeItem
 import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +64,7 @@ class OverViewFragment : Fragment() {
     ): View {
         initBinding(inflater, container)
         initViewPager()
+
 
         measureCardHeight()
         binding.overviewTodayCard.setOnClickListener {

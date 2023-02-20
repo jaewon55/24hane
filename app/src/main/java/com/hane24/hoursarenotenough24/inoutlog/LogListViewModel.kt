@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -9,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.*
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
-import com.hane24.hoursarenotenough24.network.hane42Api
+import com.hane24.hoursarenotenough24.network.asDomainModel
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.launch

@@ -1,9 +1,8 @@
 package com.hane24.hoursarenotenough24.widget
 
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import com.hane24.hoursarenotenough24.data.AccumulationTimeInfo
+import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 
