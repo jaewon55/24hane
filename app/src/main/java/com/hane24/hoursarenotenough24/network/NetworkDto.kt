@@ -1,6 +1,7 @@
-package com.hane24.hoursarenotenough24.data
+package com.hane24.hoursarenotenough24.network
 
 import com.google.gson.annotations.SerializedName
+import com.hane24.hoursarenotenough24.data.TimeLogItem
 import java.text.SimpleDateFormat
 import java.util.*
 
