@@ -11,10 +11,10 @@ interface TimeDatabaseDAO {
     fun getAll(): List<TimeDatabaseDto>
 
     @Query("SELECT * FROM tagging_log WHERE date LIKE :target || '%'")
-    fun getMonth(target: String)
+    fun getMonth(target: String): List<TimeDatabaseDto>
 
     @Query("SELECT * FROM tagging_log WHERE date LIKE :target")
-    fun getDay(target: String)
+    fun getDay(target: String): List<TimeDatabaseDto>
 
     @Insert(onConflict = REPLACE)
     fun insertAll(vararg times: TimeDatabaseDto)
