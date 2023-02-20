@@ -64,6 +64,8 @@ class OverViewFragment : Fragment() {
     ): View {
         initBinding(inflater, container)
         initViewPager()
+
+
         measureCardHeight()
         binding.overviewTodayCard.setOnClickListener {
             it.isClickable = false

@@ -16,5 +16,7 @@ data class TimeDatabaseDto(
     @ColumnInfo
     val outTimeStamp: Long,
     @ColumnInfo
-    val duration: Long
+    val duration: Long,
+    @ColumnInfo
+    val updateTime: Long
 )
