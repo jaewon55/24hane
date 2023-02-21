@@ -152,7 +152,7 @@ class LogListRefactor : ViewModel() {
             _loadingState.value = true
             inOutInfoPerMonthApi(
                 _calendarYear.value ?: TodayCalendarUtils.year,
-                (_calendarMonth.value ?: TodayCalendarUtils.month) - 1
+                (_calendarMonth.value ?: TodayCalendarUtils.month)
             )
             _loadingState.value = false
         }
