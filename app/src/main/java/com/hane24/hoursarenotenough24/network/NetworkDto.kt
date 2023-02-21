@@ -30,11 +30,31 @@ data class InOutTimeItem(
     val durationSecond: Long
 )
 
-fun InOutTimeContainer.asDatabaseDto(): List<TimeDatabaseDto> {
+fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
-    return inOutLogs.map { log ->
-        val date = format.format(log.inTimeStamp * 1000)
-        TimeDatabaseDto(0, date, log.inTimeStamp, log.outTimeStamp, log.durationSecond, System.currentTimeMillis())
+    return if (inOutLogs.isEmpty()) {
+        listOf(
+            TimeDatabaseDto(
+                0,
+                date,
+                0,
+                0,
+                0,
+                System.currentTimeMillis()
+            )
+        )
+    } else {
+        inOutLogs.map { log ->
+            val date = format.format(log.inTimeStamp * 1000)
+            TimeDatabaseDto(
+                0,
+                date,
+                log.inTimeStamp,
+                log.outTimeStamp,
+                log.durationSecond,
+                System.currentTimeMillis()
+            )
+        }
     }
 }
 

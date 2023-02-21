@@ -21,6 +21,7 @@ import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
+import com.hane24.hoursarenotenough24.inoutlog.LogListRefactor
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
     }
     private val overViewViewModel: OverViewViewModel by viewModels()
-    private val logListViewModel: LogListViewModel by viewModels()
+    private val logListViewModel: LogListRefactor by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +87,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setRefresh() {
         overViewViewModel.refreshLoading.observe(this) {
-            if (!it && logListViewModel.refreshLoading.value == false && binding.swipeRefreshLayout.isRefreshing) {
+            if (!it && logListViewModel.loadingState.value == false && binding.swipeRefreshLayout.isRefreshing) {
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         }
-        logListViewModel.refreshLoading.observe(this) {
+        logListViewModel.loadingState.observe(this) {
             if (!it && overViewViewModel.refreshLoading.value == false && binding.swipeRefreshLayout.isRefreshing) {
                 binding.swipeRefreshLayout.isRefreshing = false
             }

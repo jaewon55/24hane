@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.hane24.hoursarenotenough24.inoutlog.LogListViewModel" />
+            type="com.hane24.hoursarenotenough24.inoutlog.LogListRefactor" />
 
     </data>
 
@@ -18,7 +18,9 @@
         <ImageButton
             android:id="@+id/calender_left_button"
             style="@style/LogCalendarButton"
-            buttonState="@{viewModel.leftButtonState}"
+            leftBtnMonth="@{viewModel.calendarMonth}"
+            leftBtnYear="@{viewModel.calendarYear}"
+            loadingState="@{viewModel.loadingState}"
             android:layout_marginStart="30dp"
             android:onClick="@{() -> viewModel.leftButtonOnClick()}"
             android:paddingStart="10dp"
@@ -40,7 +42,9 @@
         <ImageButton
             android:id="@+id/calender_right_button"
             style="@style/LogCalendarButton"
-            buttonState="@{viewModel.rightButtonState}"
+            loadingState="@{viewModel.loadingState}"
+            rightBtnMonth="@{viewModel.calendarMonth}"
+            rightBtnYear="@{viewModel.calendarYear}"
             android:layout_marginEnd="30dp"
             android:onClick="@{() -> viewModel.rightButtonOnClick()}"
             android:paddingStart="80dp"
@@ -56,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:paddingStart="5dp"
-            app:calendarGrid="@{viewModel.calendarItemList}"
+            app:calendarGrid="@{viewModel.calendarList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_min="200dp"
@@ -87,7 +91,7 @@
             android:layout_marginTop="21dp"
             android:background="@drawable/shape_round_corner"
             android:padding="8dp"
-            android:text="@{viewModel.monthAccumulationTimeText}"
+            android:text="@{viewModel.monthAccumulationTime}"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20dp"
@@ -110,7 +114,7 @@
             android:id="@+id/day_accumulation_time"
             style="@style/LogListSubTitleText"
             android:layout_marginEnd="10dp"
-            android:text="@{viewModel.dayAccumulationTimeText}"
+            android:text="@{viewModel.dayAccumulationTime}"
             app:layout_constraintEnd_toEndOf="@id/month_accumulation_time"
             app:layout_constraintTop_toBottomOf="@id/month_accumulation_time"
             tools:text="7시간 45분" />
@@ -164,12 +168,12 @@
             app:layout_constraintHeight_max="500dp"
             app:layout_constraintStart_toStartOf="@id/month_accumulation_time"
             app:layout_constraintTop_toBottomOf="@id/log_list_header_in"
-            app:tableList="@{viewModel.tableItemList}"
+            app:tableList="@{viewModel.logTableList}"
             tools:itemCount="40"
             tools:listitem="@layout/fragment_log_list_logs_item" />
 
         <TextView
-            tableList="@{viewModel.tableItemList}"
+            tableList="@{viewModel.logTableList}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingVertical="10dp"

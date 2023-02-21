@@ -29,7 +29,7 @@ import com.hane24.hoursarenotenough24.login.State
 
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
-    private val viewModel: LogListViewModel by activityViewModels()
+    private val viewModel: LogListRefactor by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

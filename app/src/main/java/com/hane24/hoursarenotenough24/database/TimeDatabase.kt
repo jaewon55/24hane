@@ -12,7 +12,7 @@ abstract class TimeDatabase: RoomDatabase() {
 }
 
 private lateinit var INSTANCE: TimeDatabase
-fun createDatabase(): RoomDatabase {
+fun createDatabase(): TimeDatabase {
     synchronized(TimeDatabase::class.java) {
         if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(App.instance.applicationContext, TimeDatabase::class.java, "time_database").build()
