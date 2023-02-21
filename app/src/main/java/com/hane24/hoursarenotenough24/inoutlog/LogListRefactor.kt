@@ -106,11 +106,20 @@ class LogListRefactor : ViewModel() {
     fun leftButtonOnClick() {
         viewModelScope.launch {
             _loadingState.value = true
-            inOutInfoPerMonthApi(
-                _calendarYear.value ?: TodayCalendarUtils.year,
-                (_calendarMonth.value ?: TodayCalendarUtils.month) - 1
-            )
-            _calendarMonth.value = _calendarMonth.value?.minus(1)
+            var newYear = _calendarYear.value ?: TodayCalendarUtils.year
+            val newMonth = _calendarMonth.value?.minus(1)?.let {
+                if (it == 0) {
+                    --newYear
+                    12
+                } else {
+                    it
+                }
+            } ?: TodayCalendarUtils.month
+            inOutInfoPerMonthApi(newYear, newMonth)
+            if (_calendarYear.value != newYear) {
+                _calendarYear.value = newYear
+            }
+            _calendarMonth.value = newMonth
             _calendarDay.value = 1
             _loadingState.value = false
         }
@@ -119,11 +128,20 @@ class LogListRefactor : ViewModel() {
     fun rightButtonOnClick() {
         viewModelScope.launch {
             _loadingState.value = true
-            inOutInfoPerMonthApi(
-                _calendarYear.value ?: TodayCalendarUtils.year,
-                (_calendarMonth.value ?: TodayCalendarUtils.month) + 1
-            )
-            _calendarMonth.value = _calendarMonth.value?.plus(1)
+            var newYear = _calendarYear.value ?: TodayCalendarUtils.year
+            val newMonth = _calendarMonth.value?.plus(1)?.let {
+                if (it == 13) {
+                    ++newYear
+                    1
+                } else {
+                    it
+                }
+            } ?: TodayCalendarUtils.month
+            inOutInfoPerMonthApi(newYear, newMonth)
+            if (_calendarYear.value != newYear) {
+                _calendarYear.value = newYear
+            }
+            _calendarMonth.value = newMonth
             _calendarDay.value = 1
             _loadingState.value = false
         }
@@ -135,7 +153,7 @@ class LogListRefactor : ViewModel() {
             inOutInfoPerMonthApi(
                 _calendarYear.value ?: TodayCalendarUtils.year,
                 (_calendarMonth.value ?: TodayCalendarUtils.month) - 1
-            )git 
+            )
             _loadingState.value = false
         }
     }
