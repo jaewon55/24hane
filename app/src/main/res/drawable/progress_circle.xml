@@ -9,8 +9,8 @@
             <gradient
                 android:type="linear"
                 android:angle="180"
-                android:startColor="#33BCF8F9"
-                android:endColor="#33735BF2"/>
+                android:startColor="@color/back_gradient_start"
+                android:endColor="@color/back_gradient_end"/>
         </shape>
     </item>
 
@@ -25,8 +25,8 @@
                 <gradient
                     android:type="linear"
                     android:angle="225"
-                    android:startColor="#8EF2F3"
-                    android:endColor="#735BF2"/>
+                    android:startColor="@color/front_gradient_start"
+                    android:endColor="@color/front_gradient_end"/>
             </shape>
         </rotate>
     </item>

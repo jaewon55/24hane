@@ -9,10 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.database.TimeDatabase
+import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.databinding.FragmentEtcOptionBinding
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.repository.TimeRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.sql.Time
 
 class EtcOptionFragment : Fragment() {
     private lateinit var binding: FragmentEtcOptionBinding
@@ -77,6 +84,9 @@ class EtcOptionFragment : Fragment() {
 
     private fun logOutOnClick() {
         SharedPreferenceUtils.saveAccessToken("")
+        CoroutineScope(Dispatchers.IO).launch {
+            TimeRepository(createDatabase() as TimeDatabase).deleteAll()
+        }
 
         val intent = Intent(requireActivity(), LoginActivity::class.java)
             .putExtra("loginState", State.LOGIN_FAIL)

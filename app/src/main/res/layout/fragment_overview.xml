@@ -139,16 +139,14 @@
                             app:layout_constraintEnd_toStartOf="@+id/overview_today_guideline"
                             app:layout_constraintTop_toBottomOf="@+id/overview_today_accumulate_time_text" />
 
-                        <ProgressBar
+                        <com.hane24.hoursarenotenough24.view.CustomProgressbar
                             android:id="@+id/overview_today_progressbar"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                             android:layout_width="140dp"
                             android:layout_height="140dp"
                             android:layout_marginTop="20dp"
                             android:indeterminate="false"
                             android:max="100"
                             android:progress="@{viewModel.dayProgressPercent}"
-                            android:progressDrawable="@drawable/progress_circle"
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -276,16 +274,14 @@
                             app:layout_constraintEnd_toStartOf="@+id/overview_month_guideline"
                             app:layout_constraintTop_toBottomOf="@+id/overview_month_accumulate_time_text" />
 
-                        <ProgressBar
+                        <com.hane24.hoursarenotenough24.view.CustomProgressbar
                             android:id="@+id/overview_month_progressbar"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                             android:layout_width="140dp"
                             android:layout_height="140dp"
                             android:layout_marginTop="20dp"
                             android:indeterminate="false"
                             android:max="100"
                             android:progress="@{viewModel.monthProgressPercent}"
-                            android:progressDrawable="@drawable/progress_circle"
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -356,7 +352,8 @@
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/overview_graph_tab"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="30dp"
                             android:layout_gravity="center_horizontal"
                             app:tabBackground="@drawable/tab_selector"
                             app:tabGravity="center" />
