@@ -8,6 +8,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/graph_card"
         app:cardCornerRadius="20dp"
         android:padding="20dp"
         app:cardElevation="0dp"
@@ -57,10 +58,10 @@
                     android:id="@+id/overview_graph_info_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
                     android:backgroundTint="@color/black"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="0dp"
-                    android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toTopOf="@+id/guideline3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +110,6 @@
                     android:id="@+id/overview_graph1"
                     android:layout_width="25dp"
                     android:layout_height="87dp"
-
                     android:src="@drawable/graph"
                     app:layout_constraintBottom_toTopOf="@+id/guideline2"
                     app:layout_constraintEnd_toStartOf="@+id/overview_graph2"
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.9" />
+                    app:layout_constraintGuide_begin="169dp" />
 
                 <ImageView
                     android:id="@+id/overview_graph2"
@@ -175,8 +175,9 @@
                     android:text="@string/overview_graph_recent"
                     android:textColor="@color/graph_text"
                     android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/overview_graph1"
-                    app:layout_constraintTop_toBottomOf="@+id/overview_graph1" />
+                    app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
                 <TextView
                     android:id="@+id/overview_graph_old"
@@ -185,6 +186,7 @@
                     android:text="@string/overview_graph_old"
                     android:textColor="@color/graph_text"
                     android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/overview_graph6"
                     app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
@@ -193,7 +195,67 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.32" />
+                    app:layout_constraintGuide_end="105dp" />
+
+                <ImageView
+                    android:id="@+id/overview_graph_triangle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_graph1"
+                    app:layout_constraintStart_toStartOf="@+id/overview_graph1"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
+                    app:srcCompat="@drawable/ic_reverse_triangle" />
+
+                <ImageView
+                    android:id="@+id/overview_graph_triangle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_graph2"
+                    app:layout_constraintStart_toStartOf="@+id/overview_graph2"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
+                    app:srcCompat="@drawable/ic_reverse_triangle" />
+
+                <ImageView
+                    android:id="@+id/overview_graph_triangle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_graph3"
+                    app:layout_constraintStart_toStartOf="@+id/overview_graph3"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
+                    app:srcCompat="@drawable/ic_reverse_triangle" />
+
+                <ImageView
+                    android:id="@+id/overview_graph_triangle4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_graph4"
+                    app:layout_constraintStart_toStartOf="@+id/overview_graph4"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
+                    app:srcCompat="@drawable/ic_reverse_triangle" />
+
+                <ImageView
+                    android:id="@+id/overview_graph_triangle5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_graph5"
+                    app:layout_constraintStart_toStartOf="@+id/overview_graph5"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
+                    app:srcCompat="@drawable/ic_reverse_triangle" />
+
+                <ImageView
+                    android:id="@+id/overview_graph_triangle6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_graph6"
+                    app:layout_constraintStart_toStartOf="@+id/overview_graph6"
+                    app:layout_constraintTop_toTopOf="@+id/overview_graph_triangle4"
+                    app:srcCompat="@drawable/ic_reverse_triangle" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

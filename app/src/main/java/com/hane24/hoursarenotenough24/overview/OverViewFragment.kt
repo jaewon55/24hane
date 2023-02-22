@@ -11,18 +11,21 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
+import android.text.method.Touch
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -41,7 +44,7 @@ import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
-import com.hane24.hoursarenotenough24.databinding.OverviewGraphViewBinding
+import com.hane24.hoursarenotenough24.databinding.FragmentOverviewGraphViewBinding
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
@@ -264,7 +267,7 @@ class OverViewFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: GraphViewHolder, position: Int) {
-            holder.bind(items[position], viewPager)
+            holder.bind(items[position])
 
             if (position == items.size-1)
                 viewPager.post(runnable)
@@ -274,27 +277,116 @@ class OverViewFragment : Fragment() {
             return 2
         }
 
-        class GraphViewHolder private constructor (val binding: OverviewGraphViewBinding) : RecyclerView.ViewHolder(binding.root) {
-            fun getGraphHeight(percent: Long): Int {
+        class TouchDelegateHelper(view: View): TouchDelegate(Rect(), view) {
+            private val delegates = mutableListOf<TouchDelegate>()
+            fun addDelegate(new: TouchDelegate) {
+                delegates += new
+            }
+            override fun onTouchEvent(event: MotionEvent): Boolean {
+                var res = false
+                delegates.forEach {
+                    event.setLocation(event.x, event.y)
+                    res = it.onTouchEvent(event) || res
+                }
+                return res
+            }
+        }
+
+        class GraphViewHolder private constructor (val binding: FragmentOverviewGraphViewBinding) : RecyclerView.ViewHolder(binding.root) {
+            private val graphs = arrayOf(
+                binding.overviewGraph1,
+                binding.overviewGraph2,
+                binding.overviewGraph3,
+                binding.overviewGraph4,
+                binding.overviewGraph5,
+                binding.overviewGraph6
+            )
+
+            private val selectors = arrayOf(
+                binding.overviewGraphTriangle1,
+                binding.overviewGraphTriangle2,
+                binding.overviewGraphTriangle3,
+                binding.overviewGraphTriangle4,
+                binding.overviewGraphTriangle5,
+                binding.overviewGraphTriangle6
+                )
+
+            private var currSelect = 0
+            private fun getGraphHeight(percent: Long): Int {
                 val maxHeight = 87
                 val whiteHeight = (maxHeight * (percent * 0.01)).toInt()
                 val density = App.instance.applicationContext.resources.displayMetrics.density
                 return (whiteHeight * density).toInt()
             }
-            fun bind(item: TimeInfo, viewPager: ViewPager2) {
-                binding.overviewGraphName.text = if (item.timeType == 0) "최근 주간 그래프" else "최근 월간 그래프"
+
+            private fun spanClickArea() {
+                val parent = binding.constraintLayout
+
+                val touchDelegateHelper = TouchDelegateHelper(parent)
+                val density = App.instance.applicationContext.resources.displayMetrics.density
+
+                parent.post {
+                    graphs.forEach {
+                        val hitRect = Rect()
+                        it.getHitRect(hitRect)
+                        hitRect.top = (87 * density).toInt()
+
+                        touchDelegateHelper.addDelegate(TouchDelegate(hitRect, it))
+                    }
+                    parent.touchDelegate = touchDelegateHelper
+                }
+            }
+
+            private fun graphClickLogic(index: Int) {
+                val graphScaleAnim = AnimationUtils.loadAnimation(App.instance.applicationContext, R.anim.scale_anim)
+                val selectorOpenAnim = AnimationUtils.loadAnimation(App.instance.applicationContext, R.anim.tanslate_anim)
+                val selectorCloseAnim = AnimationUtils.loadAnimation(App.instance.applicationContext, R.anim.reverse_translate_anim)
+                graphScaleAnim.interpolator = LinearInterpolator()
+                selectorOpenAnim.interpolator = LinearInterpolator()
+                selectorCloseAnim.interpolator = LinearInterpolator()
+                selectorCloseAnim.setAnimationListener(object: AnimationListener {
+                    override fun onAnimationStart(p0: Animation?) {}
+
+                    override fun onAnimationEnd(p0: Animation?) {
+                        selectors[currSelect].visibility = View.GONE
+                        selectors[index].visibility = View.VISIBLE
+                        selectors[index].startAnimation(selectorOpenAnim)
+                        currSelect = index
+                    }
+
+                    override fun onAnimationRepeat(p0: Animation?) {}
+                })
+                selectorOpenAnim.setAnimationListener(object : AnimationListener {
+                    override fun onAnimationStart(p0: Animation?) {}
+
+                    override fun onAnimationEnd(p0: Animation?) {
+                        graphs.forEach { it.isClickable = true }
+                    }
+
+                    override fun onAnimationRepeat(p0: Animation?) {}
+                })
+                graphs[index].startAnimation(graphScaleAnim)
+                if (currSelect != index) {
+                    graphs.forEach {
+                        it.isClickable = false
+                    }
+                    selectors[currSelect].startAnimation(selectorCloseAnim)
+                }
+            }
+            fun bind(item: TimeInfo) {
+                binding.overviewGraphName.text =
+                    if (item.timeType == 0) "최근 주간 그래프" else "최근 월간 그래프"
                 binding.overviewGraphType.text = if (item.timeType == 0) "(6주)" else "(6달)"
-                binding.overviewGraph1.layoutParams.height = getGraphHeight(item.accumulationTimes[0])
-                binding.overviewGraph2.layoutParams.height = getGraphHeight(item.accumulationTimes[1])
-                binding.overviewGraph3.layoutParams.height = getGraphHeight(item.accumulationTimes[2])
-                binding.overviewGraph4.layoutParams.height = getGraphHeight(item.accumulationTimes[3])
-                binding.overviewGraph5.layoutParams.height = getGraphHeight(item.accumulationTimes[4])
-                binding.overviewGraph6.layoutParams.height = getGraphHeight(item.accumulationTimes[5])
+                spanClickArea()
+                for ((idx, graph) in graphs.withIndex()) {
+                    graph.layoutParams.height = getGraphHeight(item.accumulationTimes[idx])
+                    graph.setOnClickListener { graphClickLogic(idx) }
+                }
             }
             companion object {
                 fun from(parent: ViewGroup): GraphViewHolder {
                     val layoutInflater = LayoutInflater.from(parent.context)
-                    val binding = OverviewGraphViewBinding.inflate(layoutInflater, parent, false)
+                    val binding = FragmentOverviewGraphViewBinding.inflate(layoutInflater, parent, false)
                     return GraphViewHolder(binding)
                 }
             }

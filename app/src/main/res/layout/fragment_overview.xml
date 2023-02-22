@@ -352,7 +352,8 @@
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/overview_graph_tab"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="30dp"
                             android:layout_gravity="center_horizontal"
                             app:tabBackground="@drawable/tab_selector"
                             app:tabGravity="center" />
