@@ -64,33 +64,9 @@ class OverViewFragment : Fragment() {
     ): View {
         initBinding(inflater, container)
         initViewPager()
-
-
         measureCardHeight()
-        binding.overviewTodayCard.setOnClickListener {
-            it.isClickable = false
-            if (isToggled(it)) {
-                binding.overviewTodayBtn.animate().rotation(0f).apply { duration = 200 }
-                collapseAnimation(it)
-            }
-            else {
-                binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
-                expandAnimation(it)
-            }
-        }
-
-        binding.overviewMonthCard.setOnClickListener {
-            it.isClickable = false
-            if (isToggled(it)) {
-                binding.overviewMonthBtn.animate().rotation(0f).apply { duration = 200 }
-                collapseAnimation(it)
-            }
-            else {
-                binding.overviewMonthBtn.animate().rotation(90f).apply { duration = 200 }
-                expandAnimation(it)
-            }
-        }
-
+        binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
+        binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
         observeErrorState()
         return binding.root
     }
@@ -138,17 +114,17 @@ class OverViewFragment : Fragment() {
         })
     }
 
-    private fun isChildViewVisible(view: View): Boolean {
-        if (view == binding.overviewTodayCard) {
-            return binding.overviewTodayTargetText.visibility == View.VISIBLE
-        } else if (view == binding.overviewMonthCard) {
-            return binding.overviewMonthTargetText.visibility == View.VISIBLE
+    private fun setCardAnimation(view: View) {
+        view.isClickable = false
+        if (isToggled(view)) {
+            binding.overviewTodayBtn.animate().rotation(0f).apply { duration = 200 }
+            collapseAnimation(view)
         }
-        return false
+        else {
+            binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
+            expandAnimation(view)
+        }
     }
-
-    private fun isMeasuredMaxHeight() = maxHeight != Int.MIN_VALUE
-
     private fun isToggled(view: View) = view.height == maxHeight
 
     private fun reverseViewVisibility(view: View) {
@@ -196,6 +172,7 @@ class OverViewFragment : Fragment() {
             }
             override fun onAnimationRepeat(p0: Animation?) {}
         }
+
         expandAnimation.setAnimationListener(animListener)
         view.startAnimation(expandAnimation)
     }
@@ -208,6 +185,7 @@ class OverViewFragment : Fragment() {
                 view.requestLayout()
             }
         }.apply { duration = 200L }
+
         val animListener = object: AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
                 reverseViewVisibility(view)
@@ -218,24 +196,10 @@ class OverViewFragment : Fragment() {
             }
             override fun onAnimationRepeat(p0: Animation?) {}
         }
+
         collapseAnimation.setAnimationListener(animListener)
         view.startAnimation(collapseAnimation)
     }
-
-    fun slideCardView(view: View) {
-        reverseViewVisibility(view)
-        if (view == binding.overviewTodayCard) {
-            binding.overviewTodayBtn.animate().setDuration(200).rotation(90f)
-        } else if (view == binding.overviewMonthCard) {
-            reverseMonthCardColor(view)
-            binding.overviewMonthBtn.animate().setDuration(200).rotation(90f)
-            binding.overviewMonthCard.measure(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
-            maxHeight = binding.overviewMonthCard.measuredHeight
-        }
-        binding.overviewTodayLayout.layoutTransition = null
-        binding.overviewMonthLayout.layoutTransition = null
-    }
-
     private fun reverseMonthCardColor(view: View) {
         if (view != binding.overviewMonthCard) return
         if (binding.overviewMonthAccumulateText.textColors == ColorStateList.valueOf(Color.WHITE)) {
@@ -326,24 +290,6 @@ class OverViewFragment : Fragment() {
                 binding.overviewGraph4.layoutParams.height = getGraphHeight(item.accumulationTimes[3])
                 binding.overviewGraph5.layoutParams.height = getGraphHeight(item.accumulationTimes[4])
                 binding.overviewGraph6.layoutParams.height = getGraphHeight(item.accumulationTimes[5])
-            }
-
-            class ExpandAnimation(val view: View, val minHeight: Int, val maxHeight: Int): Animation() {
-                override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                    view.layoutParams.height =
-                        if (interpolatedTime >= 0.8f) {
-                            maxHeight
-                        } else (minHeight + (minHeight * interpolatedTime)).toInt()
-                    view.requestLayout()
-                }
-            }
-
-            class CollapseAnimation(val view: View, val minHeight: Int, val maxHeight: Int): Animation() {
-                override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                    view.layoutParams.height =
-                        if (interpolatedTime >= 0.8f) minHeight else (maxHeight - (maxHeight * interpolatedTime)).toInt()
-                    view.requestLayout()
-                }
             }
             companion object {
                 fun from(parent: ViewGroup): GraphViewHolder {

@@ -37,7 +37,7 @@ class CustomProgressbar(context: Context, attrs: AttributeSet?): View(context, a
         super.onDraw(canvas)
 
         val size = (min(super.getHeight(), super.getWidth()) - 10).toFloat()
-
+        paint.isAntiAlias = true
         paint.strokeCap = Paint.Cap.ROUND
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 20f
