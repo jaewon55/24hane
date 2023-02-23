@@ -14,7 +14,7 @@
 
         <variable
             name="viewModel"
-            type="com.hane24.hoursarenotenough24.inoutlog.LogListViewModel" />
+            type="com.hane24.hoursarenotenough24.inoutlog.LogListRefactor" />
 
     </data>
 
@@ -37,14 +37,14 @@
             android:insetRight="0dp"
             android:insetBottom="0dp"
             android:letterSpacing="0"
-            android:onClick="@{() -> viewModel.changeSelectedDay(item.day)}"
+            android:onClick="@{() -> viewModel.calendarItemOnClick(item.day)}"
             android:padding="0dp"
             android:stateListAnimator="@null"
             android:textSize="14dp"
             app:cornerRadius="20dp"
             app:item="@{item}"
             app:rippleColor="@color/white"
-            app:selectedDay="@{viewModel.selectedDay}"
+            app:selectedDay="@{viewModel.calendarDay}"
             app:strokeWidth="0dp"
             tools:text="29" />
 

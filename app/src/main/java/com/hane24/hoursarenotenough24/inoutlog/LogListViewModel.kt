@@ -1,28 +1,36 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.*
+import com.hane24.hoursarenotenough24.database.asDomainModel
+import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.network.asDomainModel
+import com.hane24.hoursarenotenough24.repository.TimeRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class LogListViewModel : ViewModel() {
 
-    private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
-
     private val monthLogContainer = mutableListOf<MonthTimeLogContainer>()
 
+    private val logCalendar = LogCalendar()
+
     private var monthLogListIndex = -1
+
+    private val repository = TimeRepository(createDatabase())
 
     private var selectedYear = TodayCalendarUtils.year
     private var selectedMonth = TodayCalendarUtils.month
@@ -45,8 +53,9 @@ class LogListViewModel : ViewModel() {
         get() = _selectedDay
 
     private val _calendarDateText = MutableLiveData("")
-    val calendarDateText: LiveData<String>
-        get() = _calendarDateText
+    val calendarDateText = Transformations.map(logCalendar.month) { m ->
+        String.format("%d%d", logCalendar.year.value, m)
+    }
 
     private val _leftButtonState = MutableLiveData(true)
     val leftButtonState: LiveData<Boolean>
@@ -91,7 +100,7 @@ class LogListViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _loadingState.value = true
+            _loadingState.value = false
             useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
             _selectedDay.value = TodayCalendarUtils.day
             _loadingState.value = false
@@ -101,9 +110,11 @@ class LogListViewModel : ViewModel() {
 
     private suspend fun useGetInOutInfoPerMonthApi(year: Int, month: Int) {
         try {
-            val monthTimeLog =
-                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, year, month)
-                    .asDomainModel()
+            val monthTimeLog = withContext(Dispatchers.IO) {
+                repository.getMonth(String.format("%4d%02d", year, month)).asDomainModel()
+            }
+//                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, year, month)
+//                    .asDomainModel()
             monthLogContainer.add(MonthTimeLogContainer(year, month, monthTimeLog))
             monthLogListIndex++
             setCalendarItemList()
@@ -118,6 +129,7 @@ class LogListViewModel : ViewModel() {
                 else -> _errorState.value = State.UNKNOWN_ERROR
             }
         } catch (err: Exception) {
+            Log.e("e_msg", err.message ?: "몰라")
             _errorState.value = State.UNKNOWN_ERROR
         }
     }
@@ -126,9 +138,11 @@ class LogListViewModel : ViewModel() {
         try {
             val newYear = TodayCalendarUtils.year
             val newMonth = TodayCalendarUtils.month
-            val newLogs =
-                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, newYear, newMonth)
-                    .asDomainModel()
+            val newLogs = withContext(Dispatchers.IO) {
+                repository.getMonth(String.format("%4d%02d", newYear, newMonth)).asDomainModel()
+            }
+//                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, newYear, newMonth)
+//                    .asDomainModel()
             val container = monthLogContainer.find { it.year == newYear && it.month == newMonth }
             if (container == null) {
                 monthLogContainer.add(0, MonthTimeLogContainer(newYear, newMonth, newLogs))
@@ -189,10 +203,22 @@ class LogListViewModel : ViewModel() {
     private fun getNewMonthData() {
         viewModelScope.launch {
             try {
-                val monthTimeLog =
-                    Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, selectedYear, selectedMonth)
-                        .asDomainModel()
-                monthLogContainer.add(MonthTimeLogContainer(selectedYear, selectedMonth, monthTimeLog))
+                val monthTimeLog = withContext(Dispatchers.IO) {
+                    repository.getMonth(String.format("%4d%02d", selectedYear, selectedMonth)).asDomainModel()
+                }
+//                    Hane42Apis.hane42ApiService.getInOutInfoPerMonth(
+//                        accessToken,
+//                        selectedYear,
+//                        selectedMonth
+//                    )
+//                        .asDomainModel()
+                monthLogContainer.add(
+                    MonthTimeLogContainer(
+                        selectedYear,
+                        selectedMonth,
+                        monthTimeLog
+                    )
+                )
                 monthLogListIndex++
             } catch (e: Exception) {
                 selectedMonth++
@@ -216,7 +242,7 @@ class LogListViewModel : ViewModel() {
     fun leftButtonOnClick() {
         _leftButtonState.value = false
         _rightButtonState.value = false
-        _loadingState.value = true
+        _loadingState.value = false
         selectedMonth--
         setCalendarDateText()
         if (monthLogContainer.lastIndex == monthLogListIndex) {
@@ -234,7 +260,7 @@ class LogListViewModel : ViewModel() {
     fun rightButtonOnClick() {
         _leftButtonState.value = false
         _rightButtonState.value = false
-        _loadingState.value = true
+        _loadingState.value = false
         selectedMonth++
         setCalendarDateText()
         _selectedDay.value = 1
@@ -247,7 +273,7 @@ class LogListViewModel : ViewModel() {
     }
 
     fun refreshButtonOnClick() {
-        _refreshLoading.value = true
+        _refreshLoading.value = false
         viewModelScope.launch {
             refreshMonthLog()
             _refreshLoading.value = false
