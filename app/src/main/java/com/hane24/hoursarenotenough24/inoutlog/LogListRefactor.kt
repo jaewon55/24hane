@@ -137,7 +137,8 @@ class LogListRefactor : ViewModel() {
                     it
                 }
             } ?: TodayCalendarUtils.month
-            inOutInfoPerMonthApi(newYear, newMonth)
+            val autoUpdate = newYear != TodayCalendarUtils.year || newMonth != TodayCalendarUtils.month
+            inOutInfoPerMonthApi(newYear, newMonth, autoUpdate)
             if (_calendarYear.value != newYear) {
                 _calendarYear.value = newYear
             }
@@ -162,10 +163,14 @@ class LogListRefactor : ViewModel() {
         _calendarDay.value = day
     }
 
-    private suspend fun inOutInfoPerMonthApi(y: Int, m: Int) {
+    private suspend fun inOutInfoPerMonthApi(y: Int, m: Int, autoUpdate: Boolean = false) {
         try {
             val domainModel = withContext(Dispatchers.IO) {
-                repository.getMonth(String.format("%4d%02d", y, m)).asDomainModel()
+                if (autoUpdate) {
+                    repository.getMonth(String.format("%4d%02d", y, m)).asDomainModel()
+                } else {
+                    repository.getMonthNoneUpdate(String.format("%4d%02d", y, m)).asDomainModel()
+                }
             }
             logContainer.value = MonthTimeLogContainer(y, m, domainModel)
         } catch (err: HttpException) {

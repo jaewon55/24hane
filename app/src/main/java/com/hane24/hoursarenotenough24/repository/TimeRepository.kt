@@ -34,6 +34,10 @@ class TimeRepository(private val db: TimeDatabase) {
         }
     }
 
+    suspend fun getMonthNoneUpdate(date: String): List<TimeDatabaseDto> {
+        return db.timeDatabaseDAO().getMonth(date)
+    }
+
     suspend fun getDay(date: String): List<TimeDatabaseDto> {
         return db.timeDatabaseDAO().getDay(date)
     }
