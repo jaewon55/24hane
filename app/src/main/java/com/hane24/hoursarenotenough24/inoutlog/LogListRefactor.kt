@@ -163,7 +163,7 @@ class LogListRefactor : ViewModel() {
         _calendarDay.value = day
     }
 
-    private suspend fun inOutInfoPerMonthApi(y: Int, m: Int, autoUpdate: Boolean = false) {
+    private suspend fun inOutInfoPerMonthApi(y: Int, m: Int, autoUpdate: Boolean = true) {
         try {
             val domainModel = withContext(Dispatchers.IO) {
                 if (autoUpdate) {

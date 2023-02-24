@@ -9,10 +9,10 @@ import com.hane24.hoursarenotenough24.network.InOutTimeItem
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Entity(tableName = "tagging_log")
+@Entity(tableName = "tagging_log", primaryKeys = ["date", "inTimeStamp"])
 data class TimeDatabaseDto(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+//    @PrimaryKey(autoGenerate = true)
+//    val id: Long,
     @ColumnInfo
     val date: String,
     @ColumnInfo

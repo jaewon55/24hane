@@ -3,6 +3,7 @@ package com.hane24.hoursarenotenough24.network
 import com.google.gson.annotations.SerializedName
 import com.hane24.hoursarenotenough24.data.TimeLogItem
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,7 +36,7 @@ fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     return if (inOutLogs.isEmpty()) {
         listOf(
             TimeDatabaseDto(
-                0,
+//                0,
                 date,
                 0,
                 0,
@@ -47,7 +48,7 @@ fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
         inOutLogs.map { log ->
             val date = format.format(log.inTimeStamp * 1000)
             TimeDatabaseDto(
-                0,
+//                0,
                 date,
                 log.inTimeStamp,
                 log.outTimeStamp,
