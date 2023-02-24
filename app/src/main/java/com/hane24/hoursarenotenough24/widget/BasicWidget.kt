@@ -83,10 +83,13 @@ private fun setSuccessCondition(context: Context, views: RemoteViews) {
     val openIntent = Intent(context, SplashActivity::class.java)
     val refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
     val openPendingIntent = PendingIntent.getActivity(context, 1, openIntent, PendingIntent.FLAG_IMMUTABLE)
-    val inOutDrawable = if (inOutStateData == null || inOutStateData == "OUT") R.drawable.widget_out_state else R.drawable.widget_in_state
 
-    views.setTextViewText(R.id.widget_accumulation_month_text, parseTimeMonth(accumulationData!!.monthAccumulationTime))
-    views.setTextViewText(R.id.widget_accumulation_today_text, parseTimeToday(accumulationData!!.todayAccumulationTime))
+    val inOutDrawable = if (inOutStateData == null || inOutStateData == "OUT") R.drawable.widget_out_state else R.drawable.widget_in_state
+    val monthText = if (accumulationData == null) "00:00" else parseTimeMonth(accumulationData!!.monthAccumulationTime)
+    val todayText = if (accumulationData == null) "00:00" else parseTimeToday(accumulationData!!.todayAccumulationTime)
+
+    views.setTextViewText(R.id.widget_accumulation_month_text, monthText)
+    views.setTextViewText(R.id.widget_accumulation_today_text, todayText)
     views.setImageViewResource(R.id.widget_inout_state_img, inOutDrawable)
     views.setOnClickPendingIntent(R.id.widget_layout, openPendingIntent)
     views.setOnClickPendingIntent(R.id.widget_refresh_layout, refreshPendingIntent)
