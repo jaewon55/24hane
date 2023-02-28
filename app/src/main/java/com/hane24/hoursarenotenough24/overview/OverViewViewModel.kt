@@ -19,33 +19,38 @@ class OverViewViewModel : ViewModel() {
     val intraId: LiveData<String>
         get() = _intraId
 
+    private val _profileImageUrl = MutableLiveData("")
+    val profileImageUrl: LiveData<String>
+        get() = _profileImageUrl
+
     private val _dayAccumulationTime = MutableLiveData(0L)
-    val dayAccumulationTime: LiveData<String> =
+    val dayAccumulationTime: LiveData<Pair<String, String>> =
         Transformations.map(_dayAccumulationTime) { parseTime(it, false) }
 
     private val _dayTargetTime = MutableLiveData(0L)
-    val dayTargetTime: LiveData<String> =
+    val dayTargetTime: LiveData<Pair<String, String>> =
         Transformations.map(_dayTargetTime) { parseTime(it, true) }
 
     private val _dayProgressPercent = MutableLiveData(0)
     val dayProgressPercent: LiveData<Int>
         get() = _dayProgressPercent
     val dayProgressPercentText: LiveData<String> =
-        Transformations.map(_dayProgressPercent) { "$it%" }
+        Transformations.map(_dayProgressPercent) { it.toString() }
 
     private val _monthAccumulationTime = MutableLiveData(0L)
-    val monthAccumulationTime: LiveData<String> =
+    val monthAccumulationTime: LiveData<Pair<String, String>> =
         Transformations.map(_monthAccumulationTime) { parseTime(it, false) }
 
     private val _monthTargetTime = MutableLiveData(0L)
-    val monthTargetTime: LiveData<String> =
+    val monthTargetTime: LiveData<Pair<String, String>> =
         Transformations.map(_monthTargetTime) { parseTime(it, true) }
 
     private val _monthProgressPercent = MutableLiveData(0)
     val monthProgressPercent: LiveData<Int>
         get() = _monthProgressPercent
+
     val monthProgressPercentText: LiveData<String> =
-        Transformations.map(_monthProgressPercent) { "$it%" }
+        Transformations.map(_monthProgressPercent) { it.toString() }
 
     private val _latestTagTime = MutableLiveData("")
     val latestTagTime: LiveData<String>
@@ -100,7 +105,8 @@ class OverViewViewModel : ViewModel() {
     private suspend fun useGetMainInfoApi() {
         try {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
-            _intraId.value = "${mainInfo.login} 님"
+            _intraId.value = mainInfo.login
+            _profileImageUrl.value = mainInfo.profileImage
             if (mainInfo.inoutState == "IN") {
                 _inOutState.value = true
                 _latestTagTime.value = mainInfo.tagAt
@@ -162,13 +168,13 @@ class OverViewViewModel : ViewModel() {
         return (time / targetDouble * 100).toInt()
     }
 
-    private fun parseTime(time: Long, isTargetTime: Boolean): String {
+    private fun parseTime(time: Long, isTargetTime: Boolean): Pair<String, String> {
         var second = time
         val hour = second / 3600
         if (isTargetTime)
-            return String.format("%d시간", hour)
+            return String.format("%d", hour) to "H"
         second -= hour * 3600
         val min = second / 60
-        return String.format("%d시간%d분", hour, min)
+        return String.format("%d", hour) to String.format("%d", min)
     }
 }

@@ -8,12 +8,16 @@ import android.graphics.drawable.TransitionDrawable
 import android.os.Build
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
@@ -244,3 +248,22 @@ fun setProgressBarVisible(
     }
 }
 
+@BindingAdapter("loadImage")
+fun loadImage(
+    view: ImageView,
+    imageUrl: String,
+) {
+    Glide.with(view.context).load(imageUrl).into(view)
+}
+
+@BindingAdapter("setBackground")
+fun setBackground(
+    view: ViewGroup,
+    flag: Boolean
+    ) {
+    view.background = if (flag) {
+        AppCompatResources.getDrawable(view.context, R.drawable.in_background)
+    } else {
+        AppCompatResources.getDrawable(view.context, R.color.overview_in_color)
+    }
+}

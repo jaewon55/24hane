@@ -9,17 +9,21 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/graph_card"
-        app:cardCornerRadius="20dp"
-        android:padding="20dp"
-        app:cardElevation="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
+            android:layout_height="wrap_content"
             android:background="#00000000"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             tools:context=".overview.OverViewGraphFragment">
 
 
@@ -28,8 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="최근 주간 그래프"
-                android:textSize="14dp"
                 android:textColor="@color/default_text"
+                android:textSize="14dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -38,8 +42,8 @@
                 android:id="@+id/overview_graph_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
                 android:text="(6주)"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_graph_name"
                 app:layout_constraintStart_toEndOf="@+id/overview_graph_name"
                 app:layout_constraintTop_toTopOf="@+id/overview_graph_name" />
@@ -49,9 +53,9 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:background="#00000000"
                 android:layout_marginTop="12dp"
+                android:background="#00000000"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_graph_name"
                 tools:layout_editor_absoluteX="20dp">
 
@@ -59,11 +63,11 @@
                     android:id="@+id/overview_graph_info_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="20dp"
                     android:backgroundTint="#333333"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline_upper"
+                    app:layout_constraintBottom_toTopOf="@+id/graph_frame"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -88,7 +92,7 @@
                             style="@style/graph_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="7dp"
+                            android:layout_marginBottom="9dp"
                             android:text="@string/default_graph_average"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@+id/overview_graph_total_time"
@@ -99,107 +103,148 @@
                             style="@style/graph_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="9dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginEnd="22dp"
+                            android:layout_marginBottom="4dp"
                             android:text="@string/default_graph_total"
+                            app:layout_constraintBottom_toTopOf="@+id/overview_graph_average_time"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_lower"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="169dp" />
-
                 <FrameLayout
                     android:id="@+id/graph_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/guideline_lower"
-                    app:layout_constraintTop_toBottomOf="@+id/guideline_upper">
+                    app:layout_constraintTop_toBottomOf="@id/guideline_upper">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/graph_btn_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="120dp">
+                        <TextView
+                            android:id="@+id/invisible_recent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/overview_graph_recent"
+                            android:textColor="@color/graph_text"
+                            android:textSize="12dp"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/overview_graph_btn1"/>
+
+                        <TextView
+                            android:id="@+id/invisible_old"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/overview_graph_old"
+                            android:textColor="@color/graph_text"
+                            android:textSize="12dp"
+                            android:visibility="invisible"
+                            tools:layout_editor_absoluteX="299dp"
+                            tools:layout_editor_absoluteY="80dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/overview_graph_btn6"/>
 
                         <ImageView
                             android:id="@+id/overview_graph_btn1"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:tint="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/invisible_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph_btn2"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/overview_graph_btn2"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:tint="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/overview_graph_btn3"
-                            app:layout_constraintStart_toEndOf="@+id/overview_graph_btn1" />
+                            app:layout_constraintBottom_toTopOf="@id/invisible_recent"
+                            app:layout_constraintEnd_toStartOf="@id/overview_graph_btn3"
+                            app:layout_constraintStart_toEndOf="@id/overview_graph_btn1"
+                            app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/overview_graph_btn3"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:tint="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/overview_graph_btn4"
-                            app:layout_constraintStart_toEndOf="@+id/overview_graph_btn2" />
+                            app:layout_constraintBottom_toTopOf="@id/invisible_recent"
+                            app:layout_constraintEnd_toStartOf="@id/overview_graph_btn4"
+                            app:layout_constraintStart_toEndOf="@id/overview_graph_btn2"
+                            app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/overview_graph_btn4"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:tint="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/overview_graph_btn5"
-                            app:layout_constraintStart_toEndOf="@+id/overview_graph_btn3" />
+                            app:layout_constraintBottom_toTopOf="@id/invisible_recent"
+                            app:layout_constraintEnd_toStartOf="@id/overview_graph_btn5"
+                            app:layout_constraintStart_toEndOf="@id/overview_graph_btn3"
+                            app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/overview_graph_btn5"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:tint="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/overview_graph_btn6"
-                            app:layout_constraintStart_toEndOf="@+id/overview_graph_btn4" />
+                            app:layout_constraintBottom_toTopOf="@id/invisible_recent"
+                            app:layout_constraintEnd_toStartOf="@id/overview_graph_btn6"
+                            app:layout_constraintStart_toEndOf="@id/overview_graph_btn4"
+                            app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/overview_graph_btn6"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:tint="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/invisible_recent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/overview_graph_btn5" />
+                            app:layout_constraintStart_toEndOf="@id/overview_graph_btn5"
+                            app:tint="@color/white" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/graph_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="120dp">
+
+                        <TextView
+                            android:id="@+id/overview_graph_recent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/overview_graph_recent"
+                            android:textColor="@color/graph_text"
+                            android:textSize="12dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/overview_graph1"/>
+
+                        <TextView
+                            android:id="@+id/overview_graph_old"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/overview_graph_old"
+                            android:textColor="@color/graph_text"
+                            android:textSize="12dp"
+                            tools:layout_editor_absoluteX="299dp"
+                            tools:layout_editor_absoluteY="80dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/overview_graph6"/>
 
                         <ImageView
                             android:id="@+id/overview_graph1"
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph2"
                             app:layout_constraintStart_toStartOf="parent" />
 
@@ -208,7 +253,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph3"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph1" />
 
@@ -217,7 +262,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph4"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph2" />
 
@@ -226,7 +271,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph5"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph3" />
 
@@ -235,7 +280,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph6"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph4" />
 
@@ -244,45 +289,18 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph5" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
                 </FrameLayout>
-
-                <TextView
-                    android:id="@+id/overview_graph_recent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="2dp"
-                    android:text="@string/overview_graph_recent"
-                    android:textColor="@color/graph_text"
-                    android:textSize="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline_lower" />
-
-                <TextView
-                    android:id="@+id/overview_graph_old"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="25dp"
-                    android:text="@string/overview_graph_old"
-                    android:textColor="@color/graph_text"
-                    android:textSize="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline_lower" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_upper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_end="105dp" />
+                    app:layout_constraintGuide_end="115dp" />
 
                 <ImageView
                     android:id="@+id/overview_graph_selector1"
@@ -337,8 +355,8 @@
                     android:id="@+id/overview_graph_selector6"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/overview_graph_selector5"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
                     app:srcCompat="@drawable/ic_reverse_triangle" />
