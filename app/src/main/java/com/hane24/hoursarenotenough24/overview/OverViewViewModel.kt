@@ -19,6 +19,10 @@ class OverViewViewModel : ViewModel() {
     val intraId: LiveData<String>
         get() = _intraId
 
+    private val _profileImageUrl = MutableLiveData("")
+    val profileImageUrl: LiveData<String>
+        get() = _profileImageUrl
+
     private val _dayAccumulationTime = MutableLiveData(0L)
     val dayAccumulationTime: LiveData<Pair<String, String>> =
         Transformations.map(_dayAccumulationTime) { parseTime(it, false) }
@@ -100,7 +104,8 @@ class OverViewViewModel : ViewModel() {
     private suspend fun useGetMainInfoApi() {
         try {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
-            _intraId.value = "${mainInfo.login} 님"
+            _intraId.value = mainInfo.login
+            _profileImageUrl.value = mainInfo.profileImage
             if (mainInfo.inoutState == "IN") {
                 _inOutState.value = true
                 _latestTagTime.value = mainInfo.tagAt

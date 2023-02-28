@@ -1,6 +1,7 @@
 package com.hane24.hoursarenotenough24.overview
 
 import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.LayoutTransition
 import android.animation.LayoutTransition.TransitionListener
@@ -51,6 +52,7 @@ import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.InOutTimeItem
 import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
+import com.hane24.hoursarenotenough24.view.CustomProgressbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -152,6 +154,23 @@ class OverViewFragment : Fragment() {
             reverseVisibility(binding.overviewMonthToggleGroup)
         }
     }
+
+    private fun progressAnimation(view: CustomProgressbar) {
+        Log.i("progress", "progressAnim Call")
+        val progressAnimation = ObjectAnimator.ofFloat(view, "currProgress", view.maxProgress).apply {
+            duration=1000
+        }
+
+        Log.i("progress", "${view.maxProgress}")
+        progressAnimation.doOnEnd {
+            if (view == binding.overviewMonthProgressbar)
+                binding.overviewMonthCard.isClickable = true
+            else
+                binding.overviewTodayCard.isClickable = true
+        }
+
+        progressAnimation.start()
+    }
     private fun expandAnimation(view: View) {
         val expandAnimation = object: Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
@@ -170,7 +189,10 @@ class OverViewFragment : Fragment() {
 
             override fun onAnimationEnd(p0: Animation?) {
                 reverseViewVisibility(view)
-                view.isClickable = true
+                if (view == binding.overviewTodayCard)
+                    progressAnimation(binding.overviewTodayProgressbar)
+                else
+                    progressAnimation(binding.overviewMonthProgressbar)
             }
             override fun onAnimationRepeat(p0: Animation?) {}
         }
@@ -195,6 +217,10 @@ class OverViewFragment : Fragment() {
             override fun onAnimationEnd(p0: Animation?) {
                 reverseMonthCardColor(view)
                 view.isClickable = true
+                if (view == binding.overviewTodayCard)
+                    binding.overviewTodayProgressbar.currProgress = 0f
+                else
+                    binding.overviewMonthProgressbar.currProgress = 0f
             }
             override fun onAnimationRepeat(p0: Animation?) {}
         }

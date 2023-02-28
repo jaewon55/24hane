@@ -69,6 +69,10 @@ dependencies {
     implementation("androidx.room:room-ktx:2.3.0")
     kapt 'org.xerial:sqlite-jdbc:3.34.0'
 
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.15.0'
+    kapt 'com.github.bumptech.glide:compiler:4.15.0'
+
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.fragment:fragment-ktx:1.5.4'
