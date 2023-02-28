@@ -97,15 +97,12 @@ class LogListRefactor : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _loadingState.value = true
             inOutInfoPerMonthApi(TodayCalendarUtils.year, TodayCalendarUtils.month)
-            _loadingState.value = false
         }
     }
 
     fun leftButtonOnClick() {
         viewModelScope.launch {
-            _loadingState.value = true
             var newYear = _calendarYear.value ?: TodayCalendarUtils.year
             val newMonth = _calendarMonth.value?.minus(1)?.let {
                 if (it == 0) {
@@ -121,13 +118,11 @@ class LogListRefactor : ViewModel() {
             }
             _calendarMonth.value = newMonth
             _calendarDay.value = 1
-            _loadingState.value = false
         }
     }
 
     fun rightButtonOnClick() {
         viewModelScope.launch {
-            _loadingState.value = true
             var newYear = _calendarYear.value ?: TodayCalendarUtils.year
             val newMonth = _calendarMonth.value?.plus(1)?.let {
                 if (it == 13) {
@@ -137,25 +132,23 @@ class LogListRefactor : ViewModel() {
                     it
                 }
             } ?: TodayCalendarUtils.month
-            val autoUpdate = newYear != TodayCalendarUtils.year || newMonth != TodayCalendarUtils.month
+            val autoUpdate =
+                newYear != TodayCalendarUtils.year || newMonth != TodayCalendarUtils.month
             inOutInfoPerMonthApi(newYear, newMonth, autoUpdate)
             if (_calendarYear.value != newYear) {
                 _calendarYear.value = newYear
             }
             _calendarMonth.value = newMonth
             _calendarDay.value = 1
-            _loadingState.value = false
         }
     }
 
     fun refreshButtonOnClick() {
         viewModelScope.launch {
-            _loadingState.value = true
             inOutInfoPerMonthApi(
                 _calendarYear.value ?: TodayCalendarUtils.year,
                 (_calendarMonth.value ?: TodayCalendarUtils.month)
             )
-            _loadingState.value = false
         }
     }
 
@@ -165,14 +158,22 @@ class LogListRefactor : ViewModel() {
 
     private suspend fun inOutInfoPerMonthApi(y: Int, m: Int, autoUpdate: Boolean = true) {
         try {
+            val format = String.format("%4d%02d", y, m)
             val domainModel = withContext(Dispatchers.IO) {
                 if (autoUpdate) {
-                    repository.getMonth(String.format("%4d%02d", y, m)).asDomainModel()
+                    repository.getMonthOrNull(format)?.asDomainModel()
                 } else {
-                    repository.getMonthNoneUpdate(String.format("%4d%02d", y, m)).asDomainModel()
+                    repository.getMonthNoneUpdate(format).asDomainModel()
                 }
             }
-            logContainer.value = MonthTimeLogContainer(y, m, domainModel)
+            domainModel?.let {
+                logContainer.value = MonthTimeLogContainer(y, m, it)
+                return
+            }
+            _loadingState.value = true
+            logContainer.value =
+                MonthTimeLogContainer(y, m, repository.getMonthFromServer(format).asDomainModel())
+            _loadingState.value = false
         } catch (err: HttpException) {
             Log.e("e_msg", err.message ?: "몰라")
             val isLoginFail = err.code() == 401
