@@ -10,10 +10,7 @@ import com.hane24.hoursarenotenough24.data.*
 import com.hane24.hoursarenotenough24.database.asDomainModel
 import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.network.Hane42Apis
-import com.hane24.hoursarenotenough24.network.asDomainModel
 import com.hane24.hoursarenotenough24.repository.TimeRepository
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -111,7 +108,7 @@ class LogListViewModel : ViewModel() {
     private suspend fun useGetInOutInfoPerMonthApi(year: Int, month: Int) {
         try {
             val monthTimeLog = withContext(Dispatchers.IO) {
-                repository.getMonth(String.format("%4d%02d", year, month)).asDomainModel()
+                repository.getMonthFromServer(String.format("%4d%02d", year, month)).asDomainModel()
             }
 //                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, year, month)
 //                    .asDomainModel()
@@ -139,7 +136,7 @@ class LogListViewModel : ViewModel() {
             val newYear = TodayCalendarUtils.year
             val newMonth = TodayCalendarUtils.month
             val newLogs = withContext(Dispatchers.IO) {
-                repository.getMonth(String.format("%4d%02d", newYear, newMonth)).asDomainModel()
+                repository.getMonthOrNull(String.format("%4d%02d", newYear, newMonth))!!.asDomainModel()
             }
 //                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, newYear, newMonth)
 //                    .asDomainModel()
@@ -204,7 +201,7 @@ class LogListViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val monthTimeLog = withContext(Dispatchers.IO) {
-                    repository.getMonth(String.format("%4d%02d", selectedYear, selectedMonth)).asDomainModel()
+                    repository.getMonthOrNull(String.format("%4d%02d", selectedYear, selectedMonth))!!.asDomainModel()
                 }
 //                    Hane42Apis.hane42ApiService.getInOutInfoPerMonth(
 //                        accessToken,
