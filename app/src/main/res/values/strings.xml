@@ -52,5 +52,9 @@ limitations under the License.</string>
     <string name="etc_complain">출입 기록 문의</string>
     <string name="etc_guide">이용 가이드</string>
     <string name="etc_feedback">앱 피드백</string>
+    <string name="overview_hour_text">시간&#160;</string>
+    <string name="overview_minute_text">분</string>
+    <string name="overview_target_time_text">시간</string>
+    <string name="overview_percent_text">%</string>
 
 </resources>

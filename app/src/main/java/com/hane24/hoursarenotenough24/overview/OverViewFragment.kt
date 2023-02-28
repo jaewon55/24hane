@@ -25,6 +25,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -71,13 +72,13 @@ class OverViewFragment : Fragment() {
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
         binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
         observeErrorState()
+
         return binding.root
     }
 
     private fun measureCardHeight() {
         measureMinHeight()
         measureMaxHeight()
-        binding.loadingLayout.visibility = View.GONE
     }
 
     private fun measureMinHeight() {
@@ -120,11 +121,19 @@ class OverViewFragment : Fragment() {
     private fun setCardAnimation(view: View) {
         view.isClickable = false
         if (isToggled(view)) {
-            binding.overviewTodayBtn.animate().rotation(0f).apply { duration = 200 }
+            if (view == binding.overviewTodayCard) {
+                binding.overviewTodayBtn.animate().rotation(0f).apply { duration = 200 }
+            } else {
+                binding.overviewMonthBtn.animate().rotation(0f).apply { duration = 200 }
+            }
             collapseAnimation(view)
         }
         else {
-            binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
+            if (view == binding.overviewTodayCard) {
+                binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
+            } else {
+                binding.overviewMonthBtn.animate().rotation(90f).apply { duration = 200 }
+            }
             expandAnimation(view)
         }
     }
@@ -138,26 +147,16 @@ class OverViewFragment : Fragment() {
                 View.GONE
         }
         if (view == binding.overviewTodayCard) {
-            reverseVisibility(binding.overviewTodayTargetText)
-            reverseVisibility(binding.overviewTodayTargetTimeText)
-            reverseVisibility(binding.overviewTodayProgressbar)
-            reverseVisibility(binding.overviewTodayProgressbarPercent)
-            reverseVisibility(binding.overviewTodayProgressbarTarget)
-            reverseVisibility(binding.overviewTodayProgressbarTargetTime)
+            reverseVisibility(binding.overviewTodayToggleGroup)
         } else {
-            reverseVisibility(binding.overviewMonthTargetText)
-            reverseVisibility(binding.overviewMonthTargetTimeText)
-            reverseVisibility(binding.overviewMonthProgressbar)
-            reverseVisibility(binding.overviewMonthProgressbarPercent)
-            reverseVisibility(binding.overviewMonthProgressbarTarget)
-            reverseVisibility(binding.overviewMonthProgressbarTargetTime)
+            reverseVisibility(binding.overviewMonthToggleGroup)
         }
     }
     private fun expandAnimation(view: View) {
         val expandAnimation = object: Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
                 view.layoutParams.height =
-                    if (interpolatedTime >= 0.8f) {
+                    if (interpolatedTime >= 0.7f) {
                         maxHeight
                     } else (minHeight + (minHeight * interpolatedTime)).toInt()
                 view.requestLayout()
@@ -184,7 +183,7 @@ class OverViewFragment : Fragment() {
         val collapseAnimation = object: Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
                 view.layoutParams.height =
-                    if (interpolatedTime >= 0.8f) minHeight else (maxHeight - (maxHeight * interpolatedTime)).toInt()
+                    if (interpolatedTime >= 0.7f) minHeight else (maxHeight - (maxHeight * interpolatedTime)).toInt()
                 view.requestLayout()
             }
         }.apply { duration = 200L }
@@ -207,12 +206,18 @@ class OverViewFragment : Fragment() {
         if (view != binding.overviewMonthCard) return
         if (binding.overviewMonthAccumulateText.textColors == ColorStateList.valueOf(Color.WHITE)) {
             binding.overviewMonthCard.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
-            binding.overviewMonthAccumulateTimeText.setTextColor(Color.BLACK)
+            binding.overviewMonthHourText.setTextColor(Color.BLACK)
+            binding.overviewMonthHourNumericText.setTextColor(Color.BLACK)
+            binding.overviewMonthMinuteNumericText.setTextColor(Color.BLACK)
+            binding.overviewMonthMinuteText.setTextColor(Color.BLACK)
             binding.overviewMonthBtn.imageTintList = ColorStateList.valueOf(Color.GRAY)
             binding.overviewMonthAccumulateText.setTextColor(Color.BLACK)
         } else {
             binding.overviewMonthCard.backgroundTintList = ColorStateList.valueOf(Color.argb(255, 115, 91, 242))
-            binding.overviewMonthAccumulateTimeText.setTextColor(Color.WHITE)
+            binding.overviewMonthHourText.setTextColor(Color.WHITE)
+            binding.overviewMonthHourNumericText.setTextColor(Color.WHITE)
+            binding.overviewMonthMinuteNumericText.setTextColor(Color.WHITE)
+            binding.overviewMonthMinuteText.setTextColor(Color.WHITE)
             binding.overviewMonthBtn.imageTintList = ColorStateList.valueOf(Color.WHITE)
             binding.overviewMonthAccumulateText.setTextColor(Color.WHITE)
         }
