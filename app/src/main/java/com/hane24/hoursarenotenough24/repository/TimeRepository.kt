@@ -5,6 +5,8 @@ import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.network.asDatabaseDto
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,20 +18,24 @@ class TimeRepository(private val db: TimeDatabase) {
         return db.timeDatabaseDAO().getAll()
     }
 
-    suspend fun getMonth(date: String): List<TimeDatabaseDto> {
+    suspend fun getMonthOrNull(date: String): List<TimeDatabaseDto>? {
         val dataBaseData = db.timeDatabaseDAO().getMonth(date)
         return if (dataBaseData.isEmpty() || shouldReloadDataFromServer(dataBaseData[0])) {
-            val year = date.substring(0, 4).toInt()
-            val month = date.substring(4, 6).toInt()
-            val monthTimeLog = Hane42Apis
-                .hane42ApiService
-                .getInOutInfoPerMonth(accessToken, year, month)
-                .asDatabaseDto(date)
-            insert(monthTimeLog)
-            monthTimeLog
+            null
         } else {
             dataBaseData
         }
+    }
+
+    suspend fun getMonthFromServer(date: String): List<TimeDatabaseDto> {
+        val year = date.substring(0, 4).toInt()
+        val month = date.substring(4, 6).toInt()
+        val monthTimeLog = Hane42Apis
+            .hane42ApiService
+            .getInOutInfoPerMonth(accessToken, year, month)
+            .asDatabaseDto(date)
+        withContext(Dispatchers.IO) { insert(monthTimeLog) }
+        return monthTimeLog
     }
 
     suspend fun getMonthNoneUpdate(date: String): List<TimeDatabaseDto> {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/loading_dot_from"
+        android:left="-12dp"
+        android:right="12dp" />
+
+    <item android:drawable="@drawable/loading_dot_from" />
+
+    <item
+        android:drawable="@drawable/loading_dot_to"
+        android:left="12dp"
+        android:right="-12dp" />
+
+</layer-list>

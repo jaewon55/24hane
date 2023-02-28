@@ -2,7 +2,11 @@ package com.hane24.hoursarenotenough24.utils
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Typeface
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.TransitionDrawable
 import android.os.Build
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -21,6 +25,7 @@ import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.data.LogTableItem
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogTableAdapter
+import java.time.format.TextStyle
 
 fun getColorHelper(context: Context, id: Int) =
     if (Build.VERSION.SDK_INT >= 23) context.getColor(id) else context.resources.getColor(id)
@@ -126,7 +131,8 @@ fun bindRightButtonState(
     month: Int,
     state: Boolean
 ) {
-    button.isEnabled = !state && (year != TodayCalendarUtils.year || month != TodayCalendarUtils.month)
+    button.isEnabled =
+        !state && (year != TodayCalendarUtils.year || month != TodayCalendarUtils.month)
 }
 
 @BindingAdapter("tableList")
@@ -156,11 +162,12 @@ fun bindCalendarRecyclerView(
     adapter.submitList(data)
 }
 
-@BindingAdapter("item", "selectedDay", requireAll = false)
+@BindingAdapter("item", "selectedDay", "selectedMonth", requireAll = false)
 fun bindCalendarItem(
     view: MaterialButton,
     item: CalendarItem,
-    selectedDay: Int
+    selectedDay: Int,
+    selectedMonth: Int,
 ) {
     view.text = when (item.day) {
         -7 -> "일"
@@ -173,21 +180,40 @@ fun bindCalendarItem(
         else -> item.day.toString()
     }
     if (item.day < 0) {
+        view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13f)
         view.setTextColor(getColorHelper(view.context, R.color.calendar_week_of_day_text))
         view.isEnabled = false
         return
 //        view.textSize = view.context.resources.getDimension(R.dimen.day_of_week_text_size)
-    }else if (item.day == selectedDay) {
+    }
+
+    view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+    view.strokeWidth = 0
+
+    if (selectedMonth == TodayCalendarUtils.month && item.day == TodayCalendarUtils.day && item.day != selectedDay) {
+        view.setTextColor(getColorHelper(view.context, R.color.selected_background_color))
+        view.backgroundTintList =
+            ColorStateList.valueOf(getColorHelper(view.context, R.color.white))
+        view.cornerRadius =
+            view.context.resources.getDimensionPixelSize(R.dimen.calendar_common_radius)
+        view.setTextAppearance(view.context, R.style.NormalTextStyle)
+        view.strokeWidth = 2
+    } else if (item.day == selectedDay) {
         view.setTextColor(getColorHelper(view.context, R.color.selected_text_color))
         view.backgroundTintList =
             ColorStateList.valueOf(getColorHelper(view.context, R.color.selected_background_color))
-        view.cornerRadius = view.context.resources.getDimensionPixelSize(R.dimen.calendar_selected_radius)
+        view.cornerRadius =
+            view.context.resources.getDimensionPixelSize(R.dimen.calendar_selected_radius)
+        view.setTextAppearance(view.context, R.style.BoldTextStyle)
     } else {
         view.setTextColor(getColorHelper(view.context, R.color.black))
         view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
-        view.cornerRadius = view.context.resources.getDimensionPixelSize(R.dimen.calendar_common_radius)
+        view.cornerRadius =
+            view.context.resources.getDimensionPixelSize(R.dimen.calendar_common_radius)
+        view.setTextAppearance(view.context, R.style.NormalTextStyle)
 //        ColorStateList.valueOf(getColorHelper(view.context, R.color.calendar_item_stroke_default))
     }
+
     if (item.isNextDay) {
         view.setTextColor(getColorHelper(view.context, R.color.next_day_text))
         view.isEnabled = false
@@ -207,10 +233,19 @@ fun setCalendarVisible(
 
 @BindingAdapter("loadingState")
 fun setProgressBarVisible(
-    progressBar: ProgressBar,
+    view: ImageView,
     loadingState: Boolean
 ) {
-    progressBar.visibility = if (loadingState) View.VISIBLE else View.INVISIBLE
+    val drawable = view.drawable as AnimationDrawable
+    if (loadingState) {
+        view.visibility = View.VISIBLE
+        drawable.setEnterFadeDuration(500)
+        drawable.setExitFadeDuration(500)
+        drawable.start()
+    } else {
+        view.visibility = View.INVISIBLE
+        drawable.stop()
+    }
 }
 
 @BindingAdapter("loadImage")
