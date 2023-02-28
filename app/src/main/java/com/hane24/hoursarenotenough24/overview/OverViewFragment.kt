@@ -71,11 +71,23 @@ class OverViewFragment : Fragment() {
         initBinding(inflater, container)
         initViewPager()
         measureCardHeight()
+        viewModel.monthProgressPercent.observe(requireActivity()) {
+            progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
+        }
+        viewModel.dayProgressPercent.observe(requireActivity()) {
+            progressChangeLogic(binding.overviewTodayProgressbar, it.toFloat())
+        }
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
         binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
         observeErrorState()
 
         return binding.root
+    }
+
+    private fun progressChangeLogic(view: CustomProgressbar, progress: Float) {
+        view.maxProgress = progress
+        view.progress = 0f
+        progressAnimation(binding.overviewMonthProgressbar)
     }
 
     private fun measureCardHeight() {
@@ -132,8 +144,10 @@ class OverViewFragment : Fragment() {
         }
         else {
             if (view == binding.overviewTodayCard) {
+                binding.overviewTodayProgressbar.progress = 0f
                 binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
             } else {
+                binding.overviewMonthProgressbar.progress = 0f
                 binding.overviewMonthBtn.animate().rotation(90f).apply { duration = 200 }
             }
             expandAnimation(view)
@@ -156,12 +170,19 @@ class OverViewFragment : Fragment() {
     }
 
     private fun progressAnimation(view: CustomProgressbar) {
-        Log.i("progress", "progressAnim Call")
-        val progressAnimation = ObjectAnimator.ofFloat(view, "currProgress", view.maxProgress).apply {
+        if (view.maxProgress == 0f) {
+            if (view == binding.overviewMonthProgressbar)
+                binding.overviewMonthCard.isClickable = true
+            else
+                binding.overviewTodayCard.isClickable = true
+            return
+        }
+
+        val progress = if (view.maxProgress > 100f) 100f else view.maxProgress
+        val progressAnimation = ObjectAnimator.ofFloat(view, "progress", progress).apply {
             duration=1000
         }
 
-        Log.i("progress", "${view.maxProgress}")
         progressAnimation.doOnEnd {
             if (view == binding.overviewMonthProgressbar)
                 binding.overviewMonthCard.isClickable = true
@@ -218,9 +239,9 @@ class OverViewFragment : Fragment() {
                 reverseMonthCardColor(view)
                 view.isClickable = true
                 if (view == binding.overviewTodayCard)
-                    binding.overviewTodayProgressbar.currProgress = 0f
+                    binding.overviewTodayProgressbar.progress = 0f
                 else
-                    binding.overviewMonthProgressbar.currProgress = 0f
+                    binding.overviewMonthProgressbar.progress = 0f
             }
             override fun onAnimationRepeat(p0: Animation?) {}
         }

@@ -48,6 +48,7 @@ class OverViewViewModel : ViewModel() {
     private val _monthProgressPercent = MutableLiveData(0)
     val monthProgressPercent: LiveData<Int>
         get() = _monthProgressPercent
+
     val monthProgressPercentText: LiveData<String> =
         Transformations.map(_monthProgressPercent) { it.toString() }
 

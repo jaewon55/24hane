@@ -10,11 +10,8 @@ class CustomProgressbar(context: Context, attrs: AttributeSet?): View(context, a
     constructor(context: Context): this(context, null)
 
     var maxProgress: Float = 0.0f
-        set(value) {
-            field = value
-        }
 
-    var currProgress: Float = 0.0f
+    var progress: Float = 0.0f
         set(value) {
             field = value
             invalidate()
@@ -50,6 +47,6 @@ class CustomProgressbar(context: Context, attrs: AttributeSet?): View(context, a
         canvas?.drawArc(10f, 10f, size, size, 0f, 360f, false, paint)
 
         paint.shader = foregroundGradient()
-        canvas?.drawArc(10f, 10f, size, size, 0f, currProgress * 3.6f, false, paint)
+        canvas?.drawArc(10f, 10f, size, size, 0f, progress * 3.6f, false, paint)
     }
 }
