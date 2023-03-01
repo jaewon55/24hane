@@ -14,6 +14,7 @@ import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.databinding.FragmentEtcOptionBinding
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.reissue.ReissueFragment
 import com.hane24.hoursarenotenough24.repository.TimeRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.CoroutineScope
@@ -40,10 +41,14 @@ class EtcOptionFragment : Fragment() {
         setFeedbackBtnClick()
         setLogoutBtnClick()
     }
-
     private fun setCardBtnClick() {
         binding.etcCardLayout.setOnClickListener {
             binding.etcCardLayout.isSelected = true
+            requireActivity()
+                .supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainerView, ReissueFragment())
+                .commit()
         }
     }
 

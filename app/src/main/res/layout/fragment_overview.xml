@@ -631,8 +631,7 @@
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/overview_gaepo_card">
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <LinearLayout
                         android:layout_width="wrap_content"

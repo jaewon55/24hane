@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="30dp"
+        android:background="@color/overview_in_color"
+        tools:context=".reissue.ReissueFragment">
+
+
+        <TextView
+            android:id="@+id/reissue_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카드 재발급 신청"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/default_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/reissue_back_button"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:rotationY="180"
+            android:src="@drawable/arrow"
+            app:layout_constraintBottom_toBottomOf="@+id/reissue_title_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/reissue_title_text" />
+
+        <TextView
+            android:id="@+id/reissue_help_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="재발급 신청 방법"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@color/default_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reissue_title_text" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/reissue_help_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            android:backgroundTint="@color/default_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reissue_help_title_text">
+
+            <TextView
+                android:id="@+id/reissue_help_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="12dp"
+                android:gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:text="자세히 보기"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/reissue_state_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="재발급 신청 현황"
+            android:textSize="18dp"
+            android:textColor="@color/default_text"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reissue_help_button" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/reissue_state_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reissue_state_title_text">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="30dp">
+
+                <ImageView
+                    android:id="@+id/reissue_state_apply_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_reissue_apply_no"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_next_image1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="spread" />
+
+                <ImageView
+                    android:id="@+id/reissue_next_image1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:rotation="90"
+                    android:src="@drawable/arrow"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_state_make_image"
+                    app:layout_constraintEnd_toEndOf="@+id/reissue_state_apply_image"
+                    app:layout_constraintStart_toStartOf="@+id/reissue_state_apply_image"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_state_apply_image" />
+
+                <ImageView
+                    android:id="@+id/reissue_state_make_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/ic_reissue_make_no"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_next_image2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_next_image1" />
+
+                <ImageView
+                    android:id="@+id/reissue_next_image2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:rotation="90"
+                    android:src="@drawable/arrow"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_state_end_image"
+                    app:layout_constraintEnd_toEndOf="@+id/reissue_state_make_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_state_make_image" />
+
+                <ImageView
+                    android:id="@+id/reissue_state_end_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/ic_reissue_end_no"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_next_image2" />
+
+                <TextView
+                    android:id="@+id/reissue_apply_text1"
+                    style="@style/reissue_text1_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="신청 후 업체에 입금해주세요"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_apply_text2"
+                    app:layout_constraintStart_toEndOf="@+id/reissue_state_apply_image"
+                    app:layout_constraintTop_toTopOf="@+id/reissue_state_apply_image"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/reissue_apply_text2"
+                    style="@style/reissue_text2_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="업체에서 입금 확인 후 제작이 진행됩니다."
+                    app:layout_constraintBottom_toBottomOf="@+id/reissue_state_apply_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/reissue_apply_text1"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_apply_text1" />
+
+                <TextView
+                    android:id="@+id/reissue_make_text1"
+                    style="@style/reissue_text1_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="제작은 약 2주간 소요됩니다"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_make_text2"
+                    app:layout_constraintStart_toEndOf="@+id/reissue_state_make_image"
+                    app:layout_constraintTop_toTopOf="@+id/reissue_state_make_image"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/reissue_make_text2"
+                    style="@style/reissue_text2_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="출입카드 재발급 신청 후 업체에서 입금 확인 후 제작이 진행됩니다."
+                    app:layout_constraintBottom_toBottomOf="@+id/reissue_state_make_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/reissue_make_text1"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_make_text1" />
+
+                <TextView
+                    android:id="@+id/reissue_end_text1"
+                    style="@style/reissue_text1_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="카드를 수령해주세요"
+                    app:layout_constraintBottom_toTopOf="@+id/reissue_end_text2"
+                    app:layout_constraintStart_toEndOf="@+id/reissue_state_end_image"
+                    app:layout_constraintTop_toTopOf="@+id/reissue_state_end_image"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/reissue_end_text2"
+                    style="@style/reissue_text2_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="재발급 카드는 데스크에서 수령가능합니다."
+                    app:layout_constraintBottom_toBottomOf="@+id/reissue_state_end_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/reissue_end_text1"
+                    app:layout_constraintTop_toBottomOf="@+id/reissue_end_text1" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/reissue_apply_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            android:backgroundTint="@color/front_gradient_end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/reissue_apply_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="12dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_medium"
+                android:text="카드 신청하기"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

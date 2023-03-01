@@ -174,5 +174,19 @@
         <item name="android:textColor">@color/etc_text</item>
     </style>
 
+    <style name="reissue_text1_style">
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="reissue_text2_style">
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 
 </resources>

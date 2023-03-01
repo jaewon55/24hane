@@ -30,10 +30,6 @@ data class InOutTimeItem(
     val outTimeStamp: Long,
     val durationSecond: Long
 )
-
-//data class ClusterPopulationInfoContainer(
-//    val ClusterPopulations: List<ClusterPopulationInfo>
-//)
 data class ClusterPopulationInfo(
     val cluster: String,
     @SerializedName("cadet")
