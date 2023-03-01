@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.repository
 
+import android.util.Log
 import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.network.Hane42Apis
@@ -28,19 +29,18 @@ class TimeRepository(private val db: TimeDatabase) {
     }
 
     suspend fun getMonthFromServer(date: String): List<TimeDatabaseDto> {
+        Log.d("accessToken", accessToken.toString())
         val year = date.substring(0, 4).toInt()
         val month = date.substring(4, 6).toInt()
-        val monthTimeLog = Hane42Apis
+        val networkData = Hane42Apis
             .hane42ApiService
-            .getInOutInfoPerMonth(accessToken, year, month)
-            .asDatabaseDto(date)
+            .getAllTagPerMonth(accessToken, year, month)
+        val monthTimeLog = networkData.asDatabaseDto(date)
         withContext(Dispatchers.IO) { insert(monthTimeLog) }
         return monthTimeLog
     }
 
-    suspend fun getMonthNoneUpdate(date: String): List<TimeDatabaseDto> {
-        return db.timeDatabaseDAO().getMonth(date)
-    }
+    suspend fun getMonthNoneUpdate(date: String): List<TimeDatabaseDto> = db.timeDatabaseDAO().getMonth(date)
 
     suspend fun getDay(date: String): List<TimeDatabaseDto> {
         return db.timeDatabaseDAO().getDay(date)
