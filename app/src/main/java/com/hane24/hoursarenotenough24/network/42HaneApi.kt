@@ -28,7 +28,7 @@ interface hane42Api {
         @Header("Authorization") token: String?
     ): MainInfo
 
-    @GET("/v1/tag-log/perday")
+    @GET("/v1/tag-log/getTagPerDay")
     suspend fun getInOutInfoPerDay(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,
@@ -36,8 +36,15 @@ interface hane42Api {
         @Query("day") day: Int
     ): InOutTimeContainer
 
-    @GET("/v1/tag-log/permonth")
+    @GET("/v1/tag-log/getTagPerMonth")
     suspend fun getInOutInfoPerMonth(
+        @Header("Authorization") token: String?,
+        @Query("year") year: Int,
+        @Query("month") month: Int,
+    ): InOutTimeContainer
+
+    @GET("/v1/tag-log/getAllTagPerMonth")
+    suspend fun getAllTagPerMonth(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,
         @Query("month") month: Int,

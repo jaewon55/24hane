@@ -39,19 +39,19 @@ data class TimeLogItem(
     val day: Int,
     val inTime: String,
     val outTime: String,
-    val durationTime: Long
+    val durationTime: Long?
 )
 
 fun MonthTimeLogContainer.getLogTableList(day: Int): List<LogTableItem> {
     return monthLog.filter { it.day == day }.map { log ->
-        val durationString = log.durationTime.let { time ->
+        val durationString = log.durationTime?.let { time ->
             var second = time
             val hour = second / 3600
             second -= hour * 3600
             val min = second / 60
             second -= min * 60
             String.format("%02d:%02d:%02d", hour, min, second)
-        }
+        } ?: "누락"
         LogTableItem(log.inTime, log.outTime, durationString)
     }
 }
@@ -66,7 +66,7 @@ fun MonthTimeLogContainer.getCalendarList(): List<CalendarItem> {
         newList.add(CalendarItem(0, 0, false))
     }
     for (i in 1..calendar.calculateDaysOfMonth()) {
-        val durationTime = monthLog.filter { it.day == i }.sumOf { it.durationTime }
+        val durationTime = monthLog.filter { it.day == i }.sumOf { it.durationTime ?: 0 }
         val isNextDay = when {
             calendar.get(Calendar.YEAR) < TodayCalendarUtils.year -> false
             calendar.get(Calendar.MONTH) + 1 < TodayCalendarUtils.month -> false

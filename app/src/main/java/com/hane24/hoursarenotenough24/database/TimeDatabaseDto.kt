@@ -20,7 +20,7 @@ data class TimeDatabaseDto(
     @ColumnInfo
     val outTimeStamp: Long,
     @ColumnInfo
-    val duration: Long,
+    val duration: Long?,
     @ColumnInfo
     val updateTime: Long
 )
@@ -28,14 +28,27 @@ data class TimeDatabaseDto(
 fun List<TimeDatabaseDto>.asDomainModel(): List<TimeLogItem> {
     val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
     return map { log ->
-        var day: Int
-        val inString =
-            format.format(log.inTimeStamp * 1000).split(' ').let {
-                day = it[0].toInt()
-                "${it[1]}:${it[2]}:${it[3]}"
+        var day = 0
+        val inString = log.inTimeStamp.let { timeNumber ->
+            if (timeNumber == 0L) {
+                "-"
+            } else {
+                format.format(timeNumber * 1000).split(' ').let { list ->
+                    day = list[0].toInt()
+                    "${list[1]}:${list[2]}:${list[3]}"
+                }
             }
-        val outString =
-            format.format(log.outTimeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
+        }
+        val outString = log.outTimeStamp.let { timeNumber ->
+            if (timeNumber == 0L) {
+                "-"
+            } else {
+                format.format(timeNumber * 1000).split(' ').let { list ->
+                    day = list[0].toInt()
+                    "${list[1]}:${list[2]}:${list[3]}"
+                }
+            }
+        }
         TimeLogItem(day, inString, outString, log.duration)
     }
 }

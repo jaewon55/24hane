@@ -83,7 +83,7 @@ class LogListRefactor : ViewModel() {
     val dayAccumulationTime = Transformations.map(logTableList) {
         val time = logContainer.value?.monthLog
             ?.filter { it.day == _calendarDay.value }
-            ?.sumOf { it.durationTime } ?: 0
+            ?.sumOf { it.durationTime ?: 0 } ?: 0
         parseAccumulationTime(time)
     }
 
@@ -187,6 +187,8 @@ class LogListRefactor : ViewModel() {
         } catch (err: Exception) {
             Log.e("e_msg", err.message ?: "몰라")
             _errorState.value = State.UNKNOWN_ERROR
+        } finally {
+            _loadingState.value = false
         }
     }
 
