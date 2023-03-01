@@ -36,6 +36,14 @@ data class ClusterPopulationInfo(
     val population: Int
 )
 
+data class ReissueState(
+    val state: String
+)
+data class ReissueRequestResult(
+    val login: String,
+    val request_at: String
+)
+
 fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
     return if (inOutLogs.isEmpty()) {
