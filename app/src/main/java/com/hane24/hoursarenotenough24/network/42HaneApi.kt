@@ -4,8 +4,10 @@ import com.hane24.hoursarenotenough24.BuildConfig
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 private const val BASE_URL = BuildConfig.BASE_URL
@@ -52,6 +54,21 @@ interface hane42Api {
     suspend fun getAccumulationTime(
         @Header("Authorization") token: String?,
     ): AccumulationTimeInfo
+
+    @GET("/v1/statistics/get_cadet_per_cluster")
+    suspend fun getCadetPerCluster(
+        @Header("Authorization") token: String?,
+    ): List<ClusterPopulationInfo>
+
+    @GET("/v1/reissue")
+    suspend fun getReissueState(
+        @Header("Authorization") token: String?,
+    ): ReissueState
+
+    @POST("/v1/reissue/request")
+    suspend fun postReissueRequest(
+        @Header("Authorization") token: String?,
+    ): ReissueRequestResult
 }
 
 object Hane42Apis {

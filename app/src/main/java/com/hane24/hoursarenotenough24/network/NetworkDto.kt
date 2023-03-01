@@ -30,6 +30,19 @@ data class InOutTimeItem(
     val outTimeStamp: Long?,
     val durationSecond: Long?
 )
+data class ClusterPopulationInfo(
+    val cluster: String,
+    @SerializedName("cadet")
+    val population: Int
+)
+
+data class ReissueState(
+    val state: String
+)
+data class ReissueRequestResult(
+    val login: String,
+    val request_at: String
+)
 
 fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
