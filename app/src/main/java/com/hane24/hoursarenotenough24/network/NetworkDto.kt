@@ -26,9 +26,9 @@ data class InOutTimeContainer(
 )
 
 data class InOutTimeItem(
-    val inTimeStamp: Long,
-    val outTimeStamp: Long,
-    val durationSecond: Long
+    val inTimeStamp: Long?,
+    val outTimeStamp: Long?,
+    val durationSecond: Long?
 )
 
 fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
@@ -37,7 +37,7 @@ fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
         listOf(
             TimeDatabaseDto(
 //                0,
-                date,
+                date + "00",
                 0,
                 0,
                 0,
@@ -46,12 +46,16 @@ fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
         )
     } else {
         inOutLogs.map { log ->
-            val date = format.format(log.inTimeStamp * 1000)
+            val dateOfLog = when {
+                log.inTimeStamp != null -> format.format(log.inTimeStamp * 1000)
+                log.outTimeStamp != null -> format.format(log.outTimeStamp * 1000)
+                else -> date + "00"
+            }
             TimeDatabaseDto(
 //                0,
-                date,
-                log.inTimeStamp,
-                log.outTimeStamp,
+                dateOfLog,
+                log.inTimeStamp ?: 0,
+                log.outTimeStamp ?: 0,
                 log.durationSecond,
                 System.currentTimeMillis()
             )
@@ -59,18 +63,18 @@ fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     }
 }
 
-fun InOutTimeContainer.asDomainModel(): List<TimeLogItem> {
-    val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
-    return inOutLogs.map { log ->
-        var day: Int
-        val inString =
-            format.format(log.inTimeStamp * 1000).split(' ').let {
-                day = it[0].toInt()
-                "${it[1]}:${it[2]}:${it[3]}"
-            }
-        val outString =
-            format.format(log.outTimeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
-        TimeLogItem(day, inString, outString, log.durationSecond)
-    }
-}
+//fun InOutTimeContainer.asDomainModel(): List<TimeLogItem> {
+//    val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
+//    return inOutLogs.map { log ->
+//        var day: Int
+//        val inString =
+//            format.format(log.inTimeStamp * 1000).split(' ').let {
+//                day = it[0].toInt()
+//                "${it[1]}:${it[2]}:${it[3]}"
+//            }
+//        val outString =
+//            format.format(log.outTimeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
+//        TimeLogItem(day, inString, outString, log.durationSecond)
+//    }
+//}
 
