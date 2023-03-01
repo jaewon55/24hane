@@ -45,6 +45,11 @@ interface hane42Api {
     suspend fun getAccumulationTime(
         @Header("Authorization") token: String?,
     ): AccumulationTimeInfo
+
+    @GET("/v1/statistics/get_cadet_per_cluster")
+    suspend fun getCadetPerCluster(
+        @Header("Authorization") token: String?,
+    ): List<ClusterPopulationInfo>
 }
 
 object Hane42Apis {

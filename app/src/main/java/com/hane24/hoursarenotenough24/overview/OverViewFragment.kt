@@ -51,6 +51,7 @@ import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.InOutTimeItem
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
 import com.hane24.hoursarenotenough24.view.CustomProgressbar
 import kotlinx.coroutines.CoroutineScope
@@ -81,12 +82,12 @@ class OverViewFragment : Fragment() {
         binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
         observeErrorState()
 
+        Log.i("token", "${SharedPreferenceUtils.getAccessToken()}")
         return binding.root
     }
 
     private fun progressChangeLogic(view: CustomProgressbar, progress: Float) {
         view.maxProgress = progress
-        view.progress = 0f
         progressAnimation(binding.overviewMonthProgressbar)
     }
 
@@ -144,10 +145,8 @@ class OverViewFragment : Fragment() {
         }
         else {
             if (view == binding.overviewTodayCard) {
-                binding.overviewTodayProgressbar.progress = 0f
                 binding.overviewTodayBtn.animate().rotation(90f).apply { duration = 200 }
             } else {
-                binding.overviewMonthProgressbar.progress = 0f
                 binding.overviewMonthBtn.animate().rotation(90f).apply { duration = 200 }
             }
             expandAnimation(view)
@@ -177,7 +176,7 @@ class OverViewFragment : Fragment() {
                 binding.overviewTodayCard.isClickable = true
             return
         }
-
+        view.progress = 0f
         val progress = if (view.maxProgress > 100f) 100f else view.maxProgress
         val progressAnimation = ObjectAnimator.ofFloat(view, "progress", progress).apply {
             duration=1000

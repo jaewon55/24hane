@@ -31,6 +31,15 @@ data class InOutTimeItem(
     val durationSecond: Long
 )
 
+//data class ClusterPopulationInfoContainer(
+//    val ClusterPopulations: List<ClusterPopulationInfo>
+//)
+data class ClusterPopulationInfo(
+    val cluster: String,
+    @SerializedName("cadet")
+    val population: Int
+)
+
 fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
     return if (inOutLogs.isEmpty()) {

@@ -59,6 +59,6 @@
     <color name="front_gradient_end">#735BF2</color>
     <color name="back_gradient_start">#33BCF8F9</color>
     <color name="back_gradient_end">#33735BF2</color>
-    <color name="overview_in_color">#00BABC</color>
+    <color name="overview_in_color">#F5F5F5</color>
 
 </resources>
