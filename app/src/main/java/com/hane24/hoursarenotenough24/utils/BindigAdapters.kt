@@ -15,6 +15,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -153,6 +155,19 @@ fun bindTableTextView(
     textView.visibility = if (data?.isEmpty() != false) View.VISIBLE else View.INVISIBLE
 }
 
+@BindingAdapter("item")
+fun bindIsMissingItem(
+    view: ConstraintLayout,
+    item: LogTableItem,
+) {
+    if (item.durationTime == "누락") {
+        view.background =
+            ResourcesCompat.getDrawable(view.resources, R.drawable.missing_record_background, view.resources.newTheme())
+    } else {
+        view.setBackgroundResource(0)
+    }
+}
+
 @BindingAdapter("calendarGrid")
 fun bindCalendarRecyclerView(
     recyclerView: RecyclerView,
@@ -260,7 +275,7 @@ fun loadImage(
 fun setBackground(
     view: ViewGroup,
     flag: Boolean
-    ) {
+) {
     view.background = if (flag) {
         AppCompatResources.getDrawable(view.context, R.drawable.in_background)
     } else {

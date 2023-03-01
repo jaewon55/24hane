@@ -18,8 +18,7 @@ data class CalendarItem(
             durationTime <= 3L * 3600 -> R.color.calendar_color1
             durationTime <= 6L * 3600 -> R.color.calendar_color2
             durationTime <= 9L * 3600 -> R.color.calendar_color3
-            durationTime <= 12L * 3600 -> R.color.calendar_color4
-            else -> R.color.calendar_color5
+            else -> R.color.calendar_color4
         }
 }
 

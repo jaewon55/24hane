@@ -37,11 +37,11 @@
     <color name="none">#00000000</color>
 
     <color name="calendar_week_of_day_text">#9B9797</color>
-    <color name="calendar_color1">#F1EFFE</color>
-    <color name="calendar_color2">#D5CEFB</color>
-    <color name="calendar_color3">#9D8CF6</color>
-    <color name="calendar_color4">#9D8CF6</color>
-    <color name="calendar_color5">#9D8CF6</color>
+<!--    <color name="calendar_color1">#F1EFFE</color>-->
+    <color name="calendar_color1">#669AC3F4</color>
+    <color name="calendar_color2">#8090A7F4</color>
+    <color name="calendar_color3">#B2807DF3</color>
+    <color name="calendar_color4">#E5735BF2</color>
     <color name="next_day_background">#FFFFFF</color>
     <color name="next_day_text">#9B9797</color>
     <color name="calendar_item_stroke_default">#E1E1E1</color>
