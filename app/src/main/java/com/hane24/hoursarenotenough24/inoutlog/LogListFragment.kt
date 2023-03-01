@@ -95,6 +95,7 @@ class LogListFragment : Fragment() {
                     return oldItem.day == newItem.day && oldItem.color == newItem.color
                 }
             })
+        binding.calendarRecycler.itemAnimator = null
     }
 
     inner class LogCalendarAdapter(

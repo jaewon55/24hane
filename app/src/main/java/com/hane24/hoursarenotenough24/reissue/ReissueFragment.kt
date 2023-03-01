@@ -1,6 +1,7 @@
 package com.hane24.hoursarenotenough24.reissue
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
