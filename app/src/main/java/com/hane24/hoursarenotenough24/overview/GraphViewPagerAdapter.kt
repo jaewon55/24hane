@@ -12,10 +12,18 @@ import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewGraphViewBinding
 
 class GraphViewPagerAdapter(
-    private val items: List<OverViewFragment.TimeInfo>,
     private val viewPager: ViewPager2
 ): RecyclerView.Adapter<GraphViewPagerAdapter.GraphViewHolder>() {
+    private var items: List<OverViewFragment.TimeInfo> =
+        listOf(
+            OverViewFragment.TimeInfo(listOf(10L, 0L, 0L, 0L, 0L, 0L), 0),
+            OverViewFragment.TimeInfo(listOf(0L, 0L, 0L, 0L, 0L, 0L), 1)
+        )
     private val runnable = Runnable { items }
+    override fun getItemId(position: Int): Long {
+        return items[position].hashCode().toLong()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GraphViewHolder {
         return GraphViewHolder.from(parent)
     }
@@ -28,7 +36,12 @@ class GraphViewPagerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return items.size
+    }
+
+    fun setItem(item: List<OverViewFragment.TimeInfo>) {
+        items = item
+        notifyDataSetChanged()
     }
 
     class GraphViewHolder private constructor (val binding: FragmentOverviewGraphViewBinding) : RecyclerView.ViewHolder(binding.root) {

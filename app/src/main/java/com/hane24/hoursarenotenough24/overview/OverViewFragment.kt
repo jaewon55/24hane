@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -78,6 +79,7 @@ class OverViewFragment : Fragment() {
         viewModel.dayProgressPercent.observe(requireActivity()) {
             progressChangeLogic(binding.overviewTodayProgressbar, it.toFloat())
         }
+
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
         binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
         observeErrorState()
@@ -108,29 +110,23 @@ class OverViewFragment : Fragment() {
         reverseViewVisibility(binding.overviewTodayCard)
     }
     private fun initViewPager() {
-        val monthlyTimeInfo = TimeInfo(listOf(20L, 30L, 40L, 50L, 60L, 100L), 1)
-        val weeklyTimeInfo = TimeInfo(listOf(60L, 100L, 40L, 30L, 20L, 10L), 0)
-        val adapter = GraphViewPagerAdapter(listOf(weeklyTimeInfo, monthlyTimeInfo), pager)
+        val adapter = GraphViewPagerAdapter(pager)
 
         pager.adapter = adapter
+
+        viewModel.accumulationTime.observe(requireActivity()) {
+            it?.let {
+                Log.i("observe", "execObserve")
+                Log.i("observe", "${viewModel.accumulationTime.value}")
+                val items = listOf(
+                    TimeInfo(viewModel.parseTimeToPercent(it.sixWeekAccumulationTime), 0),
+                    TimeInfo(viewModel.parseTimeToPercent(it.sixMonthAccumulationTime), 1)
+                )
+                Log.i("observe", "$items")
+                adapter.setItem(items)
+            }
+        }
         TabLayoutMediator(binding.overviewGraphTab, pager) { _,_ -> }.attach()
-        pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-            }
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                super.onPageScrollStateChanged(state)
-            }
-        })
     }
 
     private fun setCardAnimation(view: View) {
