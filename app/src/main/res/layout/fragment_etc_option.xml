@@ -35,7 +35,7 @@
             android:id="@+id/etc_card_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
             android:padding="8dp"
             android:layout_marginTop="44dp"
@@ -67,27 +67,27 @@
             android:id="@+id/etc_information_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="37dp"
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_card_layout">
 
-                    <ImageView
-                        android:id="@+id/etc_information_image"
-                        android:layout_marginStart="3dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_book" />
+            <ImageView
+                android:id="@+id/etc_information_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                app:srcCompat="@drawable/ic_book" />
 
-                    <TextView
-                        android:id="@+id/etc_information_text"
-                        style="@style/etc_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:text="@string/etc_information" />
+            <TextView
+                android:id="@+id/etc_information_text"
+                style="@style/etc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="@string/etc_information" />
 
         </LinearLayout>
 
@@ -95,103 +95,116 @@
             android:id="@+id/etc_complain_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="35dp"
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_information_layout">
-                    <ImageView
-                        android:id="@+id/etc_complain_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_complain" />
 
-                    <TextView
-                        android:id="@+id/etc_complain_text"
-                        style="@style/etc_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/etc_complain" />
+            <ImageView
+                android:id="@+id/etc_complain_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_complain" />
+
+            <TextView
+                android:id="@+id/etc_complain_text"
+                style="@style/etc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/etc_complain" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/etc_guide_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="35dp"
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etc_complain_layout">
-                    <ImageView
-                        android:id="@+id/etc_guide_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_guide" />
 
-                    <TextView
-                        android:id="@+id/etc_guide_text"
-                        style="@style/etc_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/etc_guide"/>
+            <ImageView
+                android:id="@+id/etc_guide_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_guide" />
+
+            <TextView
+                android:id="@+id/etc_guide_text"
+                style="@style/etc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/etc_guide" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/etc_feedback_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="35dp"
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_guide_layout">
-                    <ImageView
-                        android:id="@+id/etc_feedback_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_feedback" />
 
-                    <TextView
-                        android:id="@+id/etc_feedback_text"
-                        style="@style/etc_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/etc_feedback" />
+            <ImageView
+                android:id="@+id/etc_feedback_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_feedback" />
+
+            <TextView
+                android:id="@+id/etc_feedback_text"
+                style="@style/etc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/etc_feedback" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/etc_logout_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="38dp"
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_feedback_layout">
 
-                    <ImageView
-                        android:id="@+id/etc_logout_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/etc_logout_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-                        app:srcCompat="@drawable/ic_logout" />
+                app:srcCompat="@drawable/ic_logout" />
 
-                    <TextView
-                        android:id="@+id/etc_logout_text"
-                        style="@style/etc_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/logout" />
+            <TextView
+                android:id="@+id/etc_logout_text"
+                style="@style/etc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/logout" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/etc_copyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_logout_layout"
+            app:srcCompat="@drawable/ic_copyright" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
