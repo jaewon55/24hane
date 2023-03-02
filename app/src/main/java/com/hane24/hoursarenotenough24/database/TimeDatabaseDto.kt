@@ -44,7 +44,7 @@ fun List<TimeDatabaseDto>.asDomainModel(): List<TimeLogItem> {
                 "-"
             } else {
                 format.format(timeNumber * 1000).split(' ').let { list ->
-                    day = list[0].toInt()
+                    if (log.inTimeStamp == 0L) day = list[0].toInt()
                     "${list[1]}:${list[2]}:${list[3]}"
                 }
             }

@@ -56,6 +56,12 @@ limitations under the License.</string>
     <string name="overview_minute_text">분</string>
     <string name="overview_target_time_text">시간</string>
     <string name="overview_percent_text">%</string>
+    <string name="reissue_dialog_main_warning_apply_text">카드 재발급을\n신청하시겠습니까?</string>
+    <string name="reissue_dialog_main_warning_done_text">저는 카드를 받았음을\n확인했습니다.</string>
+    <string name="reissue_dialog_sub_warning_apply_text">신청 후 취소가 불가능합니다.</string>
+    <string name="reissue_dialog_sub_warning_done_text">실물 카드를 받은 후 눌러 주세요.</string>
+    <string name="reissue_dialog_apply_ok_text">네, 신청하겠습니다</string>
+    <string name="reissue_dialog_done_ok_text">네, 확인했습니다</string>
     <string name="overview_graph_total_time">총 %1$.1f시간</string>
     <string name="overview_graph_average_time">평균 %1$.1f시간</string>
     <string name="overview_graph_date">%1$s - %2$s</string>

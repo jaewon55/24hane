@@ -4,12 +4,12 @@
 
     <item
         android:drawable="@drawable/loading_frame1"
-        android:duration="400" />
+        android:duration="300" />
     <item
         android:drawable="@drawable/loading_frame2"
-        android:duration="400" />
+        android:duration="300" />
     <item
         android:drawable="@drawable/loading_frame3"
-        android:duration="400" />
+        android:duration="300" />
 
 </animation-list>

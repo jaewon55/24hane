@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveToFragment(fragment: Fragment) {
+    fun moveToFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainerView, fragment)
@@ -90,12 +90,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun setRefresh() {
         overViewViewModel.refreshLoading.observe(this) {
-            if (!it && logListViewModel.loadingState.value == false && binding.swipeRefreshLayout.isRefreshing) {
+            if (!it
+                && logListViewModel.loadingState.value == false
+                && reissueViewModel.loadingState.value == false
+                && binding.swipeRefreshLayout.isRefreshing
+            ) {
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         }
         logListViewModel.loadingState.observe(this) {
-            if (!it && overViewViewModel.refreshLoading.value == false && binding.swipeRefreshLayout.isRefreshing) {
+            if (!it
+                && overViewViewModel.refreshLoading.value == false
+                && reissueViewModel.loadingState.value == false
+                && binding.swipeRefreshLayout.isRefreshing
+            ) {
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
+        reissueViewModel.loadingState.observe(this) {
+            if (!it
+                && logListViewModel.loadingState.value == false
+                && overViewViewModel.refreshLoading.value == false
+                && binding.swipeRefreshLayout.isRefreshing
+            ) {
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         }

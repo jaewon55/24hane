@@ -12,8 +12,7 @@ import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GraphViewPagerAdapter(
-): RecyclerView.Adapter<GraphViewPagerAdapter.GraphViewHolder>() {
+class GraphViewPagerAdapter(): RecyclerView.Adapter<GraphViewPagerAdapter.GraphViewHolder>() {
     private val items: MutableList<OverViewFragment.TimeInfo> =
         mutableListOf(
             OverViewFragment.TimeInfo(listOf(10L,10L, 10L, 10L, 10L, 10L), 0),
