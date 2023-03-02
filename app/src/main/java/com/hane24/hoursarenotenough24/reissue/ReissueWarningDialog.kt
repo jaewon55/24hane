@@ -21,7 +21,7 @@ class ReissueWarningDialog: DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
-            val builder = AlertDialog.Builder(it, R.style.AlertDialogTheme)
+            val builder = AlertDialog.Builder(it, R.style.ReissueAlertDialogTheme)
 
             builder.setView(binding.root)
 

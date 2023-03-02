@@ -3,6 +3,7 @@ package com.hane24.hoursarenotenough24.overview
 import android.util.Log
 import androidx.lifecycle.*
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.ClusterPopulationInfo
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
@@ -74,6 +75,10 @@ class OverViewViewModel : ViewModel() {
     val clusterPopulation: LiveData<List<ClusterPopulationInfo>?>
         get() = _clusterPopulation
 
+    private val _accumulationTime: MutableLiveData<AccumulationTimeInfo?> = MutableLiveData(null)
+    val accumulationTime: LiveData<AccumulationTimeInfo?>
+        get() = _accumulationTime
+
     init {
         _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
         _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
@@ -87,14 +92,20 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetAccumulationInfoApi() {
         try {
-            val accumulationTime = Hane42Apis.hane42ApiService.getAccumulationTime(accessToken)
-            _monthAccumulationTime.value = accumulationTime.monthAccumulationTime
-            _dayAccumulationTime.value = accumulationTime.todayAccumulationTime
-            _dayProgressPercent.value =
-                getProgressPercent(accumulationTime.todayAccumulationTime, _dayTargetTime.value)
-            _monthProgressPercent.value =
-                getProgressPercent(accumulationTime.monthAccumulationTime, _monthTargetTime.value)
-            _state.value = State.SUCCESS
+            _accumulationTime.value = Hane42Apis.hane42ApiService.getAccumulationTime(accessToken)
+            Log.i("accumulation", "${accumulationTime.value}")
+
+            _accumulationTime.value?.let {
+                _monthAccumulationTime.value = it.monthAccumulationTime
+                _dayAccumulationTime.value = it.todayAccumulationTime
+                _dayProgressPercent.value =
+                    getProgressPercent(it.todayAccumulationTime, _dayTargetTime.value)
+                _monthProgressPercent.value =
+                    getProgressPercent(it.monthAccumulationTime, _monthTargetTime.value)
+                _state.value = State.SUCCESS
+            }
+
+
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
@@ -201,6 +212,11 @@ class OverViewViewModel : ViewModel() {
     fun getMTargetTime() = _monthTargetTime.value
 
     fun getDTargetTime() = _dayTargetTime.value
+
+    fun parseTimeToPercent(items: List<Long>): List<Long> {
+        val maxItem = items.maxOf { it }
+        return items.map{ (it.toDouble() / maxItem * 100L).toLong() }
+    }
 
     private fun getProgressPercent(time: Long, targetTime: Long?): Int {
         val targetDouble: Double = targetTime?.toDouble() ?: 1.0

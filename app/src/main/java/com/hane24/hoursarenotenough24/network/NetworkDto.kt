@@ -15,10 +15,10 @@ data class MainInfo(
 )
 
 data class AccumulationTimeInfo(
-    @SerializedName("todayAccumationTime")
     val todayAccumulationTime: Long,
-    @SerializedName("monthAccumationTime")
-    val monthAccumulationTime: Long
+    val monthAccumulationTime: Long,
+    val sixWeekAccumulationTime: List<Long>,
+    val sixMonthAccumulationTime: List<Long>
 )
 
 data class InOutTimeContainer(
