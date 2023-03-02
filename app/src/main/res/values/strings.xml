@@ -56,5 +56,8 @@ limitations under the License.</string>
     <string name="overview_minute_text">분</string>
     <string name="overview_target_time_text">시간</string>
     <string name="overview_percent_text">%</string>
+    <string name="overview_graph_total_time">총 %1$.1f시간</string>
+    <string name="overview_graph_average_time">평균 %1$.1f시간</string>
+    <string name="overview_graph_date">%1$s - %2$s</string>
 
 </resources>

@@ -91,16 +91,18 @@ class GraphViewPagerAdapter(
         }
 
         private fun setTotalTime(index: Int, item: OverViewFragment.TimeInfo) {
-            val totalTime = String.format("%.1f", (item.accumulationTimes[index] / 3600.0))
+            val totalTime = item.accumulationTimes[index] / 3600.0
 
-            binding.overviewGraphTotalTime.text = "총 ${totalTime}시간"
+            binding.overviewGraphTotalTime.text =
+                App.instance.applicationContext.resources.getString(R.string.overview_graph_total_time, totalTime)
         }
 
         private fun setAverageTime(index: Int, item: OverViewFragment.TimeInfo) {
             val days = if (item.timeType == 0) 7 else 30
-            val averageTime = String.format("%.1f", (item.accumulationTimes[index] / 3600.0) / days)
+            val averageTime = item.accumulationTimes[index] / 3600.0 / days
 
-            binding.overviewGraphAverageTime.text = "평균 ${averageTime}시간"
+            binding.overviewGraphAverageTime.text =
+                App.instance.applicationContext.resources.getString(R.string.overview_graph_average_time, averageTime)
         }
 
         private fun setDateText(index: Int, item: OverViewFragment.TimeInfo) {
@@ -110,10 +112,8 @@ class GraphViewPagerAdapter(
 
                 calendar.set(TodayCalendarUtils.year, TodayCalendarUtils.month-1-index, 1)
                 val toDate = format.format(calendar.time)
-                calendar.set(TodayCalendarUtils.year, TodayCalendarUtils.month-1-index, calendar.calculateDaysOfMonth())
-                val fromDate = format.format(calendar.time)
 
-                binding.overviewGraphDateInfo.text = toDate + " - " + fromDate
+                binding.overviewGraphDateInfo.text = toDate
             } else {
                 val format = SimpleDateFormat("M.d(E)", Locale("ko"))
                 val calendar = Calendar.getInstance()
@@ -170,7 +170,8 @@ class GraphViewPagerAdapter(
                     }
                     else -> throw IllegalStateException("Exception")
                 }
-                binding.overviewGraphDateInfo.text = toDate + " - " + fromDate
+                binding.overviewGraphDateInfo.text =
+                    App.instance.resources.getString(R.string.overview_graph_date, toDate, fromDate)
             }
         }
 
