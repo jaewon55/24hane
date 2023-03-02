@@ -27,6 +27,7 @@ import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
+import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
     private val overViewViewModel: OverViewViewModel by viewModels()
     private val logListViewModel: LogListRefactor by viewModels()
+    private val reissueViewModel: ReissueViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             overViewViewModel.refreshButtonOnClick()
             logListViewModel.refreshButtonOnClick()
+            reissueViewModel.refreshButtonOnClick()
         }
     }
 

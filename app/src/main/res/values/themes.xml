@@ -37,4 +37,13 @@
         <item name="colorOnPrimary">#000000</item>
     </style>
 
+    <style name="ReissueAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

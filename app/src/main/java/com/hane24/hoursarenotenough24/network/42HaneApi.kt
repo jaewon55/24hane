@@ -4,11 +4,7 @@ import com.hane24.hoursarenotenough24.BuildConfig
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 private const val BASE_URL = BuildConfig.BASE_URL
 
@@ -67,6 +63,11 @@ interface hane42Api {
 
     @POST("/v1/reissue/request")
     suspend fun postReissueRequest(
+        @Header("Authorization") token: String?,
+    ): ReissueRequestResult
+
+    @PATCH("/v1/reissue/finish")
+    suspend fun patchReissueFinish(
         @Header("Authorization") token: String?,
     ): ReissueRequestResult
 }
