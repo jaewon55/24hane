@@ -15,21 +15,26 @@ import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentReissueDialogBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 
-class ReissueWarningDialog: DialogFragment() {
-    private val binding by lazy { FragmentReissueDialogBinding.inflate(layoutInflater) }
+class ReissueWarningDialog : DialogFragment() {
+    private lateinit var binding: FragmentReissueDialogBinding
     private val viewModel: ReissueViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = AlertDialog.Builder(it, R.style.ReissueAlertDialogTheme)
 
+            binding = FragmentReissueDialogBinding.inflate(layoutInflater)
+                .apply {
+                    lifecycleOwner = activity
+                    viewModel = this@ReissueWarningDialog.viewModel
+                }
             builder.setView(binding.root)
 
-            binding.reissueDialogOkButton.setOnClickListener { viewModel.clickReissueOkButton() }
             binding.reissueDialogCancelButton.setOnClickListener { dialog?.cancel() }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
+
 
     companion object {
         fun showReissueDialog(fragmentManager: FragmentManager) {

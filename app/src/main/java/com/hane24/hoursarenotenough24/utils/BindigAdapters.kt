@@ -2,9 +2,7 @@ package com.hane24.hoursarenotenough24.utils
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.TransitionDrawable
 import android.os.Build
 import android.util.TypedValue
 import android.view.View
@@ -14,20 +12,18 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.data.LogTableItem
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogTableAdapter
-import java.time.format.TextStyle
+import com.hane24.hoursarenotenough24.network.ReissueState
 
 fun getColorHelper(context: Context, id: Int) =
     if (Build.VERSION.SDK_INT >= 23) context.getColor(id) else context.resources.getColor(id)
@@ -162,7 +158,11 @@ fun bindIsMissingItem(
 ) {
     if (item.durationTime == "누락") {
         view.background =
-            ResourcesCompat.getDrawable(view.resources, R.drawable.missing_record_background, view.resources.newTheme())
+            ResourcesCompat.getDrawable(
+                view.resources,
+                R.drawable.missing_record_background,
+                view.resources.newTheme()
+            )
     } else {
         view.setBackgroundResource(0)
     }
@@ -253,10 +253,10 @@ fun setProgressBarVisible(
 ) {
     val drawable = view.drawable as AnimationDrawable
     if (loadingState) {
-        view.visibility = View.VISIBLE
-        drawable.setEnterFadeDuration(500)
-        drawable.setExitFadeDuration(500)
+        drawable.setEnterFadeDuration(300)
+        drawable.setExitFadeDuration(300)
         drawable.start()
+        view.visibility = View.VISIBLE
     } else {
         view.visibility = View.INVISIBLE
         drawable.stop()
@@ -280,5 +280,109 @@ fun setBackground(
         AppCompatResources.getDrawable(view.context, R.drawable.in_background)
     } else {
         AppCompatResources.getDrawable(view.context, R.color.overview_in_color)
+    }
+}
+
+
+@BindingAdapter("serverState")
+fun reissueImageViewStateCheck(
+    view: ImageView,
+    state: ReissueState?,
+) {
+    state?.let {
+        view.background = when (view.id) {
+            R.id.reissue_state_apply_image -> {
+                if (it.state == "apply") {
+                    AppCompatResources.getDrawable(view.context, R.drawable.ic_reissue_apply_yes)
+                } else {
+                    AppCompatResources.getDrawable(view.context, R.drawable.ic_reissue_apply_no)
+                }
+            }
+            R.id.reissue_state_make_image -> {
+                if (it.state == "in_progress") {
+                    AppCompatResources.getDrawable(view.context, R.drawable.ic_reissue_make_yes)
+                } else {
+                    AppCompatResources.getDrawable(view.context, R.drawable.ic_reissue_make_no)
+                }
+            }
+            else -> {
+                if (it.state == "pick_up_requested") {
+                    AppCompatResources.getDrawable(view.context, R.drawable.ic_reissue_end_yes)
+                } else {
+                    AppCompatResources.getDrawable(view.context, R.drawable.ic_reissue_end_no)
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("serverState")
+fun reissueApplyButtonState(
+    view: MaterialButton,
+    state: ReissueState?
+) {
+    state?.let {
+        when (it.state) {
+            "none" -> {
+                view.isEnabled = true
+                view.backgroundTintList =
+                    ColorStateList.valueOf(getColorHelper(view.context, R.color.front_gradient_end))
+                view.text = "카드 신청하기"
+            }
+            "pick_up_requested" -> {
+                view.isEnabled = true
+                view.backgroundTintList =
+                    ColorStateList.valueOf(getColorHelper(view.context, R.color.front_gradient_end))
+                view.text = "데스크 카드수령 완료"
+            }
+            else -> {
+                view.isEnabled = false
+                view.backgroundTintList =
+                    ColorStateList.valueOf(getColorHelper(view.context, R.color.widget_out_state_color))
+                view.text = "카드 신청하기"
+            }
+        }
+    }
+}
+
+@BindingAdapter("okButtonState")
+fun reissueDialogOkButtonState(
+    view: MaterialButton,
+    state: ReissueState?
+) {
+    state?.let {
+        if (it.state == "none") {
+            view.text = view.context.getString(R.string.reissue_dialog_apply_ok_text)
+        } else {
+            view.text = view.context.getString(R.string.reissue_dialog_done_ok_text)
+        }
+    }
+}
+
+@BindingAdapter("mainWarningState")
+fun reissueDialogMainWarningState(
+    view: TextView,
+    state: ReissueState?,
+) {
+    state?.let {
+        if (it.state == "none") {
+            view.text = view.context.getString(R.string.reissue_dialog_main_warning_apply_text)
+        } else {
+            view.text = view.context.getString(R.string.reissue_dialog_main_warning_done_text)
+        }
+    }
+}
+
+@BindingAdapter("subWarningState")
+fun reissueDialogSubWarningState(
+    view: TextView,
+    state: ReissueState?,
+) {
+    state?.let {
+        if (it.state == "none") {
+            view.text = view.context.getString(R.string.reissue_dialog_sub_warning_apply_text)
+        } else {
+            view.text = view.context.getString(R.string.reissue_dialog_sub_warning_done_text)
+        }
     }
 }
