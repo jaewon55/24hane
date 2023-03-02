@@ -5,7 +5,6 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
@@ -42,7 +41,6 @@ class GraphViewPagerAdapter(
         items.clear()
         item.forEach { items += it }
         notifyDataSetChanged()
-        Log.i("recycler", "setItem Called $items")
     }
 
     class GraphViewHolder private constructor (val binding: FragmentOverviewGraphViewBinding) : RecyclerView.ViewHolder(binding.root) {
