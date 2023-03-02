@@ -78,6 +78,21 @@ class ReissueViewModel : ViewModel() {
         _reissueState.value = arr[idx++]
     }
 
+    fun clickReissueButton(activity: FragmentActivity) {
+        ReissueWarningDialog.showReissueDialog(activity.supportFragmentManager)
+    }
+    fun clickReissueOkButton() {
+        viewModelScope.launch {
+            usePostReissueApi()
+        }
+    }
+
+    fun refreshButtonOnClick() {
+        viewModelScope.launch {
+            useGetReissueStateApi()
+        }
+    }
+
     private suspend fun useGetReissueStateApi() {
         try {
             _reissueState.value = Hane42Apis.hane42ApiService.getReissueState(accessToken)
@@ -105,6 +120,16 @@ class ReissueViewModel : ViewModel() {
         }
     }
 
+    private suspend fun usePatchReissueFinish() {
+        try {
+            _reissueResult.value = Hane42Apis.hane42ApiService.postReissueRequest(accessToken)
+        } catch (err: HttpException) {
+//                404 ->
+//                503 ->
+        } catch (e: Exception) {
+
+        }
+    }
     private suspend fun usePatchReissueFinish() {
         try {
             _reissueResult.value = Hane42Apis.hane42ApiService.postReissueRequest(accessToken)

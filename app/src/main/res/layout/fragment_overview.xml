@@ -28,7 +28,8 @@
             android:id="@+id/overview_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="30dp"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -103,10 +104,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/overview_today_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -198,16 +201,16 @@
                             android:id="@+id/overview_today_toggle_group"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:constraint_referenced_ids=
-                                "overview_today_target_text,
+                            android:visibility="gone"
+                            app:constraint_referenced_ids="overview_today_target_text,
                                 overview_today_target_time_numeric_text,
                                 overview_today_target_time_text,
                                 overview_today_progressbar,
                                 overview_today_progressbar_target,
                                 overview_today_progressbar_target_time,
                                 overview_today_progressbar_percent_numeric_text,
-                                overview_today_progressbar_percent_text"
-                            android:visibility="gone"/>
+                                overview_today_progressbar_percent_text" />
+
                         <TextView
                             android:id="@+id/overview_today_target_text"
                             style="@style/overview_time_title"
@@ -266,9 +269,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
+                            android:fontFamily="@font/inter_medium"
                             android:text="@string/target_time"
                             android:textSize="12dp"
-                            android:fontFamily="@font/inter_medium"
                             android:visibility="gone"
                             app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
                             app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar"
@@ -278,9 +281,9 @@
                             android:id="@+id/overview_today_progressbar_target_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_medium"
                             android:text="@{viewModel.dayTargetTime.first + viewModel.dayTargetTime.second}"
                             android:textSize="12dp"
-                            android:fontFamily="@font/inter_medium"
                             android:visibility="gone"
                             app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar_target"
                             app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar_target"
@@ -317,8 +320,6 @@
                             app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar_target"
                             app:layout_constraintStart_toEndOf="@id/overview_today_progressbar_percent_numeric_text"
                             app:layout_constraintTop_toTopOf="@+id/overview_today_progressbar_percent_numeric_text" />
-
-
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -586,22 +587,30 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/overview_center_guideline"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/overview_gaepo_card"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="10dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
+                    app:layout_constraintEnd_toStartOf="@id/overview_center_guideline"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/overview_curr_status">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="18dp"
                         android:paddingVertical="28dp">
 
                         <TextView
@@ -625,19 +634,21 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/overview_seocho_card"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
+                    android:layout_marginStart="10dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
+                    app:layout_constraintStart_toEndOf="@id/overview_center_guideline"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="18dp"
                         android:paddingVertical="28dp">
 
                         <TextView

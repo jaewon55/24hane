@@ -11,6 +11,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import com.hane24.hoursarenotenough24.MainActivity
+
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentReissueBinding
@@ -38,6 +39,7 @@ class ReissueFragment : Fragment() {
         initBinding(inflater, container)
 
         binding.reissueBackButton.setOnClickListener { backPressedCallback.handleOnBackPressed() }
+
         binding.reissueApplyButton.setOnClickListener { viewModel.clickReissueButton(requireActivity()) }
         return binding.root
     }

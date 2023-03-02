@@ -35,7 +35,6 @@ class ReissueWarningDialog : DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-
     companion object {
         fun showReissueDialog(fragmentManager: FragmentManager) {
             val newDialog = ReissueWarningDialog()
