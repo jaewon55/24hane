@@ -1,25 +1,24 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewGraphViewBinding
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
+import java.text.SimpleDateFormat
+import java.util.*
 
 class GraphViewPagerAdapter(
-    private val viewPager: ViewPager2
 ): RecyclerView.Adapter<GraphViewPagerAdapter.GraphViewHolder>() {
-    private var items: List<OverViewFragment.TimeInfo> =
-        listOf(
-            OverViewFragment.TimeInfo(listOf(10L, 0L, 0L, 0L, 0L, 0L), 0),
-            OverViewFragment.TimeInfo(listOf(0L, 0L, 0L, 0L, 0L, 0L), 1)
+    private val items: MutableList<OverViewFragment.TimeInfo> =
+        mutableListOf(
+            OverViewFragment.TimeInfo(listOf(10L,10L, 10L, 10L, 10L, 10L), 0),
+            OverViewFragment.TimeInfo(listOf(10L, 10L, 10L, 10L, 10L, 10L), 1)
         )
-    private val runnable = Runnable { items }
     override fun getItemId(position: Int): Long {
         return items[position].hashCode().toLong()
     }
@@ -30,9 +29,6 @@ class GraphViewPagerAdapter(
 
     override fun onBindViewHolder(holder: GraphViewHolder, position: Int) {
         holder.bind(items[position])
-
-        if (position == items.size-1)
-            viewPager.post(runnable)
     }
 
     override fun getItemCount(): Int {
@@ -40,7 +36,8 @@ class GraphViewPagerAdapter(
     }
 
     fun setItem(item: List<OverViewFragment.TimeInfo>) {
-        items = item
+        items.clear()
+        item.forEach { items += it }
         notifyDataSetChanged()
     }
 
@@ -80,12 +77,105 @@ class GraphViewPagerAdapter(
 
         private fun getGraphHeight(percent: Long): Int {
             val maxHeight = 87
-            val whiteHeight = (maxHeight * (percent * 0.01)).toInt()
+            val whiteHeight = (maxHeight * (percent * 0.01)).toInt() + 10
             val density = App.instance.applicationContext.resources.displayMetrics.density
             return (whiteHeight * density).toInt()
         }
 
-        private fun graphClickLogic(index: Int) {
+        private fun parseTimeToPercent(items: List<Long>): List<Long> {
+            val maxItem = items.maxOf { it }
+            return items.map{ (it.toDouble() / maxItem * 100L).toLong() }
+        }
+
+        private fun setTotalTime(index: Int, item: OverViewFragment.TimeInfo) {
+            val totalTime = item.accumulationTimes[index] / 3600.0
+
+            binding.overviewGraphTotalTime.text =
+                App.instance.applicationContext.resources.getString(R.string.overview_graph_total_time, totalTime)
+        }
+
+        private fun setAverageTime(index: Int, item: OverViewFragment.TimeInfo) {
+            val days = if (item.timeType == 0) 7 else 30
+            val averageTime = item.accumulationTimes[index] / 3600.0 / days
+
+            binding.overviewGraphAverageTime.text =
+                App.instance.applicationContext.resources.getString(R.string.overview_graph_average_time, averageTime)
+        }
+
+        private fun setDateText(index: Int, item: OverViewFragment.TimeInfo) {
+            if (item.timeType == 1) {
+                val format = SimpleDateFormat("yyyy.M", Locale("ko"))
+                val calendar = Calendar.getInstance()
+
+                calendar.set(TodayCalendarUtils.year, TodayCalendarUtils.month-1-index, 1)
+                val toDate = format.format(calendar.time)
+
+                binding.overviewGraphDateInfo.text = toDate
+            } else {
+                val format = SimpleDateFormat("M.d(E)", Locale("ko"))
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.DATE, -(index*7))
+
+                val (toDate, fromDate) = when (calendar.get(Calendar.DAY_OF_WEEK)) {
+                    Calendar.MONDAY -> {
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    Calendar.TUESDAY -> {
+                        calendar.add(Calendar.DATE, -1)
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    Calendar.WEDNESDAY -> {
+                        calendar.add(Calendar.DATE, -2)
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    Calendar.THURSDAY -> {
+                        calendar.add(Calendar.DATE, -3)
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    Calendar.FRIDAY -> {
+                        calendar.add(Calendar.DATE, -4)
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    Calendar.SATURDAY -> {
+                        calendar.add(Calendar.DATE, -5)
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    Calendar.SUNDAY -> {
+                        calendar.add(Calendar.DATE, -6)
+                        val toDate = format.format(calendar.time)
+                        calendar.add(Calendar.DATE, 6)
+                        val fromDate = format.format(calendar.time)
+                        toDate to fromDate
+                    }
+                    else -> throw IllegalStateException("Exception")
+                }
+                binding.overviewGraphDateInfo.text =
+                    App.instance.resources.getString(R.string.overview_graph_date, toDate, fromDate)
+            }
+        }
+
+        private fun graphClickLogic(index: Int, item: OverViewFragment.TimeInfo) {
+            setTotalTime(index, item)
+            setAverageTime(index, item)
+            setDateText(index, item)
             val graphScaleAnim = AnimationUtils.loadAnimation(App.instance.applicationContext, R.anim.scale_anim)
             val selectorOpenAnim = AnimationUtils.loadAnimation(App.instance.applicationContext, R.anim.tanslate_anim)
             val selectorCloseAnim = AnimationUtils.loadAnimation(App.instance.applicationContext, R.anim.reverse_translate_anim)
@@ -126,15 +216,22 @@ class GraphViewPagerAdapter(
         }
 
         fun bind(item: OverViewFragment.TimeInfo) {
-            Log.i("adapter", "bind Called ${item.timeType}")
             binding.overviewGraphName.text =
                 if (item.timeType == 0) "최근 주간 그래프" else "최근 월간 그래프"
             binding.overviewGraphType.text = if (item.timeType == 0) "(6주)" else "(6달)"
+            setTotalTime(0, item)
+            setAverageTime(0, item)
+            setDateText(0, item)
+
+            val percents = parseTimeToPercent(item.accumulationTimes)
+
             for ((idx, btn) in graphButtons.withIndex()) {
-                graphs[idx].layoutParams.height = getGraphHeight(item.accumulationTimes[idx])
-                btn.setOnClickListener { graphClickLogic(idx) }
-                graphs[idx].setOnClickListener { graphClickLogic(idx) }
+                graphs[idx].layoutParams.height = getGraphHeight(percents[idx])
+                btn.setOnClickListener { graphClickLogic(idx, item) }
+                graphs[idx].setOnClickListener { graphClickLogic(idx, item) }
+                graphs[idx].requestLayout()
             }
+
         }
         companion object {
             fun from(parent: ViewGroup): GraphViewHolder {

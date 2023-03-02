@@ -110,19 +110,16 @@ class OverViewFragment : Fragment() {
         reverseViewVisibility(binding.overviewTodayCard)
     }
     private fun initViewPager() {
-        val adapter = GraphViewPagerAdapter(pager)
+        val adapter = GraphViewPagerAdapter()
 
         pager.adapter = adapter
 
         viewModel.accumulationTime.observe(requireActivity()) {
             it?.let {
-                Log.i("observe", "execObserve")
-                Log.i("observe", "${viewModel.accumulationTime.value}")
                 val items = listOf(
-                    TimeInfo(viewModel.parseTimeToPercent(it.sixWeekAccumulationTime), 0),
-                    TimeInfo(viewModel.parseTimeToPercent(it.sixMonthAccumulationTime), 1)
+                    TimeInfo(it.sixWeekAccumulationTime, 0),
+                    TimeInfo(it.sixMonthAccumulationTime, 1)
                 )
-                Log.i("observe", "$items")
                 adapter.setItem(items)
             }
         }
