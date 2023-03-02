@@ -116,14 +116,11 @@ class OverViewFragment : Fragment() {
 
         viewModel.accumulationTime.observe(requireActivity()) {
             it?.let {
-                Log.i("observe", "execObserve")
-                Log.i("observe", "${viewModel.accumulationTime.value}")
                 val items = listOf(
                     TimeInfo(it.sixWeekAccumulationTime, 0),
                     TimeInfo(it.sixMonthAccumulationTime, 1)
                 )
                 adapter.setItem(items)
-                Log.i("observe", "$items")
             }
         }
         TabLayoutMediator(binding.overviewGraphTab, pager) { _,_ -> }.attach()

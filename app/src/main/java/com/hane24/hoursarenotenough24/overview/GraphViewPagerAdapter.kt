@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -10,7 +9,6 @@ import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewGraphViewBinding
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,7 +78,6 @@ class GraphViewPagerAdapter(
         private fun getGraphHeight(percent: Long): Int {
             val maxHeight = 87
             val whiteHeight = (maxHeight * (percent * 0.01)).toInt() + 10
-            Log.i("graphHeight", "$whiteHeight")
             val density = App.instance.applicationContext.resources.displayMetrics.density
             return (whiteHeight * density).toInt()
         }
