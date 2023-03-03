@@ -635,9 +635,10 @@
                             style="@style/overview_population_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
-                            android:text="@{viewModel.getGaepoPopulation()}" />
+                            android:text="@{viewModel.getGaepoPopulation()}"
+                            tools:text="000명" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -673,8 +674,9 @@
                             style="@style/overview_population_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
+                            tools:text="000명"
                             android:text="@{viewModel.getSeochoPopulation()}" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

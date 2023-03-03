@@ -48,14 +48,21 @@ class MainActivity : AppCompatActivity() {
         setStatusAndNavigationBar()
         setFragmentsViewModel()
         setRefresh()
+        setBottomNavigation()
+    }
+
+    private fun setBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener {
-            val fragment = when (it.itemId) {
-                R.id.bottom_navigation_home_menu -> OverViewFragment()
-                R.id.bottom_navigation_calendar_menu -> LogListFragment()
-                else -> EtcOptionFragment()
+            if (it.isChecked) true
+            else {
+                val fragment = when (it.itemId) {
+                    R.id.bottom_navigation_home_menu -> OverViewFragment()
+                    R.id.bottom_navigation_calendar_menu -> LogListFragment()
+                    else -> EtcOptionFragment()
+                }
+                moveToFragment(fragment)
+                true
             }
-            moveToFragment(fragment)
-            true
         }
     }
 
