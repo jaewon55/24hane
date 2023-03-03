@@ -73,6 +73,7 @@ class OverViewFragment : Fragment() {
         initBinding(inflater, container)
         initViewPager()
         measureCardHeight()
+        binding.overviewProfileImage.clipToOutline = true
         viewModel.monthProgressPercent.observe(requireActivity()) {
             progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
         }
