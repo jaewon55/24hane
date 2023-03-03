@@ -2,6 +2,7 @@ package com.hane24.hoursarenotenough24
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -52,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBottomNavigation() {
+        val animationDrawable = binding.loadingProgressbar.drawable as AnimationDrawable
+        animationDrawable.setExitFadeDuration(300)
+        animationDrawable.setExitFadeDuration(300)
+        animationDrawable.start()
         binding.bottomNavigation.setOnItemSelectedListener {
             if (it.isChecked) true
             else {

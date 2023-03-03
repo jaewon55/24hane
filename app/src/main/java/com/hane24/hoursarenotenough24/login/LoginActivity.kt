@@ -2,6 +2,7 @@ package com.hane24.hoursarenotenough24.login
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,6 +25,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setStatusAndNavigationBar()
+
+        val animationDrawable = binding.loadingProgressbar.drawable as AnimationDrawable
+        animationDrawable.setExitFadeDuration(300)
+        animationDrawable.setExitFadeDuration(300)
+        animationDrawable.start()
 
         val state = intent.getSerializableExtra("loginState") as State
 

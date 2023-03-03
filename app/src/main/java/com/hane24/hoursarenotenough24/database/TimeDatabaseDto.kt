@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.database
 
+import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -28,13 +29,12 @@ data class TimeDatabaseDto(
 fun List<TimeDatabaseDto>.asDomainModel(): List<TimeLogItem> {
     val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
     return map { log ->
-        var day = 0
+        val day = log.date.substring(6..7).toInt()
         val inString = log.inTimeStamp.let { timeNumber ->
             if (timeNumber == 0L) {
                 "-"
             } else {
                 format.format(timeNumber * 1000).split(' ').let { list ->
-                    day = list[0].toInt()
                     "${list[1]}:${list[2]}:${list[3]}"
                 }
             }
@@ -44,7 +44,6 @@ fun List<TimeDatabaseDto>.asDomainModel(): List<TimeLogItem> {
                 "-"
             } else {
                 format.format(timeNumber * 1000).split(' ').let { list ->
-                    if (log.inTimeStamp == 0L) day = list[0].toInt()
                     "${list[1]}:${list[2]}:${list[3]}"
                 }
             }
