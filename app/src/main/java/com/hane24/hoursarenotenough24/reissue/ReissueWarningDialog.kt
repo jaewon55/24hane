@@ -30,6 +30,10 @@ class ReissueWarningDialog : DialogFragment() {
                 }
             builder.setView(binding.root)
 
+            binding.reissueDialogOkButton.setOnClickListener {
+                viewModel.clickReissueOkButton()
+                dialog?.cancel()
+            }
             binding.reissueDialogCancelButton.setOnClickListener { dialog?.cancel() }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")

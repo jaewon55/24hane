@@ -324,7 +324,7 @@ fun reissueApplyButtonState(
 ) {
     state?.let {
         when (it.state) {
-            "none" -> {
+            "none", "done" -> {
                 view.isEnabled = true
                 view.backgroundTintList =
                     ColorStateList.valueOf(getColorHelper(view.context, R.color.front_gradient_end))
@@ -339,7 +339,12 @@ fun reissueApplyButtonState(
             else -> {
                 view.isEnabled = false
                 view.backgroundTintList =
-                    ColorStateList.valueOf(getColorHelper(view.context, R.color.widget_out_state_color))
+                    ColorStateList.valueOf(
+                        getColorHelper(
+                            view.context,
+                            R.color.widget_out_state_color
+                        )
+                    )
                 view.text = "카드 신청하기"
             }
         }
@@ -352,7 +357,7 @@ fun reissueDialogOkButtonState(
     state: ReissueState?
 ) {
     state?.let {
-        if (it.state == "none") {
+        if (it.state == "none" || it.state == "done") {
             view.text = view.context.getString(R.string.reissue_dialog_apply_ok_text)
         } else {
             view.text = view.context.getString(R.string.reissue_dialog_done_ok_text)
@@ -366,7 +371,7 @@ fun reissueDialogMainWarningState(
     state: ReissueState?,
 ) {
     state?.let {
-        if (it.state == "none") {
+        if (it.state == "none" || it.state == "done") {
             view.text = view.context.getString(R.string.reissue_dialog_main_warning_apply_text)
         } else {
             view.text = view.context.getString(R.string.reissue_dialog_main_warning_done_text)
@@ -380,10 +385,51 @@ fun reissueDialogSubWarningState(
     state: ReissueState?,
 ) {
     state?.let {
-        if (it.state == "none") {
+        if (it.state == "none" || it.state == "done") {
             view.text = view.context.getString(R.string.reissue_dialog_sub_warning_apply_text)
         } else {
             view.text = view.context.getString(R.string.reissue_dialog_sub_warning_done_text)
         }
+    }
+}
+
+@BindingAdapter("loadingState")
+fun reissueLoadingConstraint(
+    view: ConstraintLayout,
+    loadingState: Boolean,
+) {
+    view.visibility = if (loadingState) View.INVISIBLE else View.VISIBLE
+}
+
+@BindingAdapter("loadingState")
+fun reissueLoadingImageView(
+    view: ImageView,
+    loadingState: Boolean,
+) {
+    val drawable = view.drawable as AnimationDrawable
+    if (loadingState) {
+        drawable.setEnterFadeDuration(300)
+        drawable.setExitFadeDuration(300)
+        drawable.start()
+        view.visibility = View.VISIBLE
+    } else {
+        view.visibility = View.INVISIBLE
+        drawable.stop()
+    }
+}
+
+@BindingAdapter("loadingState")
+fun reissueLoadingButton(
+    view: MaterialButton,
+    loadingState: Boolean,
+) {
+    if (loadingState) {
+        view.isEnabled = false
+        view.backgroundTintList =
+            ColorStateList.valueOf(getColorHelper(view.context, R.color.widget_out_state_color))
+    } else {
+        view.isEnabled = true
+        view.backgroundTintList =
+            ColorStateList.valueOf(getColorHelper(view.context, R.color.front_gradient_end))
     }
 }
