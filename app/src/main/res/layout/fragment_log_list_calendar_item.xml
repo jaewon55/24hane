@@ -23,6 +23,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="2dp"
+        android:backgroundTint="@color/log_list_background"
         android:visibility="@{item.day == 0 ? View.INVISIBLE : View.VISIBLE}"
         app:cardElevation="0dp">
 
@@ -31,7 +32,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:backgroundTint="@color/white"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"

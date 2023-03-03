@@ -37,7 +37,7 @@
     <color name="none">#00000000</color>
 
     <color name="calendar_week_of_day_text">#9B9797</color>
-<!--    <color name="calendar_color1">#F1EFFE</color>-->
+    <!--    <color name="calendar_color1">#F1EFFE</color>-->
     <color name="calendar_color1">#669AC3F4</color>
     <color name="calendar_color2">#8090A7F4</color>
     <color name="calendar_color3">#B2807DF3</color>
@@ -54,17 +54,17 @@
     <color name="widget_out_state_color">#D9D9D9</color>
     <color name="default_text">#333333</color>
     <color name="graph_text">#9B9797</color>
-    <color name="etc_text">#707070</color>
+    <color name="etc_text">#ffffff</color>
     <color name="front_gradient_start">#8EF2F3</color>
     <color name="front_gradient_end">#735BF2</color>
     <color name="back_gradient_start">#33BCF8F9</color>
     <color name="back_gradient_end">#33735BF2</color>
 
-    <color name="overview_in_color">#F5F5F5</color>
-    <color name="intra_id_color">#333333</color>
-    <color name="bottom_select_color">#5B5B5B</color>
-    <color name="log_list_background">#FFFFFF</color>
-    <color name="etc_title_color">#333333</color>
+    <color name="overview_in_color">#333333</color>
+    <color name="intra_id_color">#ffffff</color>
+    <color name="bottom_select_color">#ffffff</color>
+    <color name="log_list_background">#333333</color>
+    <color name="etc_title_color">#EAEAEA</color>
 
 
 </resources>

@@ -6,6 +6,7 @@ import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.ClusterPopulationInfo
 import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -70,6 +71,10 @@ class OverViewViewModel : ViewModel() {
     private val _refreshLoading = MutableLiveData(false)
     val refreshLoading: LiveData<Boolean>
         get() = _refreshLoading
+
+    private val _mainInfo = MutableLiveData<MainInfo>()
+    val mainInfo: LiveData<MainInfo>
+        get() = _mainInfo
 
     private val _clusterPopulation: MutableLiveData<List<ClusterPopulationInfo>?> = MutableLiveData(null)
     val clusterPopulation: LiveData<List<ClusterPopulationInfo>?>
@@ -143,6 +148,7 @@ class OverViewViewModel : ViewModel() {
     private suspend fun useGetMainInfoApi() {
         try {
             val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
+            _mainInfo.value = mainInfo
             _intraId.value = mainInfo.login
             _profileImageUrl.value = mainInfo.profileImage
             if (mainInfo.inoutState == "IN") {
@@ -175,14 +181,18 @@ class OverViewViewModel : ViewModel() {
     }
 
     fun getSeochoPopulation(): LiveData<String> {
-        return Transformations.map(_clusterPopulation) {
-            if (clusterPopulation.value == null) "000명" else "${clusterPopulation.value!![0].population}명"
+        return Transformations.map(mainInfo) {
+            mainInfo.value?.let {
+                "${it.seocho}명"
+            } ?: "000명"
         }
     }
 
     fun getGaepoPopulation(): LiveData<String> {
-        return Transformations.map(_clusterPopulation) {
-            if (clusterPopulation.value == null) "000명" else "${clusterPopulation.value!![1].population}명"
+        return Transformations.map(mainInfo) {
+            mainInfo.value?.let {
+                "${it.gaepo}명"
+            } ?: "000명"
         }
     }
 

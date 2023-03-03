@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             style="@style/title_style"
             android:text="카드 재발급 신청"
-            android:textColor="@color/default_text"
+            android:textColor="@color/etc_title_color"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -51,37 +51,32 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
             android:text="재발급 신청 방법"
-            android:textColor="@color/default_text"
+            android:textColor="@color/etc_title_color"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reissue_title_text" />
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/reissue_help_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/default_text"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="0dp"
+            app:cornerRadius="10dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/white"
+            android:onClick="@{() -> viewModel.testStateChange()}"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:text="자세히 보기"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/reissue_help_title_text">
-
-            <TextView
-                android:id="@+id/reissue_help_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold"
-                android:gravity="center"
-                android:onClick="@{() -> viewModel.testStateChange()}"
-                android:paddingVertical="12dp"
-                android:text="자세히 보기"
-                android:textColor="@color/white"
-                android:textSize="14dp"
-                android:textStyle="bold" />
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintTop_toBottomOf="@+id/reissue_help_title_text" />
 
         <TextView
             android:id="@+id/reissue_state_title_text"
@@ -90,7 +85,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/inter_bold"
             android:text="재발급 신청 현황"
-            android:textColor="@color/default_text"
+            android:textColor="@color/etc_title_color"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,16 +96,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reissue_state_title_text">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="30dp">
 

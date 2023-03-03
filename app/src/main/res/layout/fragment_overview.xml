@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@{viewModel.intraId}"
-                android:textColor="@color/default_text"
+                android:textColor="@color/intra_id_color"
                 android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_profile_image"
                 app:layout_constraintStart_toEndOf="@+id/overview_profile_image"
@@ -119,6 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
+                        android:background="@color/white"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="28dp">
 
@@ -575,7 +576,7 @@
                         android:id="@+id/linearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#00000000"
+                        android:background="@color/white"
                         android:orientation="vertical">
 
                         <androidx.viewpager2.widget.ViewPager2
@@ -588,6 +589,7 @@
                             android:id="@+id/overview_graph_tab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:backgroundTint="@color/white"
                             android:layout_gravity="center_horizontal"
                             app:tabBackground="@drawable/tab_selector"
                             app:tabGravity="center" />
@@ -617,6 +619,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:background="@color/white"
                         android:paddingHorizontal="18dp"
                         android:paddingVertical="28dp">
 
@@ -656,6 +659,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:background="@color/white"
                         android:paddingHorizontal="18dp"
                         android:paddingVertical="28dp">
 

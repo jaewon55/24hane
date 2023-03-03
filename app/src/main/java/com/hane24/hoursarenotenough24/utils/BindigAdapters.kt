@@ -198,6 +198,8 @@ fun bindCalendarItem(
     if (item.day < 0) {
         view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13f)
         view.setTextColor(getColorHelper(view.context, R.color.calendar_week_of_day_text))
+        view.backgroundTintList =
+            ColorStateList.valueOf(getColorHelper(view.context, R.color.log_list_background))
         view.isEnabled = false
         return
 //        view.textSize = view.context.resources.getDimension(R.dimen.day_of_week_text_size)
@@ -209,7 +211,7 @@ fun bindCalendarItem(
     if (selectedMonth == TodayCalendarUtils.month && item.day == TodayCalendarUtils.day && item.day != selectedDay) {
         view.setTextColor(getColorHelper(view.context, R.color.selected_background_color))
         view.backgroundTintList =
-            ColorStateList.valueOf(getColorHelper(view.context, R.color.white))
+            ColorStateList.valueOf(getColorHelper(view.context, R.color.log_list_background))
         view.cornerRadius =
             view.context.resources.getDimensionPixelSize(R.dimen.calendar_common_radius)
         view.setTextAppearance(view.context, R.style.NormalTextStyle)

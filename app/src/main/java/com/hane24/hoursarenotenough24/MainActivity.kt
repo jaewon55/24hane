@@ -2,6 +2,8 @@ package com.hane24.hoursarenotenough24
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(binding.root)
         refreshWidget()
         setStatusAndNavigationBar()
@@ -91,9 +96,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setStatusAndNavigationBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
-
-        controller.isAppearanceLightStatusBars = true
-        controller.isAppearanceLightNavigationBars = true
+        val currentNightMode = resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+        controller.isAppearanceLightStatusBars = !currentNightMode
+        controller.isAppearanceLightNavigationBars = !currentNightMode
     }
 
     private fun setFragmentsViewModel() {
