@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.MainActivity
 
 import com.hane24.hoursarenotenough24.R
@@ -30,6 +31,13 @@ class ReissueFragment : Fragment() {
         super.onAttach(context)
 
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onCreateView(

@@ -35,6 +35,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.transition.ChangeBounds
+import androidx.transition.TransitionInflater
 import androidx.transition.TransitionManager
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -67,6 +68,12 @@ class OverViewFragment : Fragment() {
     private var minHeight = Int.MIN_VALUE
     private var maxHeight = Int.MIN_VALUE
     private val viewModel: OverViewViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

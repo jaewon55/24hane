@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentNotificationBinding
@@ -20,6 +21,13 @@ class NotificationFragment : Fragment() {
         override fun handleOnBackPressed() {
             (activity as MainActivity).moveToFragment(OverViewFragment())
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        exitTransition = inflater.inflateTransition(R.transition.fade)
     }
 
     override fun onCreateView(
