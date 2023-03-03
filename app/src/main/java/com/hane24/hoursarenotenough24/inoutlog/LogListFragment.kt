@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Rect
 import android.os.Bundle
+import android.transition.Transition
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.TouchDelegate
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
@@ -30,6 +32,12 @@ import com.hane24.hoursarenotenough24.login.State
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
     private val viewModel: LogListRefactor by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

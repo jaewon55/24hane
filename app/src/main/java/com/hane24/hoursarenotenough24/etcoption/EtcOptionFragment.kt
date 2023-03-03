@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.database.TimeDatabase
@@ -24,6 +25,13 @@ import java.sql.Time
 
 class EtcOptionFragment : Fragment() {
     private lateinit var binding: FragmentEtcOptionBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

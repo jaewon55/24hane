@@ -221,6 +221,12 @@ class GraphViewPagerAdapter(): RecyclerView.Adapter<GraphViewPagerAdapter.GraphV
             setTotalTime(0, item)
             setAverageTime(0, item)
             setDateText(0, item)
+            selectors.forEachIndexed { idx, it ->
+                if (idx == 0)
+                    it.visibility = View.VISIBLE
+                else
+                    it.visibility = View.INVISIBLE
+            }
 
             val percents = parseTimeToPercent(item.accumulationTimes)
 
@@ -230,7 +236,6 @@ class GraphViewPagerAdapter(): RecyclerView.Adapter<GraphViewPagerAdapter.GraphV
                 graphs[idx].setOnClickListener { graphClickLogic(idx, item) }
                 graphs[idx].requestLayout()
             }
-
         }
         companion object {
             fun from(parent: ViewGroup): GraphViewHolder {

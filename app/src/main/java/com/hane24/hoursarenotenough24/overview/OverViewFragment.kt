@@ -35,6 +35,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.transition.ChangeBounds
+import androidx.transition.TransitionInflater
 import androidx.transition.TransitionManager
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -52,6 +53,7 @@ import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.InOutTimeItem
+import com.hane24.hoursarenotenough24.notification.NotificationFragment
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
 import com.hane24.hoursarenotenough24.view.CustomProgressbar
@@ -66,6 +68,12 @@ class OverViewFragment : Fragment() {
     private var minHeight = Int.MIN_VALUE
     private var maxHeight = Int.MIN_VALUE
     private val viewModel: OverViewViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -73,6 +81,7 @@ class OverViewFragment : Fragment() {
         initBinding(inflater, container)
         initViewPager()
         measureCardHeight()
+        binding.overviewProfileImage.clipToOutline = true
         viewModel.monthProgressPercent.observe(requireActivity()) {
             progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
         }
@@ -82,6 +91,13 @@ class OverViewFragment : Fragment() {
 
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
         binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
+        binding.overviewAnnounceImage.setOnClickListener {
+            requireActivity()
+                .supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainerView, NotificationFragment())
+                .commit()
+        }
         observeErrorState()
 
         Log.i("token", "${SharedPreferenceUtils.getAccessToken()}")
