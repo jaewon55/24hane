@@ -47,7 +47,6 @@ class ReissueFragment : Fragment() {
         initBinding(inflater, container)
 
         binding.reissueBackButton.setOnClickListener { backPressedCallback.handleOnBackPressed() }
-
         binding.reissueApplyButton.setOnClickListener { viewModel.clickReissueButton(requireActivity()) }
         return binding.root
     }

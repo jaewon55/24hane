@@ -22,9 +22,9 @@
 
         <TextView
             android:id="@+id/reissue_title_text"
+            style="@style/title_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/title_style"
             android:text="카드 재발급 신청"
             android:textColor="@color/etc_title_color"
             android:textSize="20dp"
@@ -106,6 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
+                loadingState="@{viewModel.loadingState}"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="30dp">
 
@@ -236,10 +237,18 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                loadingState="@{viewModel.loadingState}"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/loading_dot_anim" />
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reissue_apply_button"
+            loadingState="@{viewModel.loadingState}"
             serverState="@{viewModel.reissueState}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -46,7 +46,10 @@ class ReissueViewModel : ViewModel() {
         viewModelScope.launch {
             _loadingState.value = true
             _reissueState.value?.let {
-                if (it.state == "none") usePostReissueApi() else usePatchReissueFinish()
+                when (it.state) {
+                    "none", "done" -> usePostReissueApi()
+                    "pick_up_requested" -> usePatchReissueFinish()
+                }
             }
             _loadingState.value = false
         }
@@ -81,6 +84,7 @@ class ReissueViewModel : ViewModel() {
     private suspend fun useGetReissueStateApi() {
         try {
             _reissueState.value = Hane42Apis.hane42ApiService.getReissueState(accessToken)
+            Log.d("issue", reissueState.value?.state ?: "몰라")
         } catch (err: HttpException) {
             when (err.code()) {
                 404 -> {
@@ -97,6 +101,7 @@ class ReissueViewModel : ViewModel() {
     private suspend fun usePostReissueApi() {
         try {
             _reissueResult.value = Hane42Apis.hane42ApiService.postReissueRequest(accessToken)
+            useGetReissueStateApi()
         } catch (err: HttpException) {
 //                404 ->
 //                503 ->
@@ -107,12 +112,14 @@ class ReissueViewModel : ViewModel() {
 
     private suspend fun usePatchReissueFinish() {
         try {
-            _reissueResult.value = Hane42Apis.hane42ApiService.postReissueRequest(accessToken)
+            _reissueResult.value = Hane42Apis.hane42ApiService.patchReissueFinish(accessToken)
+            useGetReissueStateApi()
         } catch (err: HttpException) {
+            Log.d("issue", "1 ${err.message}")
 //                404 ->
 //                503 ->
         } catch (e: Exception) {
-
+            Log.d("issue", "2 ${e.message}")
         }
     }
 
