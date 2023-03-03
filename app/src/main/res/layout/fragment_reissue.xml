@@ -24,6 +24,7 @@
             android:id="@+id/reissue_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/title_style"
             android:text="카드 재발급 신청"
             android:textColor="@color/default_text"
             android:textSize="20dp"

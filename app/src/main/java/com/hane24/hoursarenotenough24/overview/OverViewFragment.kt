@@ -52,6 +52,7 @@ import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.InOutTimeItem
+import com.hane24.hoursarenotenough24.notification.NotificationFragment
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
 import com.hane24.hoursarenotenough24.view.CustomProgressbar
@@ -83,6 +84,13 @@ class OverViewFragment : Fragment() {
 
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
         binding.overviewMonthCard.setOnClickListener { setCardAnimation(it) }
+        binding.overviewAnnounceImage.setOnClickListener {
+            requireActivity()
+                .supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainerView, NotificationFragment())
+                .commit()
+        }
         observeErrorState()
 
         Log.i("token", "${SharedPreferenceUtils.getAccessToken()}")
