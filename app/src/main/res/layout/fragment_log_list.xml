@@ -181,7 +181,7 @@
             android:paddingTop="4dp"
             android:text="기록이 없습니다."
             android:textAlignment="center"
-            android:textColor="@color/default_text"
+            android:textColor="@color/etc_title_color"
             android:textSize="14dp"
             app:layout_constraintEnd_toEndOf="@id/month_accumulation_time"
             app:layout_constraintStart_toStartOf="@id/month_accumulation_time"

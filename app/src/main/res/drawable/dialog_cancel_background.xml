@@ -4,6 +4,6 @@
         <color android:color="@color/dialog_color" />
     </item>
     <item>
-        <color android:color="@color/white" />
+        <color android:color="@color/overview_in_color" />
     </item>
 </selector>

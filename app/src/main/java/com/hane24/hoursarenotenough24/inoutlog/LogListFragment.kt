@@ -93,14 +93,14 @@ class LogListFragment : Fragment() {
                     oldItem: CalendarItem,
                     newItem: CalendarItem
                 ): Boolean {
-                    return oldItem.day == newItem.day
+                    return oldItem.day < 0
                 }
 
                 override fun areContentsTheSame(
                     oldItem: CalendarItem,
                     newItem: CalendarItem
                 ): Boolean {
-                    return oldItem.day == newItem.day && oldItem.color == newItem.color
+                    return oldItem.day == newItem.day
                 }
             })
         binding.calendarRecycler.itemAnimator = null

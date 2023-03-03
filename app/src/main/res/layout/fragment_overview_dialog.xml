@@ -5,7 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/overview_in_color">
 
         <NumberPicker
             android:id="@+id/dialog_num_picker"
@@ -36,10 +37,10 @@
             android:background="@drawable/dialog_save_background"
             android:text="확인"
             android:textColor="@color/dialog_cancel_text_color"
-            app:layout_constraintTop_toTopOf="@id/dialog_cancel"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/dialog_cancel" />
+            app:layout_constraintStart_toEndOf="@id/dialog_cancel"
+            app:layout_constraintTop_toTopOf="@id/dialog_cancel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

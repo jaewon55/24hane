@@ -109,6 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/white"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +120,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
-                        android:background="@color/white"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="28dp">
 
