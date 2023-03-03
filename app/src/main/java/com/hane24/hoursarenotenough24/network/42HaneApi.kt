@@ -19,12 +19,12 @@ interface hane42Api {
         @Header("Authorization") token: String?
     ): Response<String?>
 
-    @GET("/v1/tag-log/maininfo")
+    @GET("/v2/tag-log/maininfo")
     suspend fun getMainInfo(
         @Header("Authorization") token: String?
     ): MainInfo
 
-    @GET("/v1/tag-log/getTagPerDay")
+    @GET("/v2/tag-log/getTagPerDay")
     suspend fun getInOutInfoPerDay(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,
@@ -32,41 +32,41 @@ interface hane42Api {
         @Query("day") day: Int
     ): InOutTimeContainer
 
-    @GET("/v1/tag-log/getTagPerMonth")
+    @GET("/v2/tag-log/getTagPerMonth")
     suspend fun getInOutInfoPerMonth(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): InOutTimeContainer
 
-    @GET("/v1/tag-log/getAllTagPerMonth")
+    @GET("/v2/tag-log/getAllTagPerMonth")
     suspend fun getAllTagPerMonth(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): InOutTimeContainer
 
-    @GET("/v1/tag-log/accumulationTimes")
+    @GET("/v2/tag-log/accumulationTimes")
     suspend fun getAccumulationTime(
         @Header("Authorization") token: String?,
     ): AccumulationTimeInfo
 
-    @GET("/v1/statistics/get_cadet_per_cluster")
+    @GET("/v2/statistics/get_cadet_per_cluster")
     suspend fun getCadetPerCluster(
         @Header("Authorization") token: String?,
     ): List<ClusterPopulationInfo>
 
-    @GET("/v1/reissue")
+    @GET("/v2/reissue")
     suspend fun getReissueState(
         @Header("Authorization") token: String?,
     ): ReissueState
 
-    @POST("/v1/reissue/request")
+    @POST("/v2/reissue/request")
     suspend fun postReissueRequest(
         @Header("Authorization") token: String?,
     ): ReissueRequestResult
 
-    @PATCH("/v1/reissue/finish")
+    @PATCH("/v2/reissue/finish")
     suspend fun patchReissueFinish(
         @Header("Authorization") token: String?,
     ): ReissueRequestResult

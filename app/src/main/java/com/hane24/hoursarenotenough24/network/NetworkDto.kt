@@ -11,7 +11,9 @@ data class MainInfo(
     val login: String,
     val profileImage: String,
     val inoutState: String,
-    val tagAt: String
+    val tagAt: String,
+    val gaepo: Int,
+    val seocho: Int
 )
 
 data class AccumulationTimeInfo(
