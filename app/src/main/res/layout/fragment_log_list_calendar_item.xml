@@ -47,7 +47,7 @@
             app:selectedDay="@{viewModel.calendarDay}"
             app:selectedMonth="@{viewModel.calendarMonth}"
             app:strokeWidth="0dp"
-            app:strokeColor="@color/selected_background_color"
+            app:strokeColor="@color/today_select_color"
             tools:text="29" />
 
 

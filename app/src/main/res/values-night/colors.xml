@@ -38,15 +38,16 @@
 
     <color name="calendar_week_of_day_text">#9B9797</color>
     <!--    <color name="calendar_color1">#F1EFFE</color>-->
-    <color name="calendar_color1">#669AC3F4</color>
-    <color name="calendar_color2">#8090A7F4</color>
-    <color name="calendar_color3">#B2807DF3</color>
+    <color name="calendar_color1">#33735BF2</color>
+    <color name="calendar_color2">#66735BF2</color>
+    <color name="calendar_color3">#B2735BF2</color>
     <color name="calendar_color4">#E5735BF2</color>
     <color name="next_day_background">#FFFFFF</color>
     <color name="next_day_text">#9B9797</color>
     <color name="calendar_item_stroke_default">#E1E1E1</color>
 
     <color name="dialog_color">#735BF2</color>
+
     <color name="selected_text_color">#FFFFFF</color>
     <color name="selected_background_color">#735BF2</color>
 
@@ -65,6 +66,8 @@
     <color name="bottom_select_color">#ffffff</color>
     <color name="log_list_background">#333333</color>
     <color name="etc_title_color">#EAEAEA</color>
+    <color name="today_select_color">#EAEAEA</color>
+    <color name="missing_background">#555555</color>
 
 
 </resources>

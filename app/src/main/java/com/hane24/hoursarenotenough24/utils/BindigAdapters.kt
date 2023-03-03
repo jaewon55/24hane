@@ -209,7 +209,7 @@ fun bindCalendarItem(
     view.strokeWidth = 0
 
     if (selectedMonth == TodayCalendarUtils.month && item.day == TodayCalendarUtils.day && item.day != selectedDay) {
-        view.setTextColor(getColorHelper(view.context, R.color.selected_background_color))
+        view.setTextColor(getColorHelper(view.context, R.color.today_select_color))
         view.backgroundTintList =
             ColorStateList.valueOf(getColorHelper(view.context, R.color.log_list_background))
         view.cornerRadius =
@@ -224,7 +224,7 @@ fun bindCalendarItem(
             view.context.resources.getDimensionPixelSize(R.dimen.calendar_selected_radius)
         view.setTextAppearance(view.context, R.style.BoldTextStyle)
     } else {
-        view.setTextColor(getColorHelper(view.context, R.color.black))
+        view.setTextColor(getColorHelper(view.context, R.color.etc_title_color))
         view.backgroundTintList = ColorStateList.valueOf(getColorHelper(view.context, item.color))
         view.cornerRadius =
             view.context.resources.getDimensionPixelSize(R.dimen.calendar_common_radius)
