@@ -68,6 +68,8 @@
     <color name="etc_title_color">#EAEAEA</color>
     <color name="today_select_color">#EAEAEA</color>
     <color name="missing_background">#555555</color>
+    <color name="bottom_nav_checked">#FFFFFF</color>
+    <color name="bottom_nav_default">#9B9797</color>
 
 
 </resources>

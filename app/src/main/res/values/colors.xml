@@ -68,6 +68,8 @@
     <color name="today_select_color">#735BF2</color>
     <color name="missing_background">#EAEAEA</color>
     <color name="reissue_dialog_cancel">#EAEAEA</color>
+    <color name="bottom_nav_checked">#5B5B5B</color>
+    <color name="bottom_nav_default">#9B9797</color>
 
 
 </resources>
