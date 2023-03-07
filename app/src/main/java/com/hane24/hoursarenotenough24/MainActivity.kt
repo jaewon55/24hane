@@ -1,12 +1,15 @@
 package com.hane24.hoursarenotenough24
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.AnimationDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
@@ -17,6 +20,7 @@ import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
+import com.hane24.hoursarenotenough24.utils.getColorHelper
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 
 class MainActivity : AppCompatActivity() {
@@ -39,9 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBottomNavigation() {
-        val animationDrawable = binding.loadingProgressbar.drawable as AnimationDrawable
-        animationDrawable.setExitFadeDuration(300)
-        animationDrawable.setExitFadeDuration(300)
+        val animationDrawable = binding.loadingProgressbar.drawable as AnimatedVectorDrawable
         animationDrawable.start()
         binding.bottomNavigation.setOnItemSelectedListener {
             calendarBackToToday()
@@ -97,6 +99,12 @@ class MainActivity : AppCompatActivity() {
                 Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
         controller.isAppearanceLightStatusBars = !currentNightMode
         controller.isAppearanceLightNavigationBars = !currentNightMode
+        if (currentNightMode) {
+            binding.loadingLayout.background = AppCompatResources.getDrawable(this, R.color.default_text)
+            binding.loadingProgressbar.setImageResource(R.drawable.loading_dark_animated_vector)
+        } else {
+            binding.loadingProgressbar.setImageResource(R.drawable.loading_animated_vector)
+        }
     }
 
     private fun setFragmentsViewModel() {

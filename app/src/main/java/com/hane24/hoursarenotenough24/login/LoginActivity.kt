@@ -1,7 +1,9 @@
 package com.hane24.hoursarenotenough24.login
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -9,10 +11,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.MainActivity
+import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.databinding.ActivityLoginBinding
 
@@ -26,9 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
         setStatusAndNavigationBar()
 
-        val animationDrawable = binding.loadingProgressbar.drawable as AnimationDrawable
-        animationDrawable.setExitFadeDuration(300)
-        animationDrawable.setExitFadeDuration(300)
+        val animationDrawable = binding.loadingProgressbar.drawable as AnimatedVectorDrawable
         animationDrawable.start()
 
         val loginUri: Uri = createLoginUri()
@@ -42,9 +44,16 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setStatusAndNavigationBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
-
-        controller.isAppearanceLightStatusBars = true
-        controller.isAppearanceLightNavigationBars = true
+        val currentNightMode = resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        controller.isAppearanceLightStatusBars = !currentNightMode
+        controller.isAppearanceLightNavigationBars = !currentNightMode
+        if (currentNightMode) {
+            binding.loadingLayout.background = AppCompatResources.getDrawable(this, R.color.default_text)
+            binding.loadingProgressbar.setImageResource(R.drawable.loading_dark_animated_vector)
+        } else {
+            binding.loadingProgressbar.setImageResource(R.drawable.loading_animated_vector)
+        }
     }
 
     private fun createLoginUri() =
