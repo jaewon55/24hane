@@ -1,41 +1,22 @@
 package com.hane24.hoursarenotenough24
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.drawable.AnimationDrawable
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.WindowManager
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.view.GravityCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayoutMediator
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
-import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
-import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
-import com.hane24.hoursarenotenough24.inoutlog.LogListRefactor
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
-import com.hane24.hoursarenotenough24.login.LoginActivity
-import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
     }
     private val overViewViewModel: OverViewViewModel by viewModels()
-    private val logListViewModel: LogListRefactor by viewModels()
+    private val logListViewModel: LogListViewModel by viewModels()
     private val reissueViewModel: ReissueViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,17 +44,33 @@ class MainActivity : AppCompatActivity() {
         animationDrawable.setExitFadeDuration(300)
         animationDrawable.start()
         binding.bottomNavigation.setOnItemSelectedListener {
-            if (it.isChecked) true
-            else {
+            calendarBackToToday()
+            if (it.isChecked) {
+                true
+            } else {
                 val fragment = when (it.itemId) {
-                    R.id.bottom_navigation_home_menu -> OverViewFragment()
-                    R.id.bottom_navigation_calendar_menu -> LogListFragment()
-                    else -> EtcOptionFragment()
+                    R.id.bottom_navigation_home_menu -> {
+                        OverViewFragment()
+                    }
+                    R.id.bottom_navigation_calendar_menu -> {
+                        LogListFragment()
+                    }
+                    else -> {
+                        EtcOptionFragment()
+                    }
                 }
                 moveToFragment(fragment)
                 true
             }
         }
+    }
+
+    private fun calendarBackToToday() {
+        logListViewModel.changeCalendarDate(
+            TodayCalendarUtils.year,
+            TodayCalendarUtils.month,
+            TodayCalendarUtils.day
+        )
     }
 
     fun moveToFragment(fragment: Fragment) {

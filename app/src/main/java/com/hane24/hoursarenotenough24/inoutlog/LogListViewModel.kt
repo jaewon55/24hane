@@ -12,111 +12,185 @@ import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.repository.TimeRepository
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class LogListViewModel : ViewModel() {
 
-    private val monthLogContainer = mutableListOf<MonthTimeLogContainer>()
-
-    private val logCalendar = LogCalendar()
-
-    private var monthLogListIndex = -1
-
     private val repository = TimeRepository(createDatabase())
 
-    private var selectedYear = TodayCalendarUtils.year
-    private var selectedMonth = TodayCalendarUtils.month
-        set(value) {
-            field = when {
+    private val _calendarYear = MutableLiveData(TodayCalendarUtils.year)
+    val calendarYear: LiveData<Int>
+        get() = _calendarYear
+
+    private val _calendarMonth = object : MutableLiveData<Int>(TodayCalendarUtils.month) {
+        override fun setValue(value: Int?) {
+            val m = when {
+                value == null -> null
                 value > 12 -> {
-                    selectedYear++
+                    _calendarYear.value = _calendarYear.value?.plus(1)
                     1
                 }
                 value < 1 -> {
-                    selectedYear--
+                    _calendarYear.value = _calendarYear.value?.minus(1)
                     12
                 }
                 else -> value
             }
+            super.setValue(m)
         }
+    }
+    val calendarMonth: LiveData<Int>
+        get() = _calendarMonth
 
-    private val _selectedDay = MutableLiveData(TodayCalendarUtils.day)
-    val selectedDay: LiveData<Int>
-        get() = _selectedDay
+    private val _calendarDay = MutableLiveData(TodayCalendarUtils.day)
+    val calendarDay: LiveData<Int>
+        get() = _calendarDay
 
-    private val _calendarDateText = MutableLiveData("")
-    val calendarDateText = Transformations.map(logCalendar.month) { m ->
-        String.format("%d%d", logCalendar.year.value, m)
+    private val logContainer = MutableLiveData<MonthTimeLogContainer>()
+
+    val calendarList = Transformations.map(logContainer) { list ->
+        list.getCalendarList()
     }
 
-    private val _leftButtonState = MutableLiveData(true)
-    val leftButtonState: LiveData<Boolean>
-        get() = _leftButtonState
-
-    private val _rightButtonState = MutableLiveData(false)
-    val rightButtonState: LiveData<Boolean>
-        get() = _rightButtonState
-
-    private val _calendarItemList = MutableLiveData(emptyList<CalendarItem>())
-    val calendarItemList: LiveData<List<CalendarItem>>
-        get() = _calendarItemList
-
-    val selectedDateText = Transformations.map(selectedDay) { day ->
-        val date = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, day) }.time
-        SimpleDateFormat("M.d EEEE", Locale("ko")).format(date)
+    val calendarDateText = Transformations.map(_calendarMonth) {
+        String.format("%d.%d", _calendarYear.value, _calendarMonth.value)
     }
-    val dayAccumulationTimeText = Transformations.map(selectedDay) { day ->
-        val time = calendarItemList.value?.getDayAccumulationTime(day) ?: 0L
-        parseAccumulationTime(time)
-    }
-    val monthAccumulationTimeText = Transformations.map(calendarItemList) { list ->
-        val time = list.getMonthAccumulationTime()
+
+    val monthAccumulationTime = Transformations.map(calendarList) {
+        val time = calendarList.value?.sumOf { it.durationTime } ?: 0
         "총 ${parseAccumulationTime(time)}"
     }
 
-    private val _tableItemList = MutableLiveData(emptyList<LogTableItem>())
-    val tableItemList: LiveData<List<LogTableItem>>
-        get() = _tableItemList
+    val logTableList = Transformations.map(calendarDay) {
+        val test = logContainer.value?.getLogTableList(it, _inOutState.value ?: true) ?: emptyList()
+        Log.d("logList", "tableList : $test")
+        test
+    }
+
+    val selectedDateText = Transformations.map(calendarDay) {
+        val date = Calendar.getInstance()
+            .apply {
+                set(
+                    _calendarYear.value ?: TodayCalendarUtils.year,
+                    (_calendarMonth.value ?: TodayCalendarUtils.month) - 1,
+                    it
+                )
+            }.time
+        SimpleDateFormat("M.d EEEE", Locale("ko")).format(date)
+    }
+
+    val dayAccumulationTime = Transformations.map(logTableList) {
+        val time = logContainer.value?.monthLog
+            ?.filter { it.day == _calendarDay.value }
+            ?.sumOf { it.durationTime ?: 0 } ?: 0
+        parseAccumulationTime(time)
+    }
 
     private val _loadingState = MutableLiveData(true)
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
-    private val _refreshLoading = MutableLiveData(false)
-    val refreshLoading: LiveData<Boolean>
-        get() = _refreshLoading
-
     private val _errorState = MutableLiveData<State?>(null)
     val errorState: LiveData<State?>
         get() = _errorState
 
+    private val _inOutState = MutableLiveData<Boolean>(null)
+
     init {
         viewModelScope.launch {
-            _loadingState.value = false
-            useGetInOutInfoPerMonthApi(selectedYear, selectedMonth)
-            _selectedDay.value = TodayCalendarUtils.day
-            _loadingState.value = false
+            inOutInfoPerMonthApi(TodayCalendarUtils.year, TodayCalendarUtils.month)
         }
-        setCalendarDateText()
     }
 
-    private suspend fun useGetInOutInfoPerMonthApi(year: Int, month: Int) {
-        try {
-            val monthTimeLog = withContext(Dispatchers.IO) {
-                repository.getMonthFromServer(String.format("%4d%02d", year, month)).asDomainModel()
+    fun leftButtonOnClick() {
+        viewModelScope.launch {
+            var newYear = _calendarYear.value ?: TodayCalendarUtils.year
+            val newMonth = _calendarMonth.value?.minus(1)?.let {
+                if (it == 0) {
+                    --newYear
+                    12
+                } else {
+                    it
+                }
+            } ?: TodayCalendarUtils.month
+            inOutInfoPerMonthApi(newYear, newMonth)
+            if (_calendarYear.value != newYear) {
+                _calendarYear.value = newYear
             }
-//                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, year, month)
-//                    .asDomainModel()
-            monthLogContainer.add(MonthTimeLogContainer(year, month, monthTimeLog))
-            monthLogListIndex++
-            setCalendarItemList()
-            setTableItemList()
+            _calendarMonth.value = newMonth
+            _calendarDay.value = 1
+        }
+    }
+
+    fun rightButtonOnClick() {
+        viewModelScope.launch {
+            var newYear = _calendarYear.value ?: TodayCalendarUtils.year
+            val newMonth = _calendarMonth.value?.plus(1)?.let {
+                if (it == 13) {
+                    ++newYear
+                    1
+                } else {
+                    it
+                }
+            } ?: TodayCalendarUtils.month
+            inOutInfoPerMonthApi(newYear, newMonth, false)
+            if (_calendarYear.value != newYear) {
+                _calendarYear.value = newYear
+            }
+            _calendarMonth.value = newMonth
+            _calendarDay.value = 1
+        }
+    }
+
+    fun changeCalendarDate(year: Int, month: Int, day: Int) {
+        viewModelScope.launch {
+            inOutInfoPerMonthApi(year, month, false)
+            if (_calendarYear.value != year) _calendarYear.value = year
+            _calendarMonth.value = month
+            _calendarDay.value = day
+        }
+    }
+
+    fun refreshButtonOnClick() {
+        viewModelScope.launch {
+            inOutInfoPerMonthApi(
+                _calendarYear.value ?: TodayCalendarUtils.year,
+                (_calendarMonth.value ?: TodayCalendarUtils.month)
+            )
+        }
+    }
+
+    fun calendarItemOnClick(day: Int) {
+        _calendarDay.value = day
+    }
+
+    fun setInOutState(isIn: Boolean) {
+        _inOutState.value = isIn
+    }
+
+    private suspend fun inOutInfoPerMonthApi(y: Int, m: Int, autoUpdate: Boolean = true) {
+        try {
+            val format = String.format("%4d%02d", y, m)
+            val domainModel = withContext(Dispatchers.IO) {
+                if (autoUpdate) {
+                    repository.getMonthOrNull(format)?.asDomainModel()
+                } else {
+                    repository.getMonthNoneUpdate(format).asDomainModel()
+                }
+            }
+            domainModel?.let {
+                logContainer.value = MonthTimeLogContainer(y, m, it)
+                return
+            }
+            _loadingState.value = true
+            logContainer.value =
+                MonthTimeLogContainer(y, m, repository.getMonthFromServer(format).asDomainModel())
+            _loadingState.value = false
         } catch (err: HttpException) {
+            Log.e("e_msg", err.message ?: "몰라")
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
 
@@ -128,40 +202,8 @@ class LogListViewModel : ViewModel() {
         } catch (err: Exception) {
             Log.e("e_msg", err.message ?: "몰라")
             _errorState.value = State.UNKNOWN_ERROR
-        }
-    }
-
-    private suspend fun refreshMonthLog() {
-        try {
-            val newYear = TodayCalendarUtils.year
-            val newMonth = TodayCalendarUtils.month
-            val newLogs = withContext(Dispatchers.IO) {
-                repository.getMonthOrNull(String.format("%4d%02d", newYear, newMonth))!!.asDomainModel()
-            }
-//                Hane42Apis.hane42ApiService.getInOutInfoPerMonth(accessToken, newYear, newMonth)
-//                    .asDomainModel()
-            val container = monthLogContainer.find { it.year == newYear && it.month == newMonth }
-            if (container == null) {
-                monthLogContainer.add(0, MonthTimeLogContainer(newYear, newMonth, newLogs))
-                monthLogListIndex++
-            } else {
-                container.monthLog = newLogs
-                if (selectedYear == newYear && selectedMonth == newMonth) {
-                    setCalendarItemList()
-                    setTableItemList()
-                }
-            }
-        } catch (err: HttpException) {
-            val isLoginFail = err.code() == 401
-            val isServerError = err.code() == 500
-
-            when {
-                isLoginFail -> _errorState.value = State.LOGIN_FAIL
-                isServerError -> _errorState.value = State.SERVER_FAIL
-                else -> _errorState.value = State.UNKNOWN_ERROR
-            }
-        } catch (err: Exception) {
-            _errorState.value = State.UNKNOWN_ERROR
+        } finally {
+            _loadingState.value = false
         }
     }
 
@@ -173,113 +215,4 @@ class LogListViewModel : ViewModel() {
         return String.format("%d시간 %d분", hour, min)
     }
 
-    private fun setCalendarDateText() {
-//        val date = Calendar.getInstance().apply { set(selectedYear, selectedMonth - 1, 1) }.time
-//        val monthName = SimpleDateFormat("MMM", Locale("en")).format(date)
-        _calendarDateText.value = "$selectedYear.$selectedMonth"
-    }
-
-    private fun setCalendarItemList() {
-        val index = if (monthLogListIndex < 0) 0 else monthLogListIndex
-        _calendarItemList.value =
-            monthLogContainer[index].getCalendarList()
-    }
-
-    private fun setTableItemList() {
-        val index = if (monthLogListIndex < 0) 0 else monthLogListIndex
-        _tableItemList.value =
-            monthLogContainer[index].getLogTableList(selectedDay.value ?: 1)
-    }
-
-    private fun setButtonState() {
-        _leftButtonState.value = selectedYear != 2022 || selectedMonth > 8
-        _rightButtonState.value =
-            selectedYear != TodayCalendarUtils.year || selectedMonth != TodayCalendarUtils.month
-    }
-
-    private fun getNewMonthData() {
-        viewModelScope.launch {
-            try {
-                val monthTimeLog = withContext(Dispatchers.IO) {
-                    repository.getMonthOrNull(String.format("%4d%02d", selectedYear, selectedMonth))!!.asDomainModel()
-                }
-//                    Hane42Apis.hane42ApiService.getInOutInfoPerMonth(
-//                        accessToken,
-//                        selectedYear,
-//                        selectedMonth
-//                    )
-//                        .asDomainModel()
-                monthLogContainer.add(
-                    MonthTimeLogContainer(
-                        selectedYear,
-                        selectedMonth,
-                        monthTimeLog
-                    )
-                )
-                monthLogListIndex++
-            } catch (e: Exception) {
-                selectedMonth++
-                _errorState.value = State.UNKNOWN_ERROR
-            } finally {
-                setCalendarDateText()
-                setCalendarItemList()
-                setTableItemList()
-                _selectedDay.value = 1
-                _loadingState.value = false
-                setButtonState()
-            }
-        }
-    }
-
-    fun changeSelectedDay(day: Int) {
-        _selectedDay.value = day
-        setTableItemList()
-    }
-
-    fun leftButtonOnClick() {
-        _leftButtonState.value = false
-        _rightButtonState.value = false
-        _loadingState.value = false
-        selectedMonth--
-        setCalendarDateText()
-        if (monthLogContainer.lastIndex == monthLogListIndex) {
-            getNewMonthData()
-        } else {
-            monthLogListIndex++
-            setCalendarItemList()
-            setTableItemList()
-            _selectedDay.value = 1
-            _loadingState.value = false
-            setButtonState()
-        }
-    }
-
-    fun rightButtonOnClick() {
-        _leftButtonState.value = false
-        _rightButtonState.value = false
-        _loadingState.value = false
-        selectedMonth++
-        setCalendarDateText()
-        _selectedDay.value = 1
-        monthLogListIndex--
-        setCalendarItemList()
-        setTableItemList()
-        _selectedDay.value = 1
-        _loadingState.value = false
-        setButtonState()
-    }
-
-    fun refreshButtonOnClick() {
-        _refreshLoading.value = false
-        viewModelScope.launch {
-            refreshMonthLog()
-            _refreshLoading.value = false
-        }
-    }
-
-    private fun List<CalendarItem>.getDayAccumulationTime(day: Int): Long =
-        filter { it.day == day }.sumOf { it.durationTime }
-
-    private fun List<CalendarItem>.getMonthAccumulationTime(): Long =
-        sumOf { it.durationTime }
 }

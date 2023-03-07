@@ -41,7 +41,7 @@ data class TimeLogItem(
     val durationTime: Long?
 )
 
-fun MonthTimeLogContainer.getLogTableList(day: Int): List<LogTableItem> {
+fun MonthTimeLogContainer.getLogTableList(day: Int, inOutState: Boolean): List<LogTableItem> {
     return monthLog.filter { it.day == day }.map { log ->
         val durationString = log.durationTime?.let { time ->
             var second = time
@@ -50,7 +50,13 @@ fun MonthTimeLogContainer.getLogTableList(day: Int): List<LogTableItem> {
             val min = second / 60
             second -= min * 60
             String.format("%02d:%02d:%02d", hour, min, second)
-        } ?: "누락"
+        } ?: run {
+            if (day == TodayCalendarUtils.day && monthLog.indexOf(log) == 0) {
+                "-"
+            } else {
+                "누락"
+            }
+        }
         LogTableItem(log.inTime, log.outTime, durationString)
     }
 }
