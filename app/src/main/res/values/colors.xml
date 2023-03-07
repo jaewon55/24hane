@@ -70,6 +70,7 @@
     <color name="reissue_dialog_cancel">#EAEAEA</color>
     <color name="bottom_nav_checked">#5B5B5B</color>
     <color name="bottom_nav_default">#9B9797</color>
+    <color name="calendar_button_color">#5B5B5B</color>
 
 
 </resources>

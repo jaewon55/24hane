@@ -70,6 +70,7 @@
     <color name="missing_background">#555555</color>
     <color name="bottom_nav_checked">#FFFFFF</color>
     <color name="bottom_nav_default">#9B9797</color>
+    <color name="calendar_button_color">#9B9797</color>
 
 
 </resources>
