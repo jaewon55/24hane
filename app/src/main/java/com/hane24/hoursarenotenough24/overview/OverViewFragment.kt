@@ -106,7 +106,7 @@ class OverViewFragment : Fragment() {
 
     private fun progressChangeLogic(view: CustomProgressbar, progress: Float) {
         view.maxProgress = progress
-        progressAnimation(binding.overviewMonthProgressbar)
+        progressAnimation(view)
     }
 
     private fun measureCardHeight() {
