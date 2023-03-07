@@ -26,6 +26,7 @@ import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
+import com.hane24.hoursarenotenough24.overview.TimeDialogFragment
 
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
@@ -44,6 +45,7 @@ class LogListFragment : Fragment() {
         initBinding(inflater, container)
         observeErrorState()
         observeInOutState()
+        setCalendarDateOnClick()
         setRecyclerAdapter()
         return binding.root
     }
@@ -89,6 +91,16 @@ class LogListFragment : Fragment() {
             .putExtra("loginState", state)
 
         startActivity(intent).also { requireActivity().finish() }
+    }
+
+    private fun setCalendarDateOnClick() {
+        binding.calendarDate.setOnClickListener {
+            val newDialog = CalendarDialog()
+
+            activity?.supportFragmentManager?.let {
+                newDialog.show(it, "timeDialog")
+            }
+        }
     }
 
     private fun setRecyclerAdapter() {

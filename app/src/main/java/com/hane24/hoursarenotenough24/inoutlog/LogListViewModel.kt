@@ -136,7 +136,9 @@ class LogListViewModel : ViewModel() {
                     it
                 }
             } ?: TodayCalendarUtils.month
-            inOutInfoPerMonthApi(newYear, newMonth, false)
+            val autoUpdate =
+                newYear != TodayCalendarUtils.year || newMonth != TodayCalendarUtils.month
+            inOutInfoPerMonthApi(newYear, newMonth, autoUpdate)
             if (_calendarYear.value != newYear) {
                 _calendarYear.value = newYear
             }
@@ -145,9 +147,10 @@ class LogListViewModel : ViewModel() {
         }
     }
 
-    fun changeCalendarDate(year: Int, month: Int, day: Int) {
+    fun changeCalendarDate(year: Int, month: Int, day: Int, autoUpdate: Boolean = false) {
         viewModelScope.launch {
-            inOutInfoPerMonthApi(year, month, false)
+            Log.d("changeCalendarDate", "$year.$month.$day")
+            inOutInfoPerMonthApi(year, month, autoUpdate)
             if (_calendarYear.value != year) _calendarYear.value = year
             _calendarMonth.value = month
             _calendarDay.value = day
