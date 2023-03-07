@@ -23,4 +23,5 @@
         <item name="colorOnPrimary">#000000</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
 </resources>

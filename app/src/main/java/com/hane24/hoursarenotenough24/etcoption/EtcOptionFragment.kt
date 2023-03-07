@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.BuildConfig
+import com.hane24.hoursarenotenough24.LicenseDialogFragment
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.database.TimeDatabase
@@ -58,6 +59,7 @@ class EtcOptionFragment : Fragment() {
         setComplainBtnClick()
         setGuideBtnClick()
         setFeedbackBtnClick()
+        setLicenseBtnClick()
         setLogoutBtnClick()
     }
     private fun setCardBtnClick() {
@@ -96,6 +98,16 @@ class EtcOptionFragment : Fragment() {
         binding.etcFeedbackLayout.setOnClickListener {
             binding.etcFeedbackLayout.isSelected = true
             startActivity(createOpenUriIntent(INQUIRE_MOBILE))
+        }
+    }
+
+    private fun setLicenseBtnClick() {
+        binding.etcLicenseLayout.setOnClickListener {
+            binding.etcFeedbackLayout.isSelected = true
+            val dialog = LicenseDialogFragment()
+            activity?.supportFragmentManager?.let {
+                dialog.show(it, "licenseDialog")
+            }
         }
     }
 

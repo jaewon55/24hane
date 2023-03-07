@@ -15,9 +15,8 @@
             android:id="@+id/name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            android:textStyle="bold"
+            android:textColor="@color/default_text"
+            android:textSize="14dp"
             tools:text="Retrofit2" />
 
         <TextView
@@ -25,8 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="@color/off_progress_front"
-            android:textSize="14dp"
+            android:textColor="@color/default_text"
+            android:textSize="12dp"
             tools:text="@string/license_retrofit2" />
 
     </LinearLayout>

@@ -13,7 +13,7 @@ import com.hane24.hoursarenotenough24.databinding.ActivityMainLicenseFormatBindi
 class LicenseDialogFragment : DialogFragment() {
     private val binding by lazy { ActivityMainLicenseDialogBinding.inflate(layoutInflater) }
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(context).create()
+        val dialog = AlertDialog.Builder(context, R.style.ReissueAlertDialogTheme).create()
 
         binding.licenseCancel.setOnClickListener {
             dialog.dismiss()

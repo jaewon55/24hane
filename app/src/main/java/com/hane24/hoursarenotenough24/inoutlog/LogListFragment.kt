@@ -98,7 +98,7 @@ class LogListFragment : Fragment() {
             val newDialog = CalendarDialog()
 
             activity?.supportFragmentManager?.let {
-                newDialog.show(it, "timeDialog")
+                newDialog.show(it, "calendarDialog")
             }
         }
     }

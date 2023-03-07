@@ -29,14 +29,13 @@
             android:id="@+id/etc_card_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="13dp"
-            android:paddingHorizontal="8dp"
             android:layout_marginTop="28dp"
             android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_title">
-
 
 
             <ImageView
@@ -46,6 +45,7 @@
                 android:layout_gravity="center"
                 android:duplicateParentState="true"
                 app:srcCompat="@drawable/ic_card" />
+
             <TextView
                 android:id="@+id/etc_card_text"
                 style="@style/etc_text"
@@ -59,10 +59,10 @@
             android:id="@+id/etc_information_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="13dp"
-            android:paddingHorizontal="8dp"
             android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_card_layout">
 
@@ -87,10 +87,10 @@
             android:id="@+id/etc_complain_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="13dp"
-            android:paddingHorizontal="8dp"
             android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_information_layout">
 
@@ -113,10 +113,10 @@
             android:id="@+id/etc_guide_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="13dp"
-            android:paddingHorizontal="8dp"
             android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etc_complain_layout">
 
@@ -139,10 +139,10 @@
             android:id="@+id/etc_feedback_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="13dp"
-            android:paddingHorizontal="8dp"
             android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_guide_layout">
 
@@ -162,15 +162,41 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/etc_license_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etc_feedback_layout">
+
+            <ImageView
+                android:id="@+id/etc_license_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_license" />
+
+            <TextView
+                android:id="@+id/etc_license_text"
+                style="@style/etc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="라이선스" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/etc_logout_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:paddingVertical="13dp"
             android:paddingHorizontal="8dp"
+            android:paddingVertical="13dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etc_feedback_layout">
+            app:layout_constraintTop_toBottomOf="@+id/etc_license_layout">
 
             <ImageView
                 android:id="@+id/etc_logout_image"
