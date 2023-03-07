@@ -18,7 +18,11 @@ import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentReissueBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
+import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
+import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.BASE_URL
 
 class ReissueFragment : Fragment() {
@@ -48,6 +52,7 @@ class ReissueFragment : Fragment() {
     ): View? {
 
         initBinding(inflater, container)
+        observeErrorState()
         setHelpButtonOnClick()
         binding.reissueBackButton.setOnClickListener { backPressedCallback.handleOnBackPressed() }
         binding.reissueApplyButton.setOnClickListener { viewModel.clickReissueButton(requireActivity()) }
@@ -62,6 +67,28 @@ class ReissueFragment : Fragment() {
             it.viewModel = this.viewModel
         }
     }
+
+    private fun observeErrorState() {
+        viewModel.errorState.observe(viewLifecycleOwner) { state: State? ->
+            state?.let { handleError(it) }
+        }
+    }
+
+    private fun handleError(state: State) =
+        when (state) {
+            State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
+            State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
+                requireActivity().supportFragmentManager
+            ) { _, _ -> viewModel.refreshButtonOnClick() }
+            else -> {}
+        }
+
+    private fun goToLogin(state: State) {
+        val intent = Intent(activity, LoginActivity::class.java)
+
+        startActivity(intent).also { requireActivity().finish() }
+    }
+
 
     private fun setHelpButtonOnClick() {
         binding.reissueHelpButton.setOnClickListener {

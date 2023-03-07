@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.network.ReissueRequestResult
 import com.hane24.hoursarenotenough24.network.ReissueState
@@ -29,6 +30,10 @@ class ReissueViewModel : ViewModel() {
     private val _loadingState = MutableLiveData(true)
     val loadingState: LiveData<Boolean>
         get() = _loadingState
+
+    private val _errorState = MutableLiveData<State>()
+    val errorState: LiveData<State>
+        get() = _errorState
 
     init {
         viewModelScope.launch {
@@ -90,11 +95,14 @@ class ReissueViewModel : ViewModel() {
                 404 -> {
                     _reissueState.value = null
                 }
-//                503 ->
+                503 -> {
+                    _errorState.value = State.SERVER_FAIL
+                }
             }
-
         } catch (e: Exception) {
-
+            _errorState.value = State.NETWORK_FAIL
+        } finally {
+            _errorState.value = State.SUCCESS
         }
     }
 
@@ -103,10 +111,18 @@ class ReissueViewModel : ViewModel() {
             _reissueResult.value = Hane42Apis.hane42ApiService.postReissueRequest(accessToken)
             useGetReissueStateApi()
         } catch (err: HttpException) {
-//                404 ->
-//                503 ->
+            when (err.code()) {
+                404 -> {
+                    _reissueState.value = null
+                }
+                503 -> {
+                    _errorState.value = State.SERVER_FAIL
+                }
+            }
         } catch (e: Exception) {
-
+            _errorState.value = State.NETWORK_FAIL
+        } finally {
+            _errorState.value = State.SUCCESS
         }
     }
 
@@ -115,11 +131,18 @@ class ReissueViewModel : ViewModel() {
             _reissueResult.value = Hane42Apis.hane42ApiService.patchReissueFinish(accessToken)
             useGetReissueStateApi()
         } catch (err: HttpException) {
-            Log.d("issue", "1 ${err.message}")
-//                404 ->
-//                503 ->
+            when (err.code()) {
+                404 -> {
+                    _reissueState.value = null
+                }
+                503 -> {
+                    _errorState.value = State.SERVER_FAIL
+                }
+            }
         } catch (e: Exception) {
-            Log.d("issue", "2 ${e.message}")
+            _errorState.value = State.NETWORK_FAIL
+        } finally {
+            _errorState.value = State.SUCCESS
         }
     }
 

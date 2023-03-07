@@ -2,6 +2,7 @@ package com.hane24.hoursarenotenough24.inoutlog
 
 import android.content.Intent
 import android.graphics.Rect
+import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.TouchDelegate
@@ -15,10 +16,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
+import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListCalendarItemBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
@@ -69,6 +72,9 @@ class LogListFragment : Fragment() {
             State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(
                 requireActivity().supportFragmentManager
             )
+            State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
+                requireActivity().supportFragmentManager
+            ) { _, _ -> viewModel.refreshButtonOnClick() }
             else -> Unit
         }
 

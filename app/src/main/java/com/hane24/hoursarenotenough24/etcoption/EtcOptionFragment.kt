@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.BuildConfig
+import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.database.createDatabase
@@ -26,6 +28,7 @@ import java.sql.Time
 
 class EtcOptionFragment : Fragment() {
     private lateinit var binding: FragmentEtcOptionBinding
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +42,14 @@ class EtcOptionFragment : Fragment() {
     ): View? {
         binding = FragmentEtcOptionBinding.inflate(layoutInflater, container, false)
         initBtn()
+        swipeRefreshLayout = (requireActivity() as MainActivity).findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
+        swipeRefreshLayout.isEnabled = false
         return binding.root
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        swipeRefreshLayout.isEnabled = true
     }
 
     private fun initBtn() {

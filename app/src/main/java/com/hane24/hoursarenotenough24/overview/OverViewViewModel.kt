@@ -123,7 +123,9 @@ class OverViewViewModel : ViewModel() {
                 else -> _state.value = State.UNKNOWN_ERROR
             }
         } catch (e: Exception) {
-            _state.value = State.UNKNOWN_ERROR
+            _state.value = State.NETWORK_FAIL
+        } finally {
+            _state.value = State.SUCCESS
         }
     }
 
@@ -143,7 +145,9 @@ class OverViewViewModel : ViewModel() {
             }
         } catch (e: Exception) {
             Log.i("api", "${e.message}")
-            _state.value = State.UNKNOWN_ERROR
+            _state.value = State.NETWORK_FAIL
+        } finally {
+            _state.value = State.SUCCESS
         }
     }
 
@@ -179,7 +183,9 @@ class OverViewViewModel : ViewModel() {
                 else -> _state.value = State.UNKNOWN_ERROR
             }
         } catch (e: Exception) {
-            _state.value = State.UNKNOWN_ERROR
+            _state.value = State.NETWORK_FAIL
+        } finally {
+            State.SUCCESS
         }
     }
 
