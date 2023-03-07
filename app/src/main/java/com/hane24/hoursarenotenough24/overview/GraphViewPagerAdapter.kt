@@ -75,7 +75,7 @@ class GraphViewPagerAdapter(): RecyclerView.Adapter<GraphViewPagerAdapter.GraphV
         }
 
         private fun getGraphHeight(percent: Long): Int {
-            val maxHeight = 87
+            val maxHeight = 77
             val whiteHeight = (maxHeight * (percent * 0.01)).toInt() + 10
             val density = App.instance.applicationContext.resources.displayMetrics.density
             return (whiteHeight * density).toInt()

@@ -560,7 +560,7 @@
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="18dp"
-                        android:paddingVertical="28dp">
+                        android:paddingVertical="22dp">
 
                         <TextView
                             android:id="@+id/overview_gaepo_title"
@@ -619,7 +619,7 @@
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="18dp"
-                        android:paddingVertical="28dp">
+                        android:paddingVertical="22dp">
 
                         <TextView
                             android:id="@+id/overview_seocho_title"

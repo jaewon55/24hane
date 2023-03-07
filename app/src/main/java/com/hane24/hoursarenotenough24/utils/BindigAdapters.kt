@@ -249,22 +249,22 @@ fun setCalendarVisible(
     recyclerView.visibility = if (loadingState) View.INVISIBLE else View.VISIBLE
 }
 
-@BindingAdapter("loadingState")
-fun setProgressBarVisible(
-    view: ImageView,
-    loadingState: Boolean
-) {
-    val drawable = view.drawable as AnimationDrawable
-    if (loadingState) {
-        drawable.setEnterFadeDuration(300)
-        drawable.setExitFadeDuration(300)
-        drawable.start()
-        view.visibility = View.VISIBLE
-    } else {
-        view.visibility = View.INVISIBLE
-        drawable.stop()
-    }
-}
+//@BindingAdapter("loadingState")
+//fun setProgressBarVisible(
+//    view: ImageView,
+//    loadingState: Boolean
+//) {
+//    val drawable = view.drawable as AnimationDrawable
+//    if (loadingState) {
+//        drawable.setEnterFadeDuration(300)
+//        drawable.setExitFadeDuration(300)
+//        drawable.start()
+//        view.visibility = View.VISIBLE
+//    } else {
+//        view.visibility = View.INVISIBLE
+//        drawable.stop()
+//    }
+//}
 
 @BindingAdapter("loadImage")
 fun loadImage(
@@ -280,7 +280,7 @@ fun setBackground(
     flag: Boolean
 ) {
     view.background = if (flag) {
-        AppCompatResources.getDrawable(view.context, R.drawable.in_background)
+        AppCompatResources.getDrawable(view.context, R.drawable.background)
     } else {
         AppCompatResources.getDrawable(view.context, R.color.overview_in_color)
     }
