@@ -364,6 +364,8 @@ fun reissueDialogOkButtonState(
         } else {
             view.text = view.context.getString(R.string.reissue_dialog_done_ok_text)
         }
+    } ?: run {
+        view.text = view.context.getString(R.string.reissue_dialog_apply_ok_text)
     }
 }
 
@@ -378,6 +380,8 @@ fun reissueDialogMainWarningState(
         } else {
             view.text = view.context.getString(R.string.reissue_dialog_main_warning_done_text)
         }
+    } ?: run {
+        view.text = view.context.getString(R.string.reissue_dialog_main_warning_apply_text)
     }
 }
 
@@ -392,6 +396,8 @@ fun reissueDialogSubWarningState(
         } else {
             view.text = view.context.getString(R.string.reissue_dialog_sub_warning_done_text)
         }
+    } ?: run {
+        view.text = view.context.getString(R.string.reissue_dialog_sub_warning_apply_text)
     }
 }
 

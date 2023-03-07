@@ -76,20 +76,12 @@ class ReissueFragment : Fragment() {
 
     private fun handleError(state: State) =
         when (state) {
-            State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
+            State.UNKNOWN_ERROR, State.SERVER_FAIL -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
             State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
                 requireActivity().supportFragmentManager
             ) { _, _ -> viewModel.refreshButtonOnClick() }
             else -> {}
         }
-
-    private fun goToLogin(state: State) {
-        val intent = Intent(activity, LoginActivity::class.java)
-
-        startActivity(intent).also { requireActivity().finish() }
-    }
-
-
     private fun setHelpButtonOnClick() {
         binding.reissueHelpButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_URL + "redirect/reissuance_guidelines"))

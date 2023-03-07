@@ -65,6 +65,7 @@ class ReissueViewModel : ViewModel() {
             _loadingState.value = true
             useGetReissueStateApi()
             _loadingState.value = false
+            Log.i("state", "state: ${reissueState.value}")
         }
     }
 

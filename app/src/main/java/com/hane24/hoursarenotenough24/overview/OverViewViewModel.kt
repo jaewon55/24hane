@@ -123,6 +123,7 @@ class OverViewViewModel : ViewModel() {
                 else -> _state.value = State.UNKNOWN_ERROR
             }
         } catch (e: Exception) {
+            Log.i("api", "${e.message}")
             _state.value = State.NETWORK_FAIL
         } finally {
             _state.value = State.SUCCESS
@@ -133,7 +134,6 @@ class OverViewViewModel : ViewModel() {
         try {
             _clusterPopulation.value = Hane42Apis.hane42ApiService.getCadetPerCluster(accessToken)
             _state.value = State.SUCCESS
-            Log.i("api", "${_clusterPopulation.value}")
         } catch (err: HttpException) {
             Log.i("api", "${err.message()}")
             val isLoginFail = err.code() == 401
@@ -183,6 +183,7 @@ class OverViewViewModel : ViewModel() {
                 else -> _state.value = State.UNKNOWN_ERROR
             }
         } catch (e: Exception) {
+            Log.i("api", "${e.message}")
             _state.value = State.NETWORK_FAIL
         } finally {
             State.SUCCESS
