@@ -1,10 +1,13 @@
 package com.hane24.hoursarenotenough24.widget
 
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane42Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import retrofit2.HttpException
 
 internal fun updateRefreshAnimationOn(views: RemoteViews, progressId: Int, buttonId: Int) {
     views.setViewVisibility(progressId, View.VISIBLE)
@@ -18,16 +21,36 @@ internal fun updateRefreshAnimationOff(views: RemoteViews, progressId: Int, butt
 
 internal suspend fun getAccumulationInfo(): AccumulationTimeInfo? {
     return try {
-        Hane42Apis.hane42ApiService.getAccumulationTime(SharedPreferenceUtils.getAccessToken())
+        val result = Hane42Apis.hane42ApiService.getAccumulationTime(SharedPreferenceUtils.getAccessToken())
+        state = State.SUCCESS
+        result
+    } catch (err:HttpException) {
+        state = when (err.code()) {
+            401 -> State.LOGIN_FAIL
+            500 -> State.UNKNOWN_ERROR
+            else -> State.UNKNOWN_ERROR
+        }
+        null
     } catch (err: Exception) {
+        state = State.UNKNOWN_ERROR
         null
     }
 }
 
 internal suspend fun getInOutState(): String? {
     return try {
-        Hane42Apis.hane42ApiService.getMainInfo(SharedPreferenceUtils.getAccessToken()).inoutState
+        val result = Hane42Apis.hane42ApiService.getMainInfo(SharedPreferenceUtils.getAccessToken()).inoutState
+        state = State.SUCCESS
+        result
+    } catch (err:HttpException) {
+        state = when (err.code()) {
+            401 -> State.LOGIN_FAIL
+            500 -> State.UNKNOWN_ERROR
+            else -> State.UNKNOWN_ERROR
+        }
+        null
     } catch (err: Exception) {
+        state = State.UNKNOWN_ERROR
         null
     }
 }

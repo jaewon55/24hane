@@ -193,7 +193,6 @@ class LogListViewModel : ViewModel() {
                 MonthTimeLogContainer(y, m, repository.getMonthFromServer(format).asDomainModel())
             _loadingState.value = false
         } catch (err: HttpException) {
-            Log.e("e_msg", err.message ?: "몰라")
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500
 
@@ -203,9 +202,10 @@ class LogListViewModel : ViewModel() {
                 else -> _errorState.value = State.UNKNOWN_ERROR
             }
         } catch (err: Exception) {
-            Log.e("e_msg", err.message ?: "몰라")
-            _errorState.value = State.UNKNOWN_ERROR
+            _errorState.value = State.NETWORK_FAIL
+
         } finally {
+            _errorState.value = State.SUCCESS
             _loadingState.value = false
         }
     }

@@ -49,6 +49,7 @@ import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewGraphViewBinding
+import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
@@ -306,6 +307,9 @@ class OverViewFragment : Fragment() {
         when (state) {
             State.LOGIN_FAIL -> goToLogin(state)
             State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
+            State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
+                requireActivity().supportFragmentManager
+            ) { _, _ -> viewModel.refreshButtonOnClick() }
             else -> {}
         }
 

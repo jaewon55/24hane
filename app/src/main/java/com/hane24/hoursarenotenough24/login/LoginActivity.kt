@@ -31,8 +31,6 @@ class LoginActivity : AppCompatActivity() {
         animationDrawable.setExitFadeDuration(300)
         animationDrawable.start()
 
-        val state = intent.getSerializableExtra("loginState") as State
-
         val loginUri: Uri = createLoginUri()
 
         cookieManager.setAcceptCookie(true)

@@ -12,10 +12,12 @@ import android.widget.RemoteViews
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.login.SplashActivity
+import com.hane24.hoursarenotenough24.login.State
 import kotlinx.coroutines.*
 
 private var accumulationData: AccumulationTimeInfo? = null
 private var inOutStateData: String? = null
+internal var state: State = State.SUCCESS
 
 class BasicWidget : AppWidgetProvider() {
     override fun onUpdate(
@@ -106,8 +108,12 @@ private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
     val openIntent = Intent(context, SplashActivity::class.java)
     val refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
     val openPendingIntent = PendingIntent.getActivity(context, 1, openIntent, PendingIntent.FLAG_IMMUTABLE)
+    val errorText = when (state) {
+        State.LOGIN_FAIL -> context.resources.getString(R.string.widget_login_error)
+        else -> context.resources.getString(R.string.widget_error)
+    }
 
-
+    views.setTextViewText(R.id.widget_error_text, errorText)
     views.setViewVisibility(R.id.widget_error_layout, View.VISIBLE)
     views.setViewVisibility(R.id.widget_success_layout, View.GONE)
 
@@ -137,7 +143,7 @@ internal fun updateAppWidget(
 
     CoroutineScope(Dispatchers.Default).launch {
         getData()
-        if (accumulationData == null)
+        if (accumulationData == null || inOutStateData == null)
             setErrorCondition(context, views)
         else
             setSuccessCondition(context, views)

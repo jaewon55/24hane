@@ -20,6 +20,7 @@ enum class State {
     SUCCESS,
     LOGIN_FAIL,
     SERVER_FAIL,
+    NETWORK_FAIL
 }
 
 class SplashActivity : AppCompatActivity() {
