@@ -62,7 +62,8 @@
     <color name="back_gradient_end">#33735BF2</color>
 
     <color name="overview_in_color">#333333</color>
-    <color name="intra_id_color">#ffffff</color>
+    <color name="intra_id_in_color">#ffffff</color>
+    <color name="intra_id_out_color">#333333</color>
     <color name="bottom_select_color">#ffffff</color>
     <color name="log_list_background">#333333</color>
     <color name="etc_title_color">#EAEAEA</color>
@@ -74,6 +75,7 @@
     <color name="log_list_accumulation_color">#EAEAEA</color>
     <color name="overview_inout_state_color">#00BABC</color>
     <color name="overview_graph_type_text_color">#9B9797</color>
+    <color name="overview_curr_status_color">#FFFFFF</color>
 
 
 </resources>
