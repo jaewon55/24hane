@@ -65,7 +65,7 @@
             android:backgroundTint="@color/default_text"
             app:cornerRadius="10dp"
             app:strokeWidth="2dp"
-            app:strokeColor="@color/white"
+            app:strokeColor="@color/etc_title_color"
             android:onClick="@{() -> viewModel.testStateChange()}"
             android:fontFamily="@font/inter_bold"
             android:gravity="center"
