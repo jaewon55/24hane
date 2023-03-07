@@ -288,6 +288,7 @@
                             android:text="@string/overview_percent_text"
                             android:textColor="@color/default_text"
                             android:textSize="14dp"
+                            android:textStyle="normal"
                             android:visibility="gone"
                             app:layout_constraintBaseline_toBaselineOf="@id/overview_today_progressbar_percent_numeric_text"
                             app:layout_constraintBottom_toBottomOf="@+id/overview_today_progressbar_percent_numeric_text"

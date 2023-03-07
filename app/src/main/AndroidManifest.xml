@@ -43,7 +43,7 @@
             android:name=".login.SplashActivity"
             android:exported="true"
             android:noHistory="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Theme.24hane">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

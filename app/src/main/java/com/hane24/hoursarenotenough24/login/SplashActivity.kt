@@ -2,14 +2,17 @@ package com.hane24.hoursarenotenough24.login
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.MainActivity
+import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.NetworkObserver
@@ -31,8 +34,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-//        setStatusAndNavigationBar()
+        setStatusAndNavigationBar()
         checkNetworkState(NetworkObserverImpl().isConnected())
         checkLogin()
         observeLoginState()
@@ -89,8 +91,14 @@ class SplashActivity : AppCompatActivity() {
 
     private fun setStatusAndNavigationBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
-
-        controller.isAppearanceLightStatusBars = true
-        controller.isAppearanceLightNavigationBars = true
+        val currentNightMode = resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        controller.isAppearanceLightStatusBars = !currentNightMode
+        controller.isAppearanceLightNavigationBars = !currentNightMode
+        if (currentNightMode) {
+            binding.splashImage.setImageResource(R.drawable.ic_loading_dark)
+            binding.splashLayout.setBackgroundColor(this.resources.getColor(R.color.default_text))
+            binding.splashImage.setBackgroundColor(this.resources.getColor(R.color.default_text))
+        }
     }
 }
