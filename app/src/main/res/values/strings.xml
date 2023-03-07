@@ -40,8 +40,8 @@ limitations under the License.</string>
     <string name="target_time_default">0시간</string>
     <string name="progress_default">0%</string>
     <string name="default_progressbar_time">0H</string>
-    <string name="overview_graph_recent">최근 순</string>
-    <string name="overview_graph_old">오래된 순</string>
+    <string name="overview_graph_recent">최신순</string>
+    <string name="overview_graph_old">오래된순</string>
     <string name="overview_month_accumulate_title">월 누적 시간</string>
     <string name="default_graph_date">2.12(월) - 2.18(일)</string>
     <string name="default_graph_average">평균 6.2시간</string>

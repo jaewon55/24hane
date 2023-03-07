@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/log_list_background"
+        android:background="@color/overview_in_color"
         android:padding="20dp">
 
         <TextView
@@ -25,21 +25,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="20dp" />
-
         <LinearLayout
             android:id="@+id/etc_card_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:padding="8dp"
-            android:layout_marginTop="44dp"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="28dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_title">
 
@@ -58,20 +52,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@string/card_option"
-                app:layout_constraintBottom_toBottomOf="@+id/etc_card_image"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="@+id/etc_card_image" />
+                android:text="@string/card_option" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/etc_information_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="8dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_card_layout">
 
@@ -96,10 +87,10 @@
             android:id="@+id/etc_complain_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="8dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_information_layout">
 
@@ -122,10 +113,10 @@
             android:id="@+id/etc_guide_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="8dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etc_complain_layout">
 
@@ -148,10 +139,10 @@
             android:id="@+id/etc_feedback_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="8dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_guide_layout">
 
@@ -166,7 +157,7 @@
                 style="@style/etc_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="11dp"
                 android:text="@string/etc_feedback" />
         </LinearLayout>
 
@@ -174,10 +165,10 @@
             android:id="@+id/etc_logout_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:background="@drawable/shape_bottom_stroke"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etc_feedback_layout">
 
@@ -185,7 +176,6 @@
                 android:id="@+id/etc_logout_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 app:srcCompat="@drawable/ic_logout" />
 
             <TextView
@@ -193,7 +183,7 @@
                 style="@style/etc_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="14dp"
                 android:text="@string/logout" />
         </LinearLayout>
 

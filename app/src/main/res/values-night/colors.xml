@@ -70,6 +70,10 @@
     <color name="missing_background">#555555</color>
     <color name="bottom_nav_checked">#FFFFFF</color>
     <color name="bottom_nav_default">#9B9797</color>
+    <color name="calendar_button_color">#9B9797</color>
+    <color name="log_list_accumulation_color">#EAEAEA</color>
+    <color name="overview_inout_state_color">#00BABC</color>
+    <color name="overview_graph_type_text_color">#9B9797</color>
 
 
 </resources>

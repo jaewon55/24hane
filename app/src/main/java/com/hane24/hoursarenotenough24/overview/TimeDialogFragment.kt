@@ -65,11 +65,11 @@ class TimeDialogFragment(private val isMonth: Boolean) : DialogFragment() {
         if (isMonth) (index * MONTH_STEP) + MONTH_MIN_VALUE else (index * DAY_STEP) + DAY_MIN_VALUE
 
     companion object {
-        private const val MONTH_MAX_VALUE = 240
-        private const val MONTH_MIN_VALUE = 20
-        private const val MONTH_STEP = 10
-        private const val DAY_MAX_VALUE = 23
-        private const val DAY_MIN_VALUE = 1
+        private const val MONTH_MAX_VALUE = 420
+        private const val MONTH_MIN_VALUE = 80
+        private const val MONTH_STEP = 2
+        private const val DAY_MAX_VALUE = 24
+        private const val DAY_MIN_VALUE = 4
         private const val DAY_STEP = 1
     }
 

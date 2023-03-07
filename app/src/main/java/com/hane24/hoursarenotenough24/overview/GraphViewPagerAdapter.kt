@@ -217,7 +217,7 @@ class GraphViewPagerAdapter(): RecyclerView.Adapter<GraphViewPagerAdapter.GraphV
         fun bind(item: OverViewFragment.TimeInfo) {
             binding.overviewGraphName.text =
                 if (item.timeType == 0) "최근 주간 그래프" else "최근 월간 그래프"
-            binding.overviewGraphType.text = if (item.timeType == 0) "(6주)" else "(6달)"
+            binding.overviewGraphType.text = if (item.timeType == 0) "(6주)" else "(6개월)"
             setTotalTime(0, item)
             setAverageTime(0, item)
             setDateText(0, item)
