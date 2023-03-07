@@ -15,6 +15,7 @@ import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.databinding.FragmentEtcOptionBinding
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.network.BASE_URL
 import com.hane24.hoursarenotenough24.reissue.ReissueFragment
 import com.hane24.hoursarenotenough24.repository.TimeRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
@@ -111,10 +112,9 @@ class EtcOptionFragment : Fragment() {
     }
 
     companion object {
-        private const val APP_GUIDE = BuildConfig.APP_GUIDE
-        private const val PAGE_GUIDE = BuildConfig.PAGE_GUIDE
-        private const val INQUIRE_ATTENDANCE = BuildConfig.INQUIRY_ATTENDANCE
-        private const val INQUIRE_MOBILE = BuildConfig.INQUIRY_MOBILE
-        private const val NUM_PAGES = 2
+        private const val APP_GUIDE = BASE_URL + "redirect/usage"
+        private const val PAGE_GUIDE = BASE_URL + "redirect/money_guidelines"
+        private const val INQUIRE_ATTENDANCE = BASE_URL + "redirect/question"
+        private const val INQUIRE_MOBILE = BASE_URL + "redirect/feedback"
     }
 }

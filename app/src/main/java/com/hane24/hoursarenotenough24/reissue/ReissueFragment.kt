@@ -1,6 +1,8 @@
 package com.hane24.hoursarenotenough24.reissue
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,6 +19,7 @@ import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentReissueBinding
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
+import com.hane24.hoursarenotenough24.network.BASE_URL
 
 class ReissueFragment : Fragment() {
     private lateinit var binding: FragmentReissueBinding
@@ -45,7 +48,7 @@ class ReissueFragment : Fragment() {
     ): View? {
 
         initBinding(inflater, container)
-
+        setHelpButtonOnClick()
         binding.reissueBackButton.setOnClickListener { backPressedCallback.handleOnBackPressed() }
         binding.reissueApplyButton.setOnClickListener { viewModel.clickReissueButton(requireActivity()) }
         return binding.root
@@ -57,6 +60,13 @@ class ReissueFragment : Fragment() {
         binding.let {
             it.lifecycleOwner = viewLifecycleOwner
             it.viewModel = this.viewModel
+        }
+    }
+
+    private fun setHelpButtonOnClick() {
+        binding.reissueHelpButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BASE_URL + "redirect/reissuance_guidelines"))
+            startActivity(intent)
         }
     }
 

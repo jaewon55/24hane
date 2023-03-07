@@ -16,6 +16,9 @@ interface TimeDatabaseDAO {
     @Query("SELECT * FROM tagging_log WHERE date LIKE :target")
     fun getDay(target: String): List<TimeDatabaseDto>
 
+    @Query("DELETE FROM tagging_log WHERE date = :date AND inTimeStamp = :inTime AND outTimeStamp = :outTime")
+    fun deleteOne(date: String, inTime: Long, outTime: Long)
+
     @Insert(onConflict = REPLACE)
     fun insertAll(vararg times: TimeDatabaseDto)
 

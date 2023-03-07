@@ -1,13 +1,8 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Rect
 import android.os.Bundle
-import android.transition.Transition
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.TouchDelegate
 import android.view.View
@@ -24,14 +19,15 @@ import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.CalendarItem
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentLogListCalendarItemBinding
-import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 
 class LogListFragment : Fragment() {
     private lateinit var binding: FragmentLogListBinding
-    private val viewModel: LogListRefactor by activityViewModels()
+    private val viewModel: LogListViewModel by activityViewModels()
+    private val overViewViewModel: OverViewViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val inflater = TransitionInflater.from(requireContext())
@@ -44,6 +40,7 @@ class LogListFragment : Fragment() {
     ): View? {
         initBinding(inflater, container)
         observeErrorState()
+        observeInOutState()
         setRecyclerAdapter()
         return binding.root
     }
@@ -74,6 +71,12 @@ class LogListFragment : Fragment() {
             )
             else -> Unit
         }
+
+    private fun observeInOutState() {
+        overViewViewModel.inOutState.observe(viewLifecycleOwner) {
+            viewModel.setInOutState(it)
+        }
+    }
 
     private fun goToLogin(state: State) {
         val intent = Intent(activity, LoginActivity::class.java)
