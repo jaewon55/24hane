@@ -77,6 +77,7 @@
     <color name="overview_graph_type_text_color">#9B9797</color>
     <color name="overview_curr_status_color">#333333</color>
     <color name="in_state_color">#00BABC</color>
+    <color name="overview_in_background">#33000000</color>
 
 
 </resources>

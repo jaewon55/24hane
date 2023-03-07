@@ -7,7 +7,6 @@
         <import type="android.view.View"/>
         <import type="androidx.appcompat.content.res.AppCompatResources" />
         <import type="android.R.drawable" />
-        <import type="android.R.color" />
 
         <variable
             name="viewModel"
@@ -51,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@{viewModel.intraId}"
-                android:textColor="@{viewModel.inOutState ? R.color.intra_id_in_color : R.color.intra_id_out_color}"
+                android:textColor="@{viewModel.inOutState ? @color/intra_id_in_color : @color/intra_id_out_color}"
                 android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_profile_image"
                 app:layout_constraintStart_toEndOf="@+id/overview_profile_image"
@@ -664,7 +663,7 @@
                     android:layout_marginBottom="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/overview_curr_status"
-                    android:textColor="@color/overview_curr_status_color"
+                    android:textColor="@{viewModel.inOutState ? @color/intra_id_in_color : @color/intra_id_out_color}"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/overview_gaepo_card"
