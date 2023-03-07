@@ -663,7 +663,7 @@
                     android:layout_marginBottom="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/overview_curr_status"
-                    android:textColor="@color/default_text"
+                    android:textColor="@color/intra_id_color"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/overview_gaepo_card"
