@@ -88,6 +88,7 @@
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/overview_profile_layout"
             app:layout_constraintVertical_bias="0.0">
@@ -108,8 +109,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    app:cardCornerRadius="20dp"
                     android:backgroundTint="@color/white"
+                    app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -402,14 +403,13 @@
                             android:id="@+id/overview_month_toggle_group"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:constraint_referenced_ids=
-                                "overview_month_target_text,
+                            android:visibility="gone"
+                            app:constraint_referenced_ids="overview_month_target_text,
                                 overview_month_target_time_numeric_text,
                                 overview_month_target_time_text,
                                 overview_month_progressbar,
                                 overview_month_progressbar_percent_numeric_text,
-                                overview_month_progressbar_percent_text"
-                            android:visibility="gone"/>
+                                overview_month_progressbar_percent_text" />
 
                         <TextView
                             android:id="@+id/overview_month_target_text"
@@ -457,8 +457,8 @@
                             android:layout_marginTop="20dp"
                             android:indeterminate="false"
                             android:max="100"
-                            android:progress="0"
                             android:maxProgress="@{viewModel.monthProgressPercent}"
+                            android:progress="0"
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -526,8 +526,8 @@
                             android:id="@+id/overview_graph_tab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
                             android:layout_gravity="center_horizontal"
+                            android:backgroundTint="@color/white"
                             app:tabBackground="@drawable/tab_selector"
                             app:tabGravity="center" />
                     </LinearLayout>
@@ -544,19 +544,20 @@
                     android:id="@+id/overview_gaepo_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="20dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintEnd_toStartOf="@id/overview_center_guideline"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/overview_center_guideline"
                     app:layout_constraintStart_toStartOf="@+id/overview_curr_status">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal"
                         android:paddingHorizontal="18dp"
                         android:paddingVertical="28dp">
 
@@ -565,38 +566,57 @@
                             style="@style/overview_population_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/overview_gaepo_title" />
+                            android:text="@string/overview_gaepo_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/overview_gaepo_numeric_population"
+                            style="@style/overview_population_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getGaepoPopulation()}"
+                            app:layout_constraintBottom_toBottomOf="@+id/overview_gaepo_population"
+                            app:layout_constraintEnd_toStartOf="@+id/overview_gaepo_population"
+                            app:layout_constraintTop_toTopOf="@+id/overview_gaepo_population"
+                            tools:text="000" />
 
                         <TextView
                             android:id="@+id/overview_gaepo_population"
                             style="@style/overview_population_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:text="@{viewModel.getGaepoPopulation()}"
-                            tools:text="000명" />
-                    </LinearLayout>
+                            android:text="명"
+                            android:textSize="16dp"
+                            app:layout_constraintBaseline_toBaselineOf="@id/overview_gaepo_numeric_population"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="명" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/overview_seocho_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginBottom="20dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintStart_toEndOf="@id/overview_center_guideline"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/overview_center_guideline">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal"
                         android:paddingHorizontal="18dp"
                         android:paddingVertical="28dp">
 
@@ -605,19 +625,35 @@
                             style="@style/overview_population_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/overview_seocho_title" />
+                            android:text="@string/overview_seocho_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/overview_seocho_numeric_population"
+                            style="@style/overview_population_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getSeochoPopulation()}"
+                            app:layout_constraintBottom_toBottomOf="@+id/overview_seocho_population"
+                            app:layout_constraintEnd_toStartOf="@+id/overview_seocho_population"
+                            app:layout_constraintTop_toTopOf="@+id/overview_seocho_population"
+                            tools:text="000" />
 
                         <TextView
                             android:id="@+id/overview_seocho_population"
                             style="@style/overview_population_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            tools:text="000명"
-                            android:text="@{viewModel.getSeochoPopulation()}" />
-                    </LinearLayout>
+                            android:text="명"
+                            android:textSize="16dp"
+                            app:layout_constraintBaseline_toBaselineOf="@id/overview_seocho_numeric_population"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="명" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <TextView

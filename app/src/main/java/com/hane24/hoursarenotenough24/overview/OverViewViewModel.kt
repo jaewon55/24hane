@@ -183,16 +183,16 @@ class OverViewViewModel : ViewModel() {
     fun getSeochoPopulation(): LiveData<String> {
         return Transformations.map(mainInfo) {
             mainInfo.value?.let {
-                "${it.seocho}명"
-            } ?: "000명"
+                "${it.seocho}"
+            } ?: "0"
         }
     }
 
     fun getGaepoPopulation(): LiveData<String> {
         return Transformations.map(mainInfo) {
             mainInfo.value?.let {
-                "${it.gaepo}명"
-            } ?: "000명"
+                "${it.gaepo}"
+            } ?: "0"
         }
     }
 
