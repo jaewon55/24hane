@@ -64,7 +64,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:background="@drawable/oval"
-                android:backgroundTint="@color/overview_in_color"
+                android:backgroundTint="@color/overview_inout_state_color"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
                 android:visibility="@{viewModel.inOutState ? View.VISIBLE : View.GONE}"
@@ -75,6 +75,7 @@
                 android:id="@+id/overview_announce_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_profile_id"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/overview_profile_id"
@@ -419,8 +420,7 @@
                             android:layout_marginTop="20dp"
                             android:text="@string/target_time"
                             android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_month_accumulate_text"
-                            app:layout_constraintStart_toStartOf="@+id/overview_month_accumulate_text"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/overview_month_accumulate_text" />
 
                         <TextView
@@ -525,7 +525,7 @@
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/overview_graph_tab"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_gravity="center_horizontal"
                             android:backgroundTint="@color/white"
                             app:tabBackground="@drawable/tab_selector"

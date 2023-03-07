@@ -72,6 +72,7 @@
     <color name="bottom_nav_default">#9B9797</color>
     <color name="calendar_button_color">#9B9797</color>
     <color name="log_list_accumulation_color">#EAEAEA</color>
+    <color name="overview_inout_state_color">#00BABC</color>
 
 
 </resources>
