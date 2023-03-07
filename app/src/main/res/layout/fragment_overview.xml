@@ -205,8 +205,6 @@
                                 overview_today_target_time_numeric_text,
                                 overview_today_target_time_text,
                                 overview_today_progressbar,
-                                overview_today_progressbar_target,
-                                overview_today_progressbar_target_time,
                                 overview_today_progressbar_percent_numeric_text,
                                 overview_today_progressbar_percent_text" />
 
@@ -251,8 +249,8 @@
 
                         <com.hane24.hoursarenotenough24.view.CustomProgressbar
                             android:id="@+id/overview_today_progressbar"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
                             android:layout_marginTop="20dp"
                             android:indeterminate="false"
                             android:max="100"
@@ -264,38 +262,9 @@
                             app:layout_constraintTop_toBottomOf="@+id/overview_today_target_time_text" />
 
                         <TextView
-                            android:id="@+id/overview_today_progressbar_target"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
-                            android:fontFamily="@font/inter_medium"
-                            android:text="@string/target_time"
-                            android:textColor="@color/default_text"
-                            android:textSize="12dp"
-                            android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
-                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar"
-                            app:layout_constraintTop_toTopOf="@+id/overview_today_progressbar" />
-
-                        <TextView
-                            android:id="@+id/overview_today_progressbar_target_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_medium"
-                            android:text="@{viewModel.dayTargetTime.first + viewModel.dayTargetTime.second}"
-                            android:textSize="12dp"
-                            android:textColor="@color/default_text"
-                            android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar_target"
-                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar_target"
-                            app:layout_constraintTop_toBottomOf="@+id/overview_today_progressbar_target"
-                            tools:text="5H" />
-
-                        <TextView
                             android:id="@+id/overview_today_progressbar_percent_numeric_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="30dp"
                             android:fontFamily="@font/inter_medium"
                             android:text="@{viewModel.dayProgressPercentText}"
                             android:textColor="@color/default_text"
@@ -304,16 +273,15 @@
                             app:layout_constraintBottom_toBottomOf="@+id/overview_today_progressbar"
                             app:layout_constraintEnd_toStartOf="@+id/overview_today_progressbar_percent_text"
                             app:layout_constraintHorizontal_chainStyle="packed"
-                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar_target"
-                            app:layout_constraintTop_toBottomOf="@+id/overview_today_progressbar_target_time"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/overview_today_progressbar"
+                            app:layout_constraintTop_toTopOf="@+id/overview_today_progressbar"
                             tools:text="30" />
 
                         <TextView
                             android:id="@+id/overview_today_progressbar_percent_text"
+                            style="@style/overview_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/overview_time"
                             android:fontFamily="@font/inter_medium"
                             android:text="@string/overview_percent_text"
                             android:textColor="@color/default_text"
@@ -321,7 +289,7 @@
                             android:visibility="gone"
                             app:layout_constraintBaseline_toBaselineOf="@id/overview_today_progressbar_percent_numeric_text"
                             app:layout_constraintBottom_toBottomOf="@+id/overview_today_progressbar_percent_numeric_text"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar_target"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_today_progressbar"
                             app:layout_constraintStart_toEndOf="@id/overview_today_progressbar_percent_numeric_text"
                             app:layout_constraintTop_toTopOf="@+id/overview_today_progressbar_percent_numeric_text" />
 
@@ -439,8 +407,6 @@
                                 overview_month_target_time_numeric_text,
                                 overview_month_target_time_text,
                                 overview_month_progressbar,
-                                overview_month_progressbar_target,
-                                overview_month_progressbar_target_time,
                                 overview_month_progressbar_percent_numeric_text,
                                 overview_month_progressbar_percent_text"
                             android:visibility="gone"/>
@@ -486,8 +452,8 @@
 
                         <com.hane24.hoursarenotenough24.view.CustomProgressbar
                             android:id="@+id/overview_month_progressbar"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
                             android:layout_marginTop="20dp"
                             android:indeterminate="false"
                             android:max="100"
@@ -500,48 +466,19 @@
                             app:layout_constraintTop_toBottomOf="@+id/overview_month_target_time_text" />
 
                         <TextView
-                            android:id="@+id/overview_month_progressbar_target"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
-                            android:text="@string/target_time"
-                            android:textSize="12dp"
-                            android:textColor="@color/default_text"
-                            android:fontFamily="@font/inter_medium"
-                            android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
-                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar"
-                            app:layout_constraintTop_toTopOf="@+id/overview_month_progressbar" />
-
-                        <TextView
-                            android:id="@+id/overview_month_progressbar_target_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{viewModel.monthTargetTime.first + viewModel.monthTargetTime.second}"
-                            android:textSize="12dp"
-                            android:textColor="@color/default_text"
-                            android:fontFamily="@font/inter_medium"
-                            android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar_target"
-                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar_target"
-                            app:layout_constraintTop_toBottomOf="@+id/overview_month_progressbar_target"
-                            tools:text="5H" />
-
-                        <TextView
                             android:id="@+id/overview_month_progressbar_percent_numeric_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="30dp"
-                            android:text="@{viewModel.monthProgressPercentText}"
-                            android:textSize="32dp"
-                            android:textColor="@color/default_text"
                             android:fontFamily="@font/inter_font_family"
+                            android:text="@{viewModel.monthProgressPercentText}"
+                            android:textColor="@color/default_text"
+                            android:textSize="32dp"
                             android:visibility="gone"
-                            app:layout_constraintHorizontal_chainStyle="packed"
                             app:layout_constraintBottom_toBottomOf="@+id/overview_month_progressbar"
                             app:layout_constraintEnd_toStartOf="@id/overview_month_progressbar_percent_text"
-                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar_target"
-                            app:layout_constraintTop_toBottomOf="@+id/overview_month_progressbar_target_time"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="@+id/overview_month_progressbar"
+                            app:layout_constraintTop_toTopOf="@+id/overview_month_progressbar"
                             tools:text="30" />
 
                         <TextView
@@ -555,7 +492,7 @@
                             android:visibility="gone"
                             app:layout_constraintBaseline_toBaselineOf="@id/overview_month_progressbar_percent_numeric_text"
                             app:layout_constraintBottom_toBottomOf="@+id/overview_month_progressbar_percent_numeric_text"
-                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar_target"
+                            app:layout_constraintEnd_toEndOf="@+id/overview_month_progressbar"
                             app:layout_constraintStart_toEndOf="@id/overview_month_progressbar_percent_numeric_text" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -121,7 +121,7 @@ class OverViewFragment : Fragment() {
 
     private fun measureMaxHeight() {
         reverseViewVisibility(binding.overviewTodayCard)
-        binding.overviewTodayCard.measure(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+        binding.overviewTodayCard.measure(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         maxHeight = binding.overviewTodayCard.measuredHeight
         reverseViewVisibility(binding.overviewTodayCard)
     }
