@@ -83,14 +83,12 @@ class ReissueViewModel : ViewModel() {
         }
 
     fun testStateChange() {
-        Log.d("reissueState", "state : ${arr[idx].state}")
         _reissueState.value = arr[idx++]
     }
 
     private suspend fun useGetReissueStateApi() {
         try {
             _reissueState.value = Hane42Apis.hane42ApiService.getReissueState(accessToken)
-            Log.d("issue", reissueState.value?.state ?: "몰라")
         } catch (err: HttpException) {
             when (err.code()) {
                 404 -> {

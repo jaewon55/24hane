@@ -30,20 +30,6 @@ import com.hane24.hoursarenotenough24.network.ReissueState
 fun getColorHelper(context: Context, id: Int) =
     if (Build.VERSION.SDK_INT >= 23) context.getColor(id) else context.resources.getColor(id)
 
-//@BindingAdapter("latestTime", "isStateOn", requireAll = false)
-//fun latestTimeText(
-//    view: TextView,
-//    timeString: String,
-//    state: Boolean
-//) {
-//    if (state) {
-//        view.text = view.context.getString(R.string.latest_time_format, timeString)
-//        view.visibility = View.VISIBLE
-//    } else {
-//        view.visibility = View.INVISIBLE
-//    }
-//}
-
 @BindingAdapter(value = ["isStateOn"], requireAll = false)
 fun ProgressBar.isStateOn(state: Boolean) {
     if (state) {

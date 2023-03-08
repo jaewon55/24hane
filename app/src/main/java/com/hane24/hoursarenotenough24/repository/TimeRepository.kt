@@ -30,7 +30,6 @@ class TimeRepository(private val db: TimeDatabase) {
     }
 
     suspend fun getMonthFromServer(date: String): List<TimeDatabaseDto> {
-        Log.d("accessToken", accessToken.toString())
         val year = date.substring(0, 4).toInt()
         val month = date.substring(4, 6).toInt()
         val networkData = Hane42Apis
@@ -38,20 +37,9 @@ class TimeRepository(private val db: TimeDatabase) {
             .getAllTagPerMonth(accessToken, year, month)
         val monthTimeLog = networkData.asDatabaseDto(date)
         withContext(Dispatchers.IO) {
-            Log.d("logList", "$date == ${String.format("%4d%02d", TodayCalendarUtils.year, TodayCalendarUtils.month)}")
-            if (date == String.format("%4d%02d", TodayCalendarUtils.year, TodayCalendarUtils.month)) {
-                val dbData = getDay("$date${String.format("%02d", TodayCalendarUtils.day)}")
-                Log.d("logList", "todayList : $dbData")
-                Log.d("logList", "monthFirst ${monthTimeLog[0].inTimeStamp}")
-                dbData.forEach {
-                    if (it.inTimeStamp == monthTimeLog[0].inTimeStamp) {
-                        deleteOne(it.date, it.inTimeStamp, it.outTimeStamp)
-                    }
-                }
-            }
+            deleteMonth(date)
             insert(monthTimeLog)
         }
-        Log.d("logList", "getMonth : $monthTimeLog")
         return monthTimeLog
     }
 
@@ -64,6 +52,10 @@ class TimeRepository(private val db: TimeDatabase) {
 
     private suspend fun insert(timeInfo: List<TimeDatabaseDto>) {
         db.timeDatabaseDAO().insertAll(*(timeInfo.toTypedArray()))
+    }
+
+    suspend fun deleteMonth(date: String) {
+        db.timeDatabaseDAO().deleteMonth(date)
     }
 
     suspend fun deleteOne(date: String, inTime: Long, outTime: Long) {

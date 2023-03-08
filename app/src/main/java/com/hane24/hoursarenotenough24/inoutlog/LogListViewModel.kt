@@ -65,9 +65,7 @@ class LogListViewModel : ViewModel() {
     }
 
     val logTableList = Transformations.map(calendarDay) {
-        val test = logContainer.value?.getLogTableList(it, _inOutState.value ?: true) ?: emptyList()
-        Log.d("logList", "tableList : $test")
-        test
+        logContainer.value?.getLogTableList(it, _inOutState.value ?: true) ?: emptyList()
     }
 
     val selectedDateText = Transformations.map(calendarDay) {
@@ -149,7 +147,6 @@ class LogListViewModel : ViewModel() {
 
     fun changeCalendarDate(year: Int, month: Int, day: Int, autoUpdate: Boolean = false) {
         viewModelScope.launch {
-            Log.d("changeCalendarDate", "$year.$month.$day")
             inOutInfoPerMonthApi(year, month, autoUpdate)
             if (_calendarYear.value != year) _calendarYear.value = year
             _calendarMonth.value = month
@@ -163,6 +160,7 @@ class LogListViewModel : ViewModel() {
                 _calendarYear.value ?: TodayCalendarUtils.year,
                 (_calendarMonth.value ?: TodayCalendarUtils.month)
             )
+            _calendarDay.value = _calendarDay.value
         }
     }
 

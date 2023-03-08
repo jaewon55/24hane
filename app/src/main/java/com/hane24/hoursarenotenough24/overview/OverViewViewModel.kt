@@ -157,7 +157,6 @@ class OverViewViewModel : ViewModel() {
             _mainInfo.value = mainInfo
             _intraId.value = mainInfo.login
             _profileImageUrl.value = mainInfo.profileImage
-            Log.d("tagAt", mainInfo.tagAt)
             if (mainInfo.inoutState == "IN") {
                 _inOutState.value = true
                 _latestTagTime.value = mainInfo.tagAt
