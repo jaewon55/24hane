@@ -63,7 +63,7 @@
 
     <color name="overview_in_color">#333333</color>
     <color name="intra_id_in_color">#ffffff</color>
-    <color name="intra_id_out_color">#333333</color>
+    <color name="intra_id_out_color">#ffffff</color>
     <color name="bottom_select_color">#ffffff</color>
     <color name="log_list_background">#333333</color>
     <color name="etc_title_color">#EAEAEA</color>

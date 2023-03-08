@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -440,4 +441,11 @@ fun reissueLoadingButton(
         view.backgroundTintList =
             ColorStateList.valueOf(getColorHelper(view.context, R.color.front_gradient_end))
     }
+}
+
+@BindingAdapter("setInOutColor")
+fun setInOutColor(
+    view: TextView,
+    inOutState: Boolean
+) {
 }
