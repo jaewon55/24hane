@@ -51,7 +51,7 @@ fun MonthTimeLogContainer.getLogTableList(day: Int, inOutState: Boolean): List<L
             second -= min * 60
             String.format("%02d:%02d:%02d", hour, min, second)
         } ?: run {
-            if (day == TodayCalendarUtils.day && monthLog.indexOf(log) == 0) {
+            if (inOutState && day == TodayCalendarUtils.day && monthLog.indexOf(log) == 0) {
                 "-"
             } else {
                 "누락"
