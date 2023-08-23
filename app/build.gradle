@@ -9,12 +9,12 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 android {
     namespace 'com.hane24.hoursarenotenough24'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.hane24.hoursarenotenough24"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 4
         versionName "2.0"
         buildConfigField "String", "LOGIN_URL", properties['login_url']
