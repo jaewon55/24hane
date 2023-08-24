@@ -46,6 +46,7 @@
             app:rippleColor="@color/white"
             app:selectedDay="@{viewModel.calendarDay}"
             app:selectedMonth="@{viewModel.calendarMonth}"
+            app:selectedYear="@{viewModel.calendarYear}"
             app:strokeWidth="0dp"
             app:strokeColor="@color/today_select_color"
             tools:text="29" />

@@ -165,10 +165,11 @@ fun bindCalendarRecyclerView(
     adapter.submitList(data)
 }
 
-@BindingAdapter("item", "selectedDay", "selectedMonth", requireAll = false)
+@BindingAdapter("item", "selectedYear", "selectedDay", "selectedMonth", requireAll = false)
 fun bindCalendarItem(
     view: MaterialButton,
     item: CalendarItem,
+    selectedYear: Int,
     selectedDay: Int,
     selectedMonth: Int,
 ) {
@@ -195,7 +196,11 @@ fun bindCalendarItem(
     view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
     view.strokeWidth = 0
 
-    if (selectedMonth == TodayCalendarUtils.month && item.day == TodayCalendarUtils.day && item.day != selectedDay) {
+    if (selectedYear == TodayCalendarUtils.year &&
+        selectedMonth == TodayCalendarUtils.month &&
+        item.day == TodayCalendarUtils.day &&
+        item.day != selectedDay
+    ) {
         view.setTextColor(getColorHelper(view.context, R.color.today_select_color))
         view.backgroundTintList =
             ColorStateList.valueOf(getColorHelper(view.context, R.color.log_list_background))
