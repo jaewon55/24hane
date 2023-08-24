@@ -15,8 +15,8 @@ android {
         applicationId "com.hane24.hoursarenotenough24"
         minSdk 21
         targetSdk 33
-        versionCode 4
-        versionName "2.0"
+        versionCode 6
+        versionName "2.1"
         buildConfigField "String", "LOGIN_URL", properties['login_url']
         buildConfigField "String", "BASE_URL", properties['base_url']
         buildConfigField "String", "PAGE_GUIDE", properties['page_guide']
