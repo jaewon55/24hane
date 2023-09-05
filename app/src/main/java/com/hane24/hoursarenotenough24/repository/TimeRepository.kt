@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.repository
 
-import android.util.Log
 import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.network.Hane42Apis
@@ -68,7 +67,18 @@ class TimeRepository(private val db: TimeDatabase) {
 
     private fun shouldReloadDataFromServer(data: TimeDatabaseDto): Boolean {
         val updateTime = SimpleDateFormat("yyyyMM", Locale("ko")).format(data.updateTime)
-        return updateTime == data.date.substring(0, 6)
+        val dataDate = data.date.substring(0, 6)
+        var y = TodayCalendarUtils.year
+        val m = TodayCalendarUtils.month.minus(1).let {
+            if (it == 0) {
+                --y
+                12
+            } else {
+                it
+            }
+        }
+        val lastMonth = String.format("%04d%02d", y, m)
+        return updateTime == dataDate || lastMonth == dataDate
     }
 
 }
