@@ -1,13 +1,11 @@
 package com.hane24.hoursarenotenough24.overview
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.ClusterPopulationInfo
-import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
@@ -99,7 +97,7 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetAccumulationInfoApi() {
         try {
-            _accumulationTime.value = Hane42Apis.hane42ApiService.getAccumulationTime(accessToken)
+            _accumulationTime.value = Hane24Apis.hane24ApiService.getAccumulationTime(accessToken)
             Log.i("accumulation", "${accumulationTime.value}")
 
             _accumulationTime.value?.let {
@@ -132,7 +130,7 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetCadetPerClusterApi() {
         try {
-            _clusterPopulation.value = Hane42Apis.hane42ApiService.getCadetPerCluster(accessToken)
+            _clusterPopulation.value = Hane24Apis.hane24ApiService.getCadetPerCluster(accessToken)
             _state.value = State.SUCCESS
         } catch (err: HttpException) {
             Log.i("api", "${err.message()}")
@@ -153,7 +151,7 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetMainInfoApi() {
         try {
-            val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
+            val mainInfo = Hane24Apis.hane24ApiService.getMainInfo(accessToken)
             _mainInfo.value = mainInfo
             _intraId.value = mainInfo.login
             _profileImageUrl.value = mainInfo.profileImage

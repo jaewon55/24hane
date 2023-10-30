@@ -35,7 +35,7 @@ class CustomProgressbar(context: Context, attrs: AttributeSet?): View(context, a
         return SweepGradient(size - 10 / 2, size - 10 / 2,  colors, positions)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         val size = (min(super.getHeight(), super.getWidth()) - 10).toFloat()

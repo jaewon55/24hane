@@ -1,7 +1,5 @@
 package com.hane24.hoursarenotenough24.reissue
 
-import android.app.Activity
-import android.content.Context
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
@@ -9,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.network.ReissueRequestResult
 import com.hane24.hoursarenotenough24.network.ReissueState
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
@@ -88,7 +86,7 @@ class ReissueViewModel : ViewModel() {
 
     private suspend fun useGetReissueStateApi() {
         try {
-            _reissueState.value = Hane42Apis.hane42ApiService.getReissueState(accessToken)
+            _reissueState.value = Hane24Apis.hane24ApiService.getReissueState(accessToken)
         } catch (err: HttpException) {
             when (err.code()) {
                 404 -> {
@@ -107,7 +105,7 @@ class ReissueViewModel : ViewModel() {
 
     private suspend fun usePostReissueApi() {
         try {
-            _reissueResult.value = Hane42Apis.hane42ApiService.postReissueRequest(accessToken)
+            _reissueResult.value = Hane24Apis.hane24ApiService.postReissueRequest(accessToken)
             useGetReissueStateApi()
         } catch (err: HttpException) {
             when (err.code()) {
@@ -127,7 +125,7 @@ class ReissueViewModel : ViewModel() {
 
     private suspend fun usePatchReissueFinish() {
         try {
-            _reissueResult.value = Hane42Apis.hane42ApiService.patchReissueFinish(accessToken)
+            _reissueResult.value = Hane24Apis.hane24ApiService.patchReissueFinish(accessToken)
             useGetReissueStateApi()
         } catch (err: HttpException) {
             when (err.code()) {

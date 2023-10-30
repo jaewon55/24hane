@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.transition.TransitionInflater
-import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.LicenseDialogFragment
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
@@ -20,12 +19,11 @@ import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.BASE_URL
 import com.hane24.hoursarenotenough24.reissue.ReissueFragment
-import com.hane24.hoursarenotenough24.repository.TimeRepository
+import com.hane24.hoursarenotenough24.repository.TimeRepositoryC
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.sql.Time
 
 class EtcOptionFragment : Fragment() {
     private lateinit var binding: FragmentEtcOptionBinding
@@ -121,7 +119,7 @@ class EtcOptionFragment : Fragment() {
     private fun logOutOnClick() {
         SharedPreferenceUtils.saveAccessToken("")
         CoroutineScope(Dispatchers.IO).launch {
-            TimeRepository(createDatabase() as TimeDatabase).deleteAll()
+            TimeRepositoryC(createDatabase() as TimeDatabase).deleteAll()
         }
 
         val intent = Intent(requireActivity(), LoginActivity::class.java)

@@ -9,7 +9,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 android {
     namespace 'com.hane24.hoursarenotenough24'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.hane24.hoursarenotenough24"
@@ -64,14 +64,24 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Room
-    implementation("androidx.room:room-runtime:2.3.0")
-    kapt("androidx.room:room-compiler:2.3.0")
-    implementation("androidx.room:room-ktx:2.3.0")
+    def room_version = "2.6.0"
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
     kapt 'org.xerial:sqlite-jdbc:3.34.0'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.15.0'
     kapt 'com.github.bumptech.glide:compiler:4.15.0'
+
+    // test
+    testImplementation 'androidx.test:core-ktx:1.5.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
+    testImplementation "androidx.test.ext:junit-ktx:1.1.5"
+    testImplementation "org.robolectric:robolectric:4.10.3"
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation("androidx.room:room-testing:2.6.0")
 
 
     implementation 'androidx.core:core-ktx:1.7.0'

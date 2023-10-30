@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -10,7 +9,7 @@ import com.hane24.hoursarenotenough24.data.*
 import com.hane24.hoursarenotenough24.database.asDomainModel
 import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.repository.TimeRepository
+import com.hane24.hoursarenotenough24.repository.TimeRepositoryC
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.*
 import retrofit2.HttpException
@@ -19,7 +18,7 @@ import java.util.*
 
 class LogListViewModel : ViewModel() {
 
-    private val repository = TimeRepository(createDatabase())
+    private val repository = TimeRepositoryC(createDatabase())
 
     private val _calendarYear = MutableLiveData(TodayCalendarUtils.year)
     val calendarYear: LiveData<Int>

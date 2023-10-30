@@ -13,7 +13,7 @@ val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
-interface hane42Api {
+interface Hane24Api {
     @GET("/user/login/islogin")
     suspend fun isLogin(
         @Header("Authorization") token: String?
@@ -23,21 +23,6 @@ interface hane42Api {
     suspend fun getMainInfo(
         @Header("Authorization") token: String?
     ): MainInfo
-
-    @GET("/v2/tag-log/getTagPerDay")
-    suspend fun getInOutInfoPerDay(
-        @Header("Authorization") token: String?,
-        @Query("year") year: Int,
-        @Query("month") month: Int,
-        @Query("day") day: Int
-    ): InOutTimeContainer
-
-    @GET("/v2/tag-log/getTagPerMonth")
-    suspend fun getInOutInfoPerMonth(
-        @Header("Authorization") token: String?,
-        @Query("year") year: Int,
-        @Query("month") month: Int,
-    ): InOutTimeContainer
 
     @GET("/v2/tag-log/getAllTagPerMonth")
     suspend fun getAllTagPerMonth(
@@ -72,6 +57,6 @@ interface hane42Api {
     ): ReissueRequestResult
 }
 
-object Hane42Apis {
-    val hane42ApiService by lazy { retrofit.create(hane42Api::class.java) }
+object Hane24Apis {
+    val hane24ApiService by lazy { retrofit.create(Hane24Api::class.java) }
 }

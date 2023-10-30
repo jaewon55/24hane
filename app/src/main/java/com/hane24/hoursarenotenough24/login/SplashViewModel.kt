@@ -1,12 +1,11 @@
 package com.hane24.hoursarenotenough24.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
-import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.Hane24Apis
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -30,7 +29,7 @@ class SplashViewModel : ViewModel() {
 
     suspend fun isLogin(accessToken: String?): State {
         return try {
-            val result = Hane42Apis.hane42ApiService.isLogin(accessToken)
+            val result = Hane24Apis.hane24ApiService.isLogin(accessToken)
 
             if (result.code() == 204)
                 State.SUCCESS
