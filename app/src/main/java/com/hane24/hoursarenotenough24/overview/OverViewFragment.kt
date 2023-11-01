@@ -32,6 +32,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.transition.ChangeBounds
@@ -83,11 +86,20 @@ class OverViewFragment : Fragment() {
         initViewPager()
         measureCardHeight()
         binding.overviewProfileImage.clipToOutline = true
-        viewModel.monthProgressPercent.observe(requireActivity()) {
-            progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.monthProgressPercent.collect {
+                    progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
+                }
+            }
         }
-        viewModel.dayProgressPercent.observe(requireActivity()) {
-            progressChangeLogic(binding.overviewTodayProgressbar, it.toFloat())
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dayProgressPercent.collect {
+                    progressChangeLogic(binding.overviewTodayProgressbar, it.toFloat())
+                }
+            }
         }
 
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
@@ -101,7 +113,6 @@ class OverViewFragment : Fragment() {
         }
         observeErrorState()
 
-        Log.i("token", "${SharedPreferenceUtils.getAccessToken()}")
         return binding.root
     }
 
@@ -131,13 +142,17 @@ class OverViewFragment : Fragment() {
 
         pager.adapter = adapter
 
-        viewModel.accumulationTime.observe(requireActivity()) {
-            it?.let {
-                val items = listOf(
-                    TimeInfo(it.sixWeekAccumulationTime, 0),
-                    TimeInfo(it.sixMonthAccumulationTime, 1)
-                )
-                adapter.setItem(items)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.accumulationTime.collect {
+                    it?.let {
+                        val items = listOf(
+                            TimeInfo(it.sixWeekAccumulationTime, 0),
+                            TimeInfo(it.sixMonthAccumulationTime, 1)
+                        )
+                        adapter.setItem(items)
+                    }
+                }
             }
         }
         TabLayoutMediator(binding.overviewGraphTab, pager) { _,_ -> }.attach()
@@ -298,8 +313,12 @@ class OverViewFragment : Fragment() {
     }
 
     private fun observeErrorState() {
-        viewModel.state.observe(viewLifecycleOwner) { state: State? ->
-            state?.let { handleError(it) }
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect {
+                    it?.let { handleError(it) }
+                }
+            }
         }
     }
 

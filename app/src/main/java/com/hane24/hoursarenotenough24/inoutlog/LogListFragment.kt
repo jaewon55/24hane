@@ -43,6 +43,7 @@ class LogListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         initBinding(inflater, container)
+        overViewViewModel.inOutState
         observeErrorState()
         observeInOutState()
         setCalendarDateOnClick()
@@ -81,9 +82,9 @@ class LogListFragment : Fragment() {
         }
 
     private fun observeInOutState() {
-        overViewViewModel.inOutState.observe(viewLifecycleOwner) {
-            viewModel.setInOutState(it)
-        }
+//        overViewViewModel.inOutState.observe(viewLifecycleOwner) {
+//            viewModel.setInOutState(it)
+//        }
     }
 
     private fun goToLogin(state: State) {

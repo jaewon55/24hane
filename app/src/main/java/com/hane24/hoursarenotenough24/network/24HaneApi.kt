@@ -58,5 +58,5 @@ interface Hane24Api {
 }
 
 object Hane24Apis {
-    val hane24ApiService by lazy { retrofit.create(Hane24Api::class.java) }
+    val hane24ApiService: Hane24Api by lazy { retrofit.create(Hane24Api::class.java) }
 }

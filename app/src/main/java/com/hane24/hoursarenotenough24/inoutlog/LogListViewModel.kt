@@ -94,7 +94,7 @@ class LogListViewModel : ViewModel() {
     val errorState: LiveData<State?>
         get() = _errorState
 
-    private val _inOutState = MutableLiveData<Boolean>(null)
+    private val _inOutState = MutableLiveData<Boolean>(true)
 
     init {
         viewModelScope.launch {

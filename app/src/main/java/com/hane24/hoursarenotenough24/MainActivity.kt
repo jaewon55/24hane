@@ -12,22 +12,31 @@ import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
+import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
+import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
+import com.hane24.hoursarenotenough24.repository.UserRepository
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.getColorHelper
 import com.hane24.hoursarenotenough24.widget.BasicWidget
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
     }
-    private val overViewViewModel: OverViewViewModel by viewModels()
+    private val overViewViewModel: OverViewViewModel by viewModels {
+        OverViewModelFactory(App.sharedPreferenceUtilss, UserRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss))
+    }
     private val logListViewModel: LogListViewModel by viewModels()
     private val reissueViewModel: ReissueViewModel by viewModels()
 
@@ -112,13 +121,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRefresh() {
-        overViewViewModel.refreshLoading.observe(this) {
-            if (!it
-                && logListViewModel.loadingState.value == false
-                && reissueViewModel.loadingState.value == false
-                && binding.swipeRefreshLayout.isRefreshing
-            ) {
-                binding.swipeRefreshLayout.isRefreshing = false
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                overViewViewModel.refreshLoading.collect {
+                    if (!it
+                        && logListViewModel.loadingState.value == false
+                        && reissueViewModel.loadingState.value == false
+                        && binding.swipeRefreshLayout.isRefreshing
+                    ) {
+                        binding.swipeRefreshLayout.isRefreshing = false
+                    }
+                }
             }
         }
         logListViewModel.loadingState.observe(this) {

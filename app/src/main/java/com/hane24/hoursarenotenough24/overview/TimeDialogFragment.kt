@@ -3,9 +3,11 @@ package com.hane24.hoursarenotenough24.overview
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewDialogBinding
+import kotlinx.coroutines.flow.toList
 
 class TimeDialogFragment(private val isMonth: Boolean) : DialogFragment() {
     private val binding by lazy { FragmentOverviewDialogBinding.inflate(layoutInflater) }
@@ -15,24 +17,8 @@ class TimeDialogFragment(private val isMonth: Boolean) : DialogFragment() {
         val dialog = AlertDialog.Builder(context).create()
 
         val numPicker = binding.dialogNumPicker
-        val currentTargetTime: Long
 
-        numPicker.minValue = 0
-        if (isMonth) {
-            currentTargetTime = viewModel.getMTargetTime() ?: 0
-            numPicker.maxValue = getPickerIndex(MONTH_MIN_VALUE, MONTH_MAX_VALUE, MONTH_STEP)
-            numPicker.value =
-                getPickerIndex(MONTH_MIN_VALUE, currentTargetTime.toInt() / 3600, MONTH_STEP)
-            numPicker.displayedValues =
-                getDisplayedValues(numPicker.maxValue + 1, MONTH_MIN_VALUE, MONTH_STEP)
-        } else {
-            currentTargetTime = viewModel.getDTargetTime() ?: 0
-            numPicker.maxValue = getPickerIndex(DAY_MIN_VALUE, DAY_MAX_VALUE, DAY_STEP)
-            numPicker.value =
-                getPickerIndex(DAY_MIN_VALUE, currentTargetTime.toInt() / 3600, DAY_STEP)
-            numPicker.displayedValues =
-                getDisplayedValues(numPicker.maxValue + 1, DAY_MIN_VALUE, DAY_STEP)
-        }
+        initNumberPicker(numPicker)
 
         binding.dialogCancel.setOnClickListener {
             // 취소 버튼
@@ -42,11 +28,7 @@ class TimeDialogFragment(private val isMonth: Boolean) : DialogFragment() {
 
         binding.dialogSave.setOnClickListener {
             // 확인 버튼
-            val select = getSelectValue(numPicker.value) * 3600L
-            if (currentTargetTime != select) {
-                viewModel.changeTargetTime(select, isMonth)
-            }
-
+            viewModel.onClickSaveTargetTime(isMonth, getSelectValue(numPicker.value))
             dialog.dismiss()
             dialog.cancel()
         }
@@ -54,6 +36,17 @@ class TimeDialogFragment(private val isMonth: Boolean) : DialogFragment() {
         dialog.create()
 
         return dialog
+    }
+
+    private fun initNumberPicker(numPicker: NumberPicker) {
+        val minValue = if (isMonth) MONTH_MIN_VALUE else DAY_MIN_VALUE
+        val maxValue = if (isMonth) MONTH_MAX_VALUE else DAY_MAX_VALUE
+        val step = if (isMonth) MONTH_STEP else DAY_STEP
+        val currentTargetTime = if (isMonth) viewModel.monthTargetTime.value else viewModel.dayTargetTime.value
+
+        numPicker.maxValue = getPickerIndex(minValue, maxValue, step)
+        numPicker.value = getPickerIndex(minValue, currentTargetTime, step)
+        numPicker.displayedValues = getDisplayedValues(numPicker.maxValue + 1, minValue, step)
     }
 
     private fun getPickerIndex(min: Int, max: Int, step: Int) = (max - min) / step
