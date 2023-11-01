@@ -4,10 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
+        <import type="java.util.Calendar"/>
         <variable
-            name="viewModel"
-            type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />
-
+            name="graphInfo"
+            type="com.hane24.hoursarenotenough24.overview.GraphInfo" />
+        <variable
+            name="selectIndex"
+            type="int" />
+        <variable
+            name="density"
+            type="float" />
+        <variable
+            name="isMonth"
+            type="boolean" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -34,7 +44,7 @@
                 android:id="@+id/overview_graph_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="최근 주간 그래프"
+                android:text="@{isMonth ? `최근 월간 그래프` : `최근 주간 그래프`}"
                 android:textColor="@color/default_text"
                 android:textSize="14dp"
                 android:textStyle="bold"
@@ -45,7 +55,7 @@
                 android:id="@+id/overview_graph_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(6주)"
+                android:text="@{isMonth ? `(6개월)` : `(6주)`}"
                 android:textSize="14dp"
                 android:textColor="@color/overview_graph_type_text_color"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_graph_name"
@@ -86,7 +96,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="9dp"
-                            android:text="@string/default_graph_date"
+                            android:text="@{graphInfo.parseDateText(selectIndex, Calendar.getInstance())}"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,7 +106,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="9dp"
-                            android:text="@string/default_graph_average"
+                            android:text="@{@string/overview_graph_average_time(graphInfo.calculateAverageTime(selectIndex))}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@+id/overview_graph_total_time"
                             app:layout_constraintTop_toBottomOf="@+id/overview_graph_total_time" />
@@ -109,7 +119,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginEnd="22dp"
                             android:layout_marginBottom="4dp"
-                            android:text="@string/default_graph_total"
+                            android:text="@{@string/overview_graph_total_time(graphInfo.calculateTotalTime(selectIndex))}"
                             app:layout_constraintBottom_toTopOf="@+id/overview_graph_average_time"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -248,6 +258,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
+                            app:graphHeight="@{graphInfo.calculateGraphHeight(0, density)}"
                             app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph2"
                             app:layout_constraintStart_toStartOf="parent" />
@@ -257,6 +268,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
+                            app:graphHeight="@{graphInfo.calculateGraphHeight(1, density)}"
                             app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph3"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph1" />
@@ -266,6 +278,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
+                            app:graphHeight="@{graphInfo.calculateGraphHeight(2, density)}"
                             app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph4"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph2" />
@@ -275,6 +288,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
+                            app:graphHeight="@{graphInfo.calculateGraphHeight(3, density)}"
                             app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph5"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph3" />
@@ -284,6 +298,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
+                            app:graphHeight="@{graphInfo.calculateGraphHeight(4, density)}"
                             app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toStartOf="@+id/overview_graph6"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph4" />
@@ -293,6 +308,7 @@
                             android:layout_width="25dp"
                             android:layout_height="87dp"
                             android:src="@drawable/graph"
+                            app:graphHeight="@{graphInfo.calculateGraphHeight(5, density)}"
                             app:layout_constraintBottom_toTopOf="@id/overview_graph_recent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/overview_graph5" />
@@ -311,6 +327,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
+                    android:visibility="@{selectIndex == 0 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/overview_graph_selector2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
@@ -320,7 +337,7 @@
                     android:id="@+id/overview_graph_selector2"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
+                    android:visibility="@{selectIndex == 1 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/overview_graph_selector3"
                     app:layout_constraintStart_toEndOf="@id/overview_graph_selector1"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
@@ -330,7 +347,7 @@
                     android:id="@+id/overview_graph_selector3"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
+                    android:visibility="@{selectIndex == 2 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/overview_graph_selector4"
                     app:layout_constraintStart_toEndOf="@id/overview_graph_selector2"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
@@ -340,7 +357,7 @@
                     android:id="@+id/overview_graph_selector4"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
+                    android:visibility="@{selectIndex == 3 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/overview_graph_selector5"
                     app:layout_constraintStart_toEndOf="@id/overview_graph_selector3"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
@@ -350,7 +367,7 @@
                     android:id="@+id/overview_graph_selector5"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
+                    android:visibility="@{selectIndex == 4 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toStartOf="@+id/overview_graph_selector6"
                     app:layout_constraintStart_toEndOf="@id/overview_graph_selector4"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"
@@ -361,7 +378,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"
-                    android:visibility="invisible"
+                    android:visibility="@{selectIndex == 5 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/overview_graph_selector5"
                     app:layout_constraintTop_toBottomOf="@+id/overview_graph_info_card"

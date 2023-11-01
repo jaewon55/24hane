@@ -1,70 +1,34 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
-import android.animation.LayoutTransition
-import android.animation.LayoutTransition.TransitionListener
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.app.ActionBar.LayoutParams
-import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
-import android.text.method.Touch
-import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import androidx.transition.ChangeBounds
 import androidx.transition.TransitionInflater
-import androidx.transition.TransitionManager
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import com.hane24.hoursarenotenough24.App
-import com.hane24.hoursarenotenough24.MainActivity
 
 import com.hane24.hoursarenotenough24.R
-import com.hane24.hoursarenotenough24.database.TimeDatabase
-import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
-import com.hane24.hoursarenotenough24.databinding.FragmentOverviewGraphViewBinding
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.network.InOutTimeItem
 import com.hane24.hoursarenotenough24.notification.NotificationFragment
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
-import com.hane24.hoursarenotenough24.utils.bindDrawerClickable
 import com.hane24.hoursarenotenough24.view.CustomProgressbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.min
 
 class OverViewFragment : Fragment() {
     private lateinit var binding: FragmentOverviewBinding
@@ -138,19 +102,15 @@ class OverViewFragment : Fragment() {
         reverseViewVisibility(binding.overviewTodayCard)
     }
     private fun initViewPager() {
-        val adapter = GraphViewPagerAdapter()
+        val adapter = GraphViewPagerAdapter(viewModel.accumulationGraphInfo.value)
 
         pager.adapter = adapter
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.accumulationTime.collect {
-                    it?.let {
-                        val items = listOf(
-                            TimeInfo(it.sixWeekAccumulationTime, 0),
-                            TimeInfo(it.sixMonthAccumulationTime, 1)
-                        )
-                        adapter.setItem(items)
+                viewModel.accumulationGraphInfo.collect {
+                    it.let {
+                        adapter.setItem(it)
                     }
                 }
             }
@@ -339,5 +299,4 @@ class OverViewFragment : Fragment() {
         startActivity(intent).also { requireActivity().finish() }
     }
 
-    data class TimeInfo(val accumulationTimes: List<Long>, val timeType: Int)
 }

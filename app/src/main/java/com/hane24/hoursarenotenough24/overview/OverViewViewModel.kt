@@ -21,16 +21,21 @@ class OverViewViewModel(
     sharedPreferenceUtilss: SharedPreferenceUtilss,
     userRepository: UserRepository,
 ): ViewModel() {
+
+    /**
+     * UseCase
+     */
+
     private val parseTimeUseCase = ParseTimeUseCase()
     private val changeTargetTimeUseCase = ChangeTargetTimeUseCase(sharedPreferenceUtilss)
     private val getUserInfoUseCase = GetUserInfoUseCase(userRepository)
     private val calculateProgressUseCase = CalculateProgressUseCase()
 
-    private val _state = MutableStateFlow<State?>(null)
-    val state = _state.asStateFlow()
 
-    private val _accumulationTime = MutableStateFlow<AccumulationTimeInfo?>(null)
-    val accumulationTime: StateFlow<AccumulationTimeInfo?> = _accumulationTime.asStateFlow()
+
+    /**
+     * TargetTime
+     */
 
     private val _dayTargetTime = MutableStateFlow(0)
     val dayTargetTime: StateFlow<Int> =
@@ -41,6 +46,13 @@ class OverViewViewModel(
     val monthTargetTime: StateFlow<Int> =
         _monthTargetTime.map { parseTimeUseCase.parseTargetTime(it) }
             .stateIn(viewModelScope, SharingStarted.Lazily, 0)
+
+    /**
+     * AccumulationTime
+     */
+
+    private val _accumulationTime = MutableStateFlow<AccumulationTimeInfo?>(null)
+    val accumulationTime: StateFlow<AccumulationTimeInfo?> = _accumulationTime.asStateFlow()
 
     val dayAccumulationTime: StateFlow<Pair<String, String>> =
         accumulationTime.map { parseTimeUseCase.parseAccumulationTime(it?.todayAccumulationTime) }
@@ -60,6 +72,21 @@ class OverViewViewModel(
             calculateProgressUseCase(acc?.monthAccumulationTime, target)
     }.stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
+    val accumulationGraphInfo: StateFlow<List<GraphInfo>> =
+        accumulationTime.map { transformGraphInfo(it?.sixWeekAccumulationTime, it?.sixMonthAccumulationTime) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Lazily,
+                listOf(
+                    GraphInfo(List(6) { 0 }, false),
+                    GraphInfo(List(6) { 0 }, true)
+                )
+            )
+
+    /**
+     *  MainInfo
+     */
+
     private val _mainInfo = MutableStateFlow<MainInfo?>(null)
 
     val intraId: StateFlow<String> =
@@ -78,6 +105,12 @@ class OverViewViewModel(
         _mainInfo.map { transformPopulationOfSeochoAndGaepo(it) }
             .stateIn(viewModelScope, SharingStarted.Lazily, 0 to 0)
 
+    /**
+     *  State
+     */
+
+    private val _state = MutableStateFlow<State?>(null)
+    val state = _state.asStateFlow()
 
     val initState: StateFlow<Boolean> = _mainInfo.combine(accumulationTime) { mainInfo: MainInfo?, accTime: AccumulationTimeInfo? ->
         mainInfo != null && accTime != null
@@ -177,6 +210,14 @@ class OverViewViewModel(
         if (currentTargetTime != selectTime) {
             changeTargetTime(selectTime, isMonth)
         }
+    }
+
+    private fun transformGraphInfo(timeOfWeek: List<Long>?, timeOfMonth: List<Long>?): List<GraphInfo> {
+        val default = listOf(0L, 0L, 0L, 0L, 0L, 0L)
+        val weekGraphInfo = GraphInfo(timeOfWeek ?: default, false)
+        val monthGraphInfo = GraphInfo(timeOfMonth ?: default, true)
+
+        return listOf(weekGraphInfo, monthGraphInfo)
     }
 }
 
