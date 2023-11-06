@@ -1,12 +1,8 @@
 package com.hane24.hoursarenotenough24.database
 
-import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.hane24.hoursarenotenough24.data.TimeLogItem
-import com.hane24.hoursarenotenough24.network.InOutTimeContainer
-import com.hane24.hoursarenotenough24.network.InOutTimeItem
 import java.text.SimpleDateFormat
 import java.util.*
 

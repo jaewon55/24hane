@@ -1,8 +1,11 @@
 package com.hane24.hoursarenotenough24.data
 
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
+import com.hane24.hoursarenotenough24.network.InOutLog
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -31,7 +34,7 @@ data class LogTableItem(
 data class MonthTimeLogContainer(
     val year: Int,
     val month: Int,
-    var monthLog: List<TimeLogItem>
+    var logs: List<TimeLogItem>
 )
 
 data class TimeLogItem(
@@ -42,7 +45,7 @@ data class TimeLogItem(
 )
 
 fun MonthTimeLogContainer.getLogTableList(day: Int, inOutState: Boolean): List<LogTableItem> {
-    return monthLog.filter { it.day == day }.map { log ->
+    return logs.filter { it.day == day }.map { log ->
         val durationString = log.durationTime?.let { time ->
             var second = time
             val hour = second / 3600
@@ -51,7 +54,7 @@ fun MonthTimeLogContainer.getLogTableList(day: Int, inOutState: Boolean): List<L
             second -= min * 60
             String.format("%02d:%02d:%02d", hour, min, second)
         } ?: run {
-            if (inOutState && day == TodayCalendarUtils.day && monthLog.indexOf(log) == 0) {
+            if (inOutState && day == TodayCalendarUtils.day && logs.indexOf(log) == 0) {
                 "-"
             } else {
                 "누락"
@@ -71,7 +74,7 @@ fun MonthTimeLogContainer.getCalendarList(): List<CalendarItem> {
         newList.add(CalendarItem(0, 0, false))
     }
     for (i in 1..calendar.calculateDaysOfMonth()) {
-        val durationTime = monthLog.filter { it.day == i }.sumOf { it.durationTime ?: 0 }
+        val durationTime = logs.filter { it.day == i }.sumOf { it.durationTime ?: 0 }
         val isNextDay = when {
             calendar.get(Calendar.YEAR) < TodayCalendarUtils.year -> false
             calendar.get(Calendar.MONTH) + 1 < TodayCalendarUtils.month -> false
@@ -81,4 +84,43 @@ fun MonthTimeLogContainer.getCalendarList(): List<CalendarItem> {
         newList.add(CalendarItem(i, durationTime, isNextDay))
     }
     return newList
+}
+
+data class DomainModelDto(
+    val year: Int,
+    val month: Int,
+    val tagLogs: List<TagLog>
+)
+
+data class TagLog(
+    val inTimeStamp: Long?,
+    val outTimeStamp: Long?,
+    val durationSecond: Long?
+)
+
+fun List<TagLog>.asDatabaseDto(year: Int, month: Int): List<TimeDatabaseDto> {
+    val date = String.format("%4d%02d", year, month)
+    val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
+    return if (isEmpty()) {
+        listOf(
+            TimeDatabaseDto(
+                date + "00", 0, 0, 0, System.currentTimeMillis()
+            )
+        )
+    } else {
+        map { log ->
+            val dateOfLog = when {
+                log.inTimeStamp != null -> simpleDateFormat.format(log.inTimeStamp * 1000)
+                log.outTimeStamp != null -> simpleDateFormat.format(log.outTimeStamp * 1000)
+                else -> date + "00"
+            }
+            TimeDatabaseDto(
+                dateOfLog,
+                log.inTimeStamp ?: 0,
+                log.outTimeStamp ?: 0,
+                log.durationSecond,
+                System.currentTimeMillis()
+            )
+        }
+    }
 }

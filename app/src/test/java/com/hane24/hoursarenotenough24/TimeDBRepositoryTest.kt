@@ -3,6 +3,7 @@ package com.hane24.hoursarenotenough24
 import android.content.Context
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
+import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
@@ -30,7 +31,7 @@ class TimeDBRepositoryTest {
     fun `읽기 테스트`() = runTest {
         //given
         val timeDto = TimeDatabaseDto(
-            "20231030",
+            "20230930",
             100,
             1001,
             100,
@@ -40,10 +41,13 @@ class TimeDBRepositoryTest {
         db.timeDatabaseDAO().insertAll(timeDto)
 
         //when
-        val result = timeDBRepository.getTimeByMonth(2023, 10, "123")
+        val result = timeDBRepository.getTagLogPerMonth(2023, 9)
 
         //then
-        Assert.assertEquals(timeDto, result.firstOrNull())
+        Assert.assertEquals(
+            TagLog(timeDto.inTimeStamp, timeDto.outTimeStamp, timeDto.duration),
+            result.firstOrNull()
+        )
     }
 
 }

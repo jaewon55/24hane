@@ -80,7 +80,7 @@ class LogListViewModel : ViewModel() {
     }
 
     val dayAccumulationTime = Transformations.map(logTableList) {
-        val time = logContainer.value?.monthLog
+        val time = logContainer.value?.logs
             ?.filter { it.day == _calendarDay.value }
             ?.sumOf { it.durationTime ?: 0 } ?: 0
         parseAccumulationTime(time)
