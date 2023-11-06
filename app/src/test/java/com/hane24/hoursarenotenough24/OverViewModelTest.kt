@@ -59,7 +59,7 @@ class OverViewModelTest {
         Mockito.`when`(hane24Api.getMainInfo(sharedPreferenceUtilss.getAccessToken())).thenAnswer {
             MainInfo("test", "test", "IN", "", 10, 10)
         }
-        viewModel.refreshButtonOnClick().join()
+        viewModel.refresh()
 
         //then
         Mockito.verify(hane24Api, times(1))
@@ -85,7 +85,7 @@ class OverViewModelTest {
         Mockito.`when`(hane24Api.getAccumulationTime(sharedPreferenceUtilss.getAccessToken())).thenAnswer {
             accTime
         }
-        viewModel.refreshButtonOnClick().join()
+        viewModel.refresh()
 
         //then
         Mockito.verify(hane24Api, times(1))

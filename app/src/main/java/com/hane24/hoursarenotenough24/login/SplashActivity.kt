@@ -1,22 +1,15 @@
 package com.hane24.hoursarenotenough24.login
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.ActivitySplashBinding
-import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
-import com.hane24.hoursarenotenough24.error.NetworkObserver
-import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
 
 enum class State {
     UNKNOWN_ERROR,
@@ -35,25 +28,12 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setStatusAndNavigationBar()
-        checkNetworkState(NetworkObserverImpl().isConnected())
         checkLogin()
         observeLoginState()
     }
 
-    fun checkLogin() {
+    private fun checkLogin() {
         viewModel.checkLogin()
-    }
-
-    private fun checkNetworkState(networkState: Boolean) {
-        val onClick = DialogInterface.OnClickListener { _, _ ->
-            checkNetworkState(NetworkObserverImpl().isConnected())
-            checkLogin()
-        }
-
-        when (networkState) {
-            false -> NetworkErrorDialog.showNetworkErrorDialog(supportFragmentManager, onClick)
-            true -> return
-        }
     }
 
     private fun observeLoginState() {

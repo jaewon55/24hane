@@ -22,8 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
-import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
-import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
+import com.hane24.hoursarenotenough24.error.ErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.notification.NotificationFragment
@@ -75,8 +74,6 @@ class OverViewFragment : Fragment() {
                 .replace(R.id.fragmentContainerView, NotificationFragment())
                 .commit()
         }
-        observeErrorState()
-
         return binding.root
     }
 
@@ -272,29 +269,28 @@ class OverViewFragment : Fragment() {
         }
     }
 
-    private fun observeErrorState() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect {
-                    it?.let { handleError(it) }
-                }
-            }
-        }
-    }
+//    private fun observeErrorState() {
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.state.collect {
+//                    it?.let { handleError(it) }
+//                }
+//            }
+//        }
+//    }
 
-    private fun handleError(state: State) =
-        when (state) {
-            State.LOGIN_FAIL -> goToLogin(state)
-            State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
-            State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
-                requireActivity().supportFragmentManager
-            ) { _, _ -> viewModel.refreshButtonOnClick() }
-            else -> {}
-        }
+//    private fun handleError(state: State) =
+//        when (state) {
+//            State.LOGIN_FAIL -> goToLogin()
+//            State.UNKNOWN_ERROR -> ErrorDialog.show(requireActivity().supportFragmentManager)
+//            State.NETWORK_FAIL -> NetworkErrorDialog.show(
+//                requireActivity().supportFragmentManager
+//            ) { _, _ -> viewModel.refreshButtonOnClick() }
+//            else -> {}
+//    }
 
-    private fun goToLogin(state: State) {
+    private fun goToLogin() {
         val intent = Intent(activity, LoginActivity::class.java)
-            .putExtra("loginState", state)
 
         startActivity(intent).also { requireActivity().finish() }
     }

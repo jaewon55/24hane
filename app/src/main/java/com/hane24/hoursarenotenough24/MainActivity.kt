@@ -39,16 +39,27 @@ class MainActivity : AppCompatActivity() {
     }
     private val logListViewModel: LogListViewModel by viewModels()
     private val reissueViewModel: ReissueViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(overViewViewModel::refresh) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        binding.lifecycleOwner = this
+        binding.mainViewModel = mainViewModel
         setContentView(binding.root)
         refreshWidget()
         setStatusAndNavigationBar()
         setFragmentsViewModel()
         setRefresh()
         setBottomNavigation()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.errorHandler.collect {
+                    it?.run { handle(this@MainActivity) }
+                }
+            }
+        }
     }
 
     private fun setBottomNavigation() {
@@ -121,41 +132,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRefresh() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                overViewViewModel.refreshLoading.collect {
-                    if (!it
-                        && logListViewModel.loadingState.value == false
-                        && reissueViewModel.loadingState.value == false
-                        && binding.swipeRefreshLayout.isRefreshing
-                    ) {
-                        binding.swipeRefreshLayout.isRefreshing = false
-                    }
-                }
-            }
-        }
-        logListViewModel.loadingState.observe(this) {
-            if (!it
-                && overViewViewModel.refreshLoading.value == false
-                && reissueViewModel.loadingState.value == false
-                && binding.swipeRefreshLayout.isRefreshing
-            ) {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
-        }
-        reissueViewModel.loadingState.observe(this) {
-            if (!it
-                && logListViewModel.loadingState.value == false
-                && overViewViewModel.refreshLoading.value == false
-                && binding.swipeRefreshLayout.isRefreshing
-            ) {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
-        }
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                overViewViewModel.refreshLoading.collect {
+//                    if (!it
+//                        && logListViewModel.loadingState.value == false
+//                        && reissueViewModel.loadingState.value == false
+//                        && binding.swipeRefreshLayout.isRefreshing
+//                    ) {
+//                        binding.swipeRefreshLayout.isRefreshing = false
+//                    }
+//                }
+//            }
+//        }
+//        logListViewModel.loadingState.observe(this) {
+//            if (!it
+//                && overViewViewModel.refreshLoading.value == false
+//                && reissueViewModel.loadingState.value == false
+//                && binding.swipeRefreshLayout.isRefreshing
+//            ) {
+//                binding.swipeRefreshLayout.isRefreshing = false
+//            }
+//        }
+//        reissueViewModel.loadingState.observe(this) {
+//            if (!it
+//                && logListViewModel.loadingState.value == false
+//                && overViewViewModel.refreshLoading.value == false
+//                && binding.swipeRefreshLayout.isRefreshing
+//            ) {
+//                binding.swipeRefreshLayout.isRefreshing = false
+//            }
+//        }
+        binding.swipeRefreshLayout.isRefreshing
         binding.swipeRefreshLayout.setOnRefreshListener {
-            overViewViewModel.refreshButtonOnClick()
-            logListViewModel.refreshButtonOnClick()
-            reissueViewModel.refreshButtonOnClick()
+            mainViewModel.refresh()
+//            overViewViewModel.refreshButtonOnClick()
+//            logListViewModel.refreshButtonOnClick()
+//            reissueViewModel.refreshButtonOnClick()
         }
     }
 

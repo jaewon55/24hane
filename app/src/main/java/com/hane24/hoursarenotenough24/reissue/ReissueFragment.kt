@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,12 +15,9 @@ import androidx.transition.TransitionInflater
 import com.hane24.hoursarenotenough24.MainActivity
 
 import com.hane24.hoursarenotenough24.R
-import com.hane24.hoursarenotenough24.databinding.FragmentLogListBinding
 import com.hane24.hoursarenotenough24.databinding.FragmentReissueBinding
-import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
-import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
+import com.hane24.hoursarenotenough24.error.ErrorDialog
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
-import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.BASE_URL
 
@@ -76,10 +72,10 @@ class ReissueFragment : Fragment() {
 
     private fun handleError(state: State) =
         when (state) {
-            State.UNKNOWN_ERROR, State.SERVER_FAIL -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
-            State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
-                requireActivity().supportFragmentManager
-            ) { _, _ -> viewModel.refreshButtonOnClick() }
+//            State.UNKNOWN_ERROR, State.SERVER_FAIL -> ErrorDialog.show(requireActivity().supportFragmentManager)
+//            State.NETWORK_FAIL -> NetworkErrorDialog.show(
+//                requireActivity().supportFragmentManager
+//            ) { _, _ -> viewModel.refreshButtonOnClick() }
             else -> {}
         }
     private fun setHelpButtonOnClick() {
