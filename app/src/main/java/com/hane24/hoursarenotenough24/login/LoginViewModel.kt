@@ -13,9 +13,9 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 
-class LoginViewModel(private val sharedPreferenceUtilss: SharedPreferenceUtilss) : ViewModel() {
+class LoginViewModel(sharedPreferenceUtilss: SharedPreferenceUtilss) : ViewModel() {
 
-    private val accessToken = SharedPreferenceUtils.getAccessToken()
+    private val accessToken = sharedPreferenceUtilss.getAccessToken()
     private val _state = MutableStateFlow<Boolean>(false)
     val state: StateFlow<Boolean> = _state.asStateFlow()
 
