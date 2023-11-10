@@ -73,34 +73,40 @@ class LogViewModel(
 
     init {
         viewModelScope.launch {
-            getLogs(_year, _month)
+            getLogs(_year, _month, day)
         }
     }
 
     suspend fun reloadLogs(year: Int, month: Int) {
-        getLogs(year, month)
+        getLogs(year, month, day)
     }
 
-    fun updateDate(day: Int?) {
+    fun updateDay(day: Int?) {
         day?.let { this.day = it }
     }
 
-    fun updateDate(year: Int, month: Int, day: Int) {
-        this._year = year
-        this._month = month
-        this.day = day
+    fun updateLogs(year: Int, month: Int, day: Int = 1) {
+        if (year == 2022 && month < 8) return
+        if (year > TodayCalendarUtils.year ||
+            (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month)) {
+            return
+        }
+        viewModelScope.launch {
+            getLogs(year, month, day)
+        }
     }
 
     fun updateInOutState(isIn: Boolean) {
         inOutState = isIn
     }
 
-    private suspend fun getLogs(year: Int, month: Int) {
+    private suspend fun getLogs(year: Int, month: Int, day: Int) {
         try {
             _loadingState.value = true
             _tagLogs = getLogsUseCase(year, month)
             _year = year
             _month = month
+            this.day = day
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500

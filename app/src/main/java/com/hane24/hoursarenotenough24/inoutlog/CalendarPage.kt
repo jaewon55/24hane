@@ -51,7 +51,13 @@ import java.util.Calendar
 import java.util.Locale
 
 @Composable
-private fun CalendarPageHeader(modifier: Modifier = Modifier) {
+private fun CalendarPageHeader(
+    modifier: Modifier = Modifier,
+    year: Int,
+    month: Int,
+    loadingState: Boolean,
+    updateLogs: (Int, Int, Int) -> Unit = { _, _, _ -> }
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -61,14 +67,24 @@ private fun CalendarPageHeader(modifier: Modifier = Modifier) {
     ) {
         IconButton(
             onClick = {
-                Toast.makeText(App.instance.applicationContext, "left", Toast.LENGTH_SHORT).show()
+                var newYear = year
+                val newMonth = month.minus(1).let {
+                    if (it == 0) {
+                        --newYear
+                        12
+                    } else {
+                        it
+                    }
+                }
+                updateLogs(newYear, newMonth, 1)
             },
+            enabled = !loadingState && !(year == 2022 && month == 8),
         ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "last month",
                 modifier = Modifier
-                    .padding(end = 50.dp)
+                    .padding(end = 80.dp)
                     .size(24.dp)
             )
         }
@@ -78,7 +94,7 @@ private fun CalendarPageHeader(modifier: Modifier = Modifier) {
             },
         ) {
             Text(
-                text = "2023.11",
+                text = "$year.$month",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp,
                 color = colorResource(id = R.color.etc_title_color),
@@ -87,14 +103,25 @@ private fun CalendarPageHeader(modifier: Modifier = Modifier) {
         }
         IconButton(
             onClick = {
-                Toast.makeText(App.instance.applicationContext, "right", Toast.LENGTH_SHORT).show()
+                var newYear = year
+                val newMonth = month.plus(1).let {
+                    if (12 < it) {
+                        ++newYear
+                        1
+                    } else {
+                        it
+                    }
+                }
+                updateLogs(newYear, newMonth, 1)
             },
+            enabled =
+            !loadingState && !isToday(year, month, TodayCalendarUtils.day)
         ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "next month",
                 modifier = Modifier
-                    .padding(start = 50.dp)
+                    .padding(start = 80.dp)
                     .size(24.dp)
             )
         }
@@ -419,12 +446,17 @@ fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel = LogVie
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
 
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
-        CalendarPageHeader()
+        CalendarPageHeader(
+            year = viewModel.year,
+            month = viewModel.month,
+            loadingState = loadingState,
+            updateLogs = { y, m, d -> viewModel.updateLogs(y, m, d) }
+        )
         DayOfWeekRow()
         if (loadingState) {
             LogCalendarGrid(
                 gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
-                dayOnClick = { viewModel.updateDate(it) },
+                dayOnClick = { viewModel.updateDay(it) },
                 year = viewModel.year,
                 month = viewModel.month,
                 day = viewModel.day
@@ -459,7 +491,11 @@ fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel = LogVie
 @Composable
 @Preview(showBackground = true)
 private fun HeaderPreview() {
-    CalendarPageHeader()
+    CalendarPageHeader(
+        year = TodayCalendarUtils.year,
+        month = TodayCalendarUtils.month,
+        loadingState = false
+    )
 }
 
 @Composable
