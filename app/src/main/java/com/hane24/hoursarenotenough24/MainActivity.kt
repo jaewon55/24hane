@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -17,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
+import com.hane24.hoursarenotenough24.inoutlog.CalendarPage
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.network.Hane24Apis
@@ -29,6 +33,8 @@ import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.getColorHelper
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 import kotlinx.coroutines.launch
+
+
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {

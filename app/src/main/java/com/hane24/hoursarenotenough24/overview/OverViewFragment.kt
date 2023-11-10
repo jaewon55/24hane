@@ -23,19 +23,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
-import com.hane24.hoursarenotenough24.error.ErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
-import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.notification.NotificationFragment
 import com.hane24.hoursarenotenough24.view.CustomProgressbar
 import kotlinx.coroutines.launch
-import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
-import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
-import com.hane24.hoursarenotenough24.login.LoginActivity
-import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.notification.NotificationFragment
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
-import com.hane24.hoursarenotenough24.view.CustomProgressbar
 
 class OverViewFragment : Fragment() {
     private lateinit var binding: FragmentOverviewBinding
