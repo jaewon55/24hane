@@ -10,6 +10,10 @@
         <variable
             name="overViewViewModel"
             type="com.hane24.hoursarenotenough24.overview.OverViewViewModel" />
+
+        <variable
+            name="mainViewModel"
+            type="com.hane24.hoursarenotenough24.MainViewModel" />
     </data>
 
     <FrameLayout
@@ -41,6 +45,7 @@
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                app:refreshing="@{mainViewModel.loading}"
                 app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

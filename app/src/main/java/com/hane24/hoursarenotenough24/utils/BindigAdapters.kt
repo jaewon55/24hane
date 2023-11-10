@@ -434,9 +434,8 @@ fun reissueLoadingButton(
     }
 }
 
-@BindingAdapter("setInOutColor")
-fun setInOutColor(
-    view: TextView,
-    inOutState: Boolean
-) {
+@BindingAdapter("graphHeight")
+fun setGraphHeight(view: ImageView, height: Int) {
+    view.layoutParams.height = height
+    view.requestLayout()
 }

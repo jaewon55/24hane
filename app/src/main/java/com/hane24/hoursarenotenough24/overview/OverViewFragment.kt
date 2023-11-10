@@ -15,11 +15,20 @@ import androidx.core.animation.doOnEnd
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.TransitionInflater
 import com.google.android.material.tabs.TabLayoutMediator
 
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewBinding
+import com.hane24.hoursarenotenough24.error.ErrorDialog
+import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.login.State
+import com.hane24.hoursarenotenough24.notification.NotificationFragment
+import com.hane24.hoursarenotenough24.view.CustomProgressbar
+import kotlinx.coroutines.launch
 import com.hane24.hoursarenotenough24.error.NetworkErrorDialog
 import com.hane24.hoursarenotenough24.error.UnknownServerErrorDialog
 import com.hane24.hoursarenotenough24.login.LoginActivity
@@ -48,11 +57,20 @@ class OverViewFragment : Fragment() {
         initViewPager()
         measureCardHeight()
         binding.overviewProfileImage.clipToOutline = true
-        viewModel.monthProgressPercent.observe(requireActivity()) {
-            progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.monthProgressPercent.collect {
+                    progressChangeLogic(binding.overviewMonthProgressbar, it.toFloat())
+                }
+            }
         }
-        viewModel.dayProgressPercent.observe(requireActivity()) {
-            progressChangeLogic(binding.overviewTodayProgressbar, it.toFloat())
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dayProgressPercent.collect {
+                    progressChangeLogic(binding.overviewTodayProgressbar, it.toFloat())
+                }
+            }
         }
 
         binding.overviewTodayCard.setOnClickListener { setCardAnimation(it) }
@@ -64,9 +82,6 @@ class OverViewFragment : Fragment() {
                 .replace(R.id.fragmentContainerView, NotificationFragment())
                 .commit()
         }
-        observeErrorState()
-
-        Log.i("token", "${SharedPreferenceUtils.getAccessToken()}")
         return binding.root
     }
 
@@ -92,17 +107,17 @@ class OverViewFragment : Fragment() {
         reverseViewVisibility(binding.overviewTodayCard)
     }
     private fun initViewPager() {
-        val adapter = GraphViewPagerAdapter()
+        val adapter = GraphViewPagerAdapter(viewModel.accumulationGraphInfo.value)
 
         pager.adapter = adapter
 
-        viewModel.accumulationTime.observe(requireActivity()) {
-            it?.let {
-                val items = listOf(
-                    TimeInfo(it.sixWeekAccumulationTime, 0),
-                    TimeInfo(it.sixMonthAccumulationTime, 1)
-                )
-                adapter.setItem(items)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.accumulationGraphInfo.collect {
+                    it.let {
+                        adapter.setItem(it)
+                    }
+                }
             }
         }
         TabLayoutMediator(binding.overviewGraphTab, pager) { _,_ -> }.attach()
@@ -262,28 +277,30 @@ class OverViewFragment : Fragment() {
         }
     }
 
-    private fun observeErrorState() {
-        viewModel.state.observe(viewLifecycleOwner) { state: State? ->
-            state?.let { handleError(it) }
-        }
-    }
+//    private fun observeErrorState() {
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.state.collect {
+//                    it?.let { handleError(it) }
+//                }
+//            }
+//        }
+//    }
 
-    private fun handleError(state: State) =
-        when (state) {
-            State.LOGIN_FAIL -> goToLogin(state)
-            State.UNKNOWN_ERROR -> UnknownServerErrorDialog.showUnknownServerErrorDialog(requireActivity().supportFragmentManager)
-            State.NETWORK_FAIL -> NetworkErrorDialog.showNetworkErrorDialog(
-                requireActivity().supportFragmentManager
-            ) { _, _ -> viewModel.refreshButtonOnClick() }
-            else -> {}
-        }
+//    private fun handleError(state: State) =
+//        when (state) {
+//            State.LOGIN_FAIL -> goToLogin()
+//            State.UNKNOWN_ERROR -> ErrorDialog.show(requireActivity().supportFragmentManager)
+//            State.NETWORK_FAIL -> NetworkErrorDialog.show(
+//                requireActivity().supportFragmentManager
+//            ) { _, _ -> viewModel.refreshButtonOnClick() }
+//            else -> {}
+//    }
 
-    private fun goToLogin(state: State) {
+    private fun goToLogin() {
         val intent = Intent(activity, LoginActivity::class.java)
-            .putExtra("loginState", state)
 
         startActivity(intent).also { requireActivity().finish() }
     }
 
-    data class TimeInfo(val accumulationTimes: List<Long>, val timeType: Int)
 }

@@ -1,253 +1,204 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import androidx.lifecycle.*
+import com.hane24.hoursarenotenough24.error.ExceptionFactory
+import com.hane24.hoursarenotenough24.error.ExceptionHandler
+import com.hane24.hoursarenotenough24.error.ExceptionHandlerFactory
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
-import com.hane24.hoursarenotenough24.network.ClusterPopulationInfo
-import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.network.MainInfo
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.repository.UserRepository
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
-class OverViewViewModel : ViewModel() {
+class OverViewViewModel(
+    sharedPreferenceUtilss: SharedPreferenceUtilss,
+    userRepository: UserRepository,
+): ViewModel() {
 
-    private val _state = MutableLiveData<State?>(null)
-    val state: LiveData<State?>
-        get() = _state
+    /**
+     * UseCase
+     */
 
-    private val accessToken by lazy { SharedPreferenceUtils.getAccessToken() }
+    private val parseTimeUseCase = ParseTimeUseCase()
+    private val changeTargetTimeUseCase = ChangeTargetTimeUseCase(sharedPreferenceUtilss)
+    private val getUserInfoUseCase = GetUserInfoUseCase(userRepository)
+    private val calculateProgressUseCase = CalculateProgressUseCase()
 
-    private val _intraId = MutableLiveData("")
-    val intraId: LiveData<String>
-        get() = _intraId
 
-    private val _profileImageUrl = MutableLiveData("")
-    val profileImageUrl: LiveData<String>
-        get() = _profileImageUrl
 
-    private val _dayAccumulationTime = MutableLiveData(0L)
-    val dayAccumulationTime: LiveData<Pair<String, String>> =
-        _dayAccumulationTime.map { parseTime(it, false) }
+    /**
+     * TargetTime
+     */
 
-    private val _dayTargetTime = MutableLiveData(0L)
-    val dayTargetTime: LiveData<Pair<String, String>> =
-        _dayTargetTime.map { parseTime(it, true) }
+    private val _dayTargetTime = MutableStateFlow(0)
+    val dayTargetTime: StateFlow<Int> =
+        _dayTargetTime.map { parseTimeUseCase.parseTargetTime(it) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
-    private val _dayProgressPercent = MutableLiveData(0)
-    val dayProgressPercent: LiveData<Int>
-        get() = _dayProgressPercent
-    val dayProgressPercentText: LiveData<String> =
-        _dayProgressPercent.map { it.toString() }
+    private val _monthTargetTime = MutableStateFlow(0)
+    val monthTargetTime: StateFlow<Int> =
+        _monthTargetTime.map { parseTimeUseCase.parseTargetTime(it) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
-    private val _monthAccumulationTime = MutableLiveData(0L)
-    val monthAccumulationTime: LiveData<Pair<String, String>> =
-        _monthAccumulationTime.map { parseTime(it, false) }
+    /**
+     * AccumulationTime
+     */
 
-    private val _monthTargetTime = MutableLiveData(0L)
-    val monthTargetTime: LiveData<Pair<String, String>> =
-        _monthTargetTime.map { parseTime(it, true) }
+    private val _accumulationTime = MutableStateFlow<AccumulationTimeInfo?>(null)
+    val accumulationTime: StateFlow<AccumulationTimeInfo?> = _accumulationTime.asStateFlow()
 
-    private val _monthProgressPercent = MutableLiveData(0)
-    val monthProgressPercent: LiveData<Int>
-        get() = _monthProgressPercent
+    val dayAccumulationTime: StateFlow<Pair<String, String>> =
+        accumulationTime.map { parseTimeUseCase.parseAccumulationTime(it?.todayAccumulationTime) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, "0" to "0")
 
-    val monthProgressPercentText: LiveData<String> =
-        _monthProgressPercent.map { it.toString() }
+    val monthAccumulationTime: StateFlow<Pair<String, String>> =
+        accumulationTime.map { parseTimeUseCase.parseAccumulationTime(it?.monthAccumulationTime) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, "0" to "0")
 
-    private val _latestTagTime = MutableLiveData("")
-    val latestTagTime: LiveData<String>
-        get() = _latestTagTime
+    val dayProgressPercent: StateFlow<Int> =
+        accumulationTime.combine(_dayTargetTime) { acc, target ->
+            calculateProgressUseCase(acc?.todayAccumulationTime, target)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
-    private val _inOutState = MutableLiveData(false)
-    val inOutState: LiveData<Boolean>
-        get() = _inOutState
+    val monthProgressPercent: StateFlow<Int> =
+        accumulationTime.combine(_monthTargetTime) { acc, target ->
+            calculateProgressUseCase(acc?.monthAccumulationTime, target)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
-    private val _initState = MutableLiveData(false)
-    val initState: LiveData<Boolean>
-        get() = _initState
+    val accumulationGraphInfo: StateFlow<List<GraphInfo>> =
+        accumulationTime.map { transformGraphInfo(it?.sixWeekAccumulationTime, it?.sixMonthAccumulationTime) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Lazily,
+                listOf(
+                    GraphInfo(List(6) { 0 }, false),
+                    GraphInfo(List(6) { 0 }, true)
+                )
+            )
 
-    private val _refreshLoading = MutableLiveData(false)
-    val refreshLoading: LiveData<Boolean>
-        get() = _refreshLoading
+    /**
+     *  MainInfo
+     */
 
-    private val _mainInfo = MutableLiveData<MainInfo>()
-    val mainInfo: LiveData<MainInfo>
-        get() = _mainInfo
+    private val _mainInfo = MutableStateFlow<MainInfo?>(null)
 
-    private val _clusterPopulation: MutableLiveData<List<ClusterPopulationInfo>?> =
-        MutableLiveData(null)
-    val clusterPopulation: LiveData<List<ClusterPopulationInfo>?>
-        get() = _clusterPopulation
+    val intraId: StateFlow<String> =
+        _mainInfo.map { it?.login ?: "marvin" }
+            .stateIn(viewModelScope, SharingStarted.Lazily, "marvin")
 
-    private val _accumulationTime: MutableLiveData<AccumulationTimeInfo?> = MutableLiveData(null)
-    val accumulationTime: LiveData<AccumulationTimeInfo?>
-        get() = _accumulationTime
+    val profileImageUrl: StateFlow<String> =
+        _mainInfo.map { it?.profileImage ?: "" }
+            .stateIn(viewModelScope, SharingStarted.Lazily, "")
+
+    val inOutState: StateFlow<Boolean> =
+        _mainInfo.map { it?.inoutState == "IN" }
+            .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    val populationSeochoAndGaepo: StateFlow<Pair<Int, Int>> =
+        _mainInfo.map { transformPopulationOfSeochoAndGaepo(it) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0 to 0)
+
+    /**
+     *  State
+     */
+
+    private val _state = MutableStateFlow<State?>(null)
+    val state = _state.asStateFlow()
+
+    val initState: StateFlow<Boolean> = _mainInfo.combine(accumulationTime) { mainInfo: MainInfo?, accTime: AccumulationTimeInfo? ->
+        mainInfo != null && accTime != null
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+
+    private val _refreshLoading = MutableStateFlow(false)
+    val refreshLoading: StateFlow<Boolean> = _refreshLoading.asStateFlow()
 
     init {
-        _dayTargetTime.value = SharedPreferenceUtils.getDayTargetTime()
-        _monthTargetTime.value = SharedPreferenceUtils.getMonthTargetTime()
         viewModelScope.launch {
-            useGetMainInfoApi()
-            useGetAccumulationInfoApi()
-            useGetCadetPerClusterApi()
-            _initState.value = true
+            _dayTargetTime.value = sharedPreferenceUtilss.getDayTargetTime()
+            _monthTargetTime.value = sharedPreferenceUtilss.getMonthTargetTime()
+            refresh()
         }
     }
 
     private suspend fun useGetAccumulationInfoApi() {
-        try {
-            _accumulationTime.value = Hane24Apis.hane24ApiService.getAccumulationTime(accessToken)
-            Log.i("accumulation", "${accumulationTime.value}")
-
-            _accumulationTime.value?.let {
-                _monthAccumulationTime.value = it.monthAccumulationTime
-                _dayAccumulationTime.value = it.todayAccumulationTime
-                _dayProgressPercent.value =
-                    getProgressPercent(it.todayAccumulationTime, _dayTargetTime.value)
-                _monthProgressPercent.value =
-                    getProgressPercent(it.monthAccumulationTime, _monthTargetTime.value)
-                _state.value = State.SUCCESS
-            }
-
-
-        } catch (err: HttpException) {
-            val isLoginFail = err.code() == 401
-            val isServerError = err.code() == 500
-
-            when {
-                isLoginFail -> _state.value = State.LOGIN_FAIL
-                isServerError -> _state.value = State.SERVER_FAIL
-                else -> _state.value = State.UNKNOWN_ERROR
-            }
-        } catch (e: Exception) {
-            Log.i("api", "${e.message}")
-            _state.value = State.NETWORK_FAIL
-        } finally {
-            _state.value = State.SUCCESS
-        }
-    }
-
-    private suspend fun useGetCadetPerClusterApi() {
-        try {
-            _clusterPopulation.value = Hane24Apis.hane24ApiService.getCadetPerCluster(accessToken)
-            _state.value = State.SUCCESS
-        } catch (err: HttpException) {
-            Log.i("api", "${err.message()}")
-            val isLoginFail = err.code() == 401
-            val isServerError = err.code() == 500
-            when {
-                isLoginFail -> _state.value = State.LOGIN_FAIL
-                isServerError -> _state.value = State.SERVER_FAIL
-                else -> _state.value = State.UNKNOWN_ERROR
-            }
-        } catch (e: Exception) {
-            Log.i("api", "${e.message}")
-            _state.value = State.NETWORK_FAIL
-        } finally {
-            _state.value = State.SUCCESS
-        }
+        _accumulationTime.value = getUserInfoUseCase.getAccumulationTime()
     }
 
     private suspend fun useGetMainInfoApi() {
-        try {
-            val mainInfo = Hane24Apis.hane24ApiService.getMainInfo(accessToken)
-            _mainInfo.value = mainInfo
-            _intraId.value = mainInfo.login
-            _profileImageUrl.value = mainInfo.profileImage
-            if (mainInfo.inoutState == "IN") {
-                _inOutState.value = true
-                _latestTagTime.value = mainInfo.tagAt
-                    .substringAfter('T')
-                    .split(":")
-                    .let {
-                        var hour = it[0].toInt() + 9
-                        if (hour > 23) hour -= 24
-                        "$hour:${it[1]}:${it[2]}"
-                    }
-            } else {
-                _inOutState.value = false
-                _latestTagTime.value = ""
-            }
-            _state.value = State.SUCCESS
-        } catch (err: HttpException) {
-            val isLoginFail = err.code() == 401
-            val isServerError = err.code() == 500
-
-            when {
-                isLoginFail -> _state.value = State.LOGIN_FAIL
-                isServerError -> _state.value = State.SERVER_FAIL
-                else -> _state.value = State.UNKNOWN_ERROR
-            }
-        } catch (e: Exception) {
-            Log.i("api", "${e.message}")
-            _state.value = State.NETWORK_FAIL
-        } finally {
-            State.SUCCESS
-        }
+        _mainInfo.value = getUserInfoUseCase.getInfo()
+        _state.value = State.SUCCESS
     }
 
-    fun getSeochoPopulation(): LiveData<String> {
-        return mainInfo.map() {
-            mainInfo.value?.let {
-                "${it.seocho}"
-            } ?: "0"
-        }
+    private fun transformPopulationOfSeochoAndGaepo(mainInfo: MainInfo?): Pair<Int, Int> {
+        val seocho = mainInfo?.seocho ?: 0
+        val gaepo = mainInfo?.gaepo ?: 0
+
+        return seocho to gaepo
     }
 
-    fun getGaepoPopulation(): LiveData<String> {
-        return mainInfo.map() {
-            mainInfo.value?.let {
-                "${it.gaepo}"
-            } ?: "0"
-        }
-    }
-
-    fun refreshButtonOnClick() {
+    suspend fun refresh() {
         _refreshLoading.value = true
-        viewModelScope.launch {
-            useGetMainInfoApi()
-            useGetAccumulationInfoApi()
-            _refreshLoading.value = false
-        }
+        useGetMainInfoApi()
+        useGetAccumulationInfoApi()
+        _refreshLoading.value = false
     }
 
-    fun changeTargetTime(time: Long, isMonth: Boolean) {
+//    fun refreshButtonOnClick() = viewModelScope.async {
+//        try {
+//            _refreshLoading.value = true
+//            refresh()
+//            _refreshLoading.value = false
+//            null
+//        } catch (err: Exception) {
+//            ExceptionHandlerFactory.create(err)
+//        }
+//    }
+
+    private fun changeTargetTime(hour: Int, isMonth: Boolean) {
+        val hoursToSeconds = hour * 3600
+
         if (isMonth) {
-            SharedPreferenceUtils.saveMonthTargetTime(time)
-            _monthTargetTime.value = time
-            _monthProgressPercent.value =
-                getProgressPercent(_monthAccumulationTime.value ?: 0, time)
+            changeTargetTimeUseCase.changeMonthTargetTime(hoursToSeconds)
+            _monthTargetTime.value = hoursToSeconds
         } else {
-            SharedPreferenceUtils.saveDayTargetTime(time)
-            _dayTargetTime.value = time
-            _dayProgressPercent.value =
-                getProgressPercent(_dayAccumulationTime.value ?: 0, time)
+            changeTargetTimeUseCase.changeDayTargetTime(hoursToSeconds)
+            _dayTargetTime.value = hoursToSeconds
         }
     }
 
-    fun getMTargetTime() = _monthTargetTime.value
+    fun onClickSaveTargetTime(isMonth: Boolean, selectTime: Int) {
+        val currentTargetTime = if (isMonth) monthTargetTime.value else dayTargetTime.value
 
-    fun getDTargetTime() = _dayTargetTime.value
-
-    fun parseTimeToPercent(items: List<Long>): List<Long> {
-        val maxItem = items.maxOf { it }
-        return items.map { (it.toDouble() / maxItem * 100L).toLong() }
+        if (currentTargetTime != selectTime) {
+            changeTargetTime(selectTime, isMonth)
+        }
     }
 
-    private fun getProgressPercent(time: Long, targetTime: Long?): Int {
-        val targetDouble: Double = targetTime?.toDouble() ?: 1.0
-        return (time / targetDouble * 100).toInt()
-    }
+    private fun transformGraphInfo(timeOfWeek: List<Long>?, timeOfMonth: List<Long>?): List<GraphInfo> {
+        val default = listOf(0L, 0L, 0L, 0L, 0L, 0L)
+        val weekGraphInfo = GraphInfo(timeOfWeek ?: default, false)
+        val monthGraphInfo = GraphInfo(timeOfMonth ?: default, true)
 
-    private fun parseTime(time: Long, isTargetTime: Boolean): Pair<String, String> {
-        var second = time
-        val hour = second / 3600
-        if (isTargetTime)
-            return String.format("%d", hour) to "H"
-        second -= hour * 3600
-        val min = second / 60
-        return String.format("%d", hour) to String.format("%d", min)
+        return listOf(weekGraphInfo, monthGraphInfo)
+    }
+}
+
+class OverViewModelFactory(
+    private val sharedPreferenceUtilss: SharedPreferenceUtilss,
+    private val userRepository: UserRepository
+): ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return OverViewViewModel(sharedPreferenceUtilss, userRepository) as T
     }
 }

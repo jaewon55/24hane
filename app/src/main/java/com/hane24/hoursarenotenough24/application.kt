@@ -2,6 +2,7 @@ package com.hane24.hoursarenotenough24
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Build
 import android.provider.Settings
@@ -10,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hane24.hoursarenotenough24.error.NetworkObserver
 import com.hane24.hoursarenotenough24.error.NetworkObserverImpl
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,10 +23,14 @@ class App : Application() {
         super.onCreate()
 
         instance = this
+        sharedPreferenceUtilss = SharedPreferenceUtilss.initialize(applicationContext)
     }
 
     companion object {
         lateinit var instance: App
+            private set
+
+        lateinit var sharedPreferenceUtilss: SharedPreferenceUtilss
             private set
     }
 }
