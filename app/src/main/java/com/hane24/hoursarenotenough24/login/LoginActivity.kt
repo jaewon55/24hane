@@ -3,7 +3,6 @@ package com.hane24.hoursarenotenough24.login
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -11,6 +10,7 @@ import android.webkit.*
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
@@ -33,19 +33,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.BuildConfig
 import com.hane24.hoursarenotenough24.MainActivity
 import com.hane24.hoursarenotenough24.R
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.delay
 
 class LoginActivity : ComponentActivity() {
-    private lateinit var cookieManager: CookieManager
     private var backgroundColor: Color = Color.White
+    private val viewModel: LoginViewModel by viewModels { LoginViewModelFactory(App.sharedPreferenceUtilss) }
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,10 +58,12 @@ class LoginActivity : ComponentActivity() {
             Color(ActivityCompat.getColor(this, R.color.default_text))
         else
             Color.White
+
         setStatusAndNavigationBar(currentNightMode)
 
         setContent {
             val modifier = Modifier.background(backgroundColor)
+
             Scaffold(modifier = modifier) { _ ->
                 LoginPage(isNightMode = currentNightMode)
             }
@@ -72,60 +76,17 @@ class LoginActivity : ComponentActivity() {
         controller.isAppearanceLightNavigationBars = !currentNightMode
     }
 
-    private fun createLoginUri() =
-        Uri.Builder().scheme("https").authority(BuildConfig.LOGIN_URL)
-            .appendPath("user")
-            .appendPath("login")
-            .appendPath("42")
-            .appendQueryParameter("redirect", "app://hane42")
-            .build()
-
     @Composable
     @Preview
     fun LoginPage(modifier: Modifier = Modifier, isNightMode: Boolean = true) {
-
         val loading = rememberSaveable { mutableStateOf(true) }
 
         Box(modifier = Modifier.background(backgroundColor)) {
             LoginWebView(loading = loading)
             if (loading.value) {
-                LoadingComponent()
-            }
-        }
-    }
-
-    @OptIn(ExperimentalAnimationGraphicsApi::class)
-    @Composable
-    @Preview
-    fun LoadingComponent(
-        modifier: Modifier = Modifier,
-        isNightMode: Boolean = true
-        ) {
-        val resId = if (isNightMode)
-                R.drawable.loading_dark_animated_vector
-            else
-                R.drawable.loading_animated_vector
-        val animateImage = AnimatedImageVector.animatedVectorResource(resId)
-        var atEnd by remember { mutableStateOf(false) }
-        val duration = 1500L
-
-        Column(
-            modifier
-                .fillMaxSize().background(backgroundColor),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = rememberAnimatedVectorPainter(animatedImageVector = animateImage, atEnd = atEnd),
-                contentDescription = "loading_icon",
-                contentScale = ContentScale.Fit
-            )
-        }
-
-        LaunchedEffect(Unit) {
-            while (true) {
-                delay(duration)
-                atEnd = !atEnd
+                LoginLoadingComponent(
+                    isNightMode = isNightMode
+                )
             }
         }
     }
@@ -137,64 +98,74 @@ class LoginActivity : ComponentActivity() {
         modifier: Modifier = Modifier,
         loading: MutableState<Boolean> = mutableStateOf(true),
         ) {
-        cookieManager = CookieManager.getInstance()
-        val webViewClient = remember { CustomWebViewClient(loading) }
+        val isLogin = viewModel.state.collectAsStateWithLifecycle()
+
+        if (isLogin.value) {
+            startActivity(Intent(LocalContext.current, MainActivity::class.java)
+                .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP })
+        }
+
+        val cookieManager = CookieManager.getInstance()
+        val webViewClient = remember { CustomWebViewClient(loading, cookieManager, this) }
+        val uri = Uri.Builder().scheme("https").authority(BuildConfig.LOGIN_URL)
+            .appendPath("user")
+            .appendPath("login")
+            .appendPath("42")
+            .appendQueryParameter("redirect", "app://hane42")
+            .build()
 
         AndroidView(factory = {
             WebView(it).apply {
                 layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
                 settings.javaScriptEnabled = true
                 this.webViewClient = webViewClient
-                loadUrl(createLoginUri().toString())
+                loadUrl(uri.toString())
                 cookieManager.setAcceptCookie(true)
                 cookieManager.setAcceptThirdPartyCookies(this, true)
             }
         }, modifier = modifier.background(backgroundColor))
     }
+}
 
-    inner class CustomWebViewClient(private val loading: MutableState<Boolean>): WebViewClient() {
-        override fun shouldOverrideUrlLoading(
-            view: WebView?,
-            request: WebResourceRequest?
-        ): Boolean {
-            return redirect(request)
-        }
+@OptIn(ExperimentalAnimationGraphicsApi::class)
+@Composable
+@Preview
+fun LoginLoadingComponent(
+    modifier: Modifier = Modifier,
+    isNightMode: Boolean = false
+) {
+    val resId = if (isNightMode)
+        R.drawable.loading_dark_animated_vector
+    else
+        R.drawable.loading_animated_vector
 
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-            super.onPageStarted(view, url, favicon)
-            loading.value = true
-        }
+    val backgroundColor = if (isNightMode)
+        Color(ActivityCompat.getColor(LocalContext.current, R.color.default_text))
+    else
+        Color.White
 
-        override fun onPageFinished(view: WebView?, url: String?) {
-            super.onPageFinished(view, url)
-            loading.value = false
-        }
+    val animateImage = AnimatedImageVector.animatedVectorResource(resId)
+    var atEnd by remember { mutableStateOf(false) }
+    val duration = 1500L
 
-        private fun parseAccessToken(): String =
-            cookieManager.getCookie("https://api.24hoursarenotenough.42seoul.kr/user/login/callback/42")
-                .substringAfter(' ').split('=')[1]
-        private fun redirectToMain() {
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent).also {
-                val accessToken = parseAccessToken()
-                SharedPreferenceUtils.saveAccessToken(accessToken)
-                cookieManager.removeAllCookies {}
-                this@LoginActivity.finish()
-            }
-        }
+    Column(
+        modifier
+            .fillMaxSize()
+            .background(backgroundColor),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = rememberAnimatedVectorPainter(animatedImageVector = animateImage, atEnd = atEnd),
+            contentDescription = "loading_icon",
+            contentScale = ContentScale.Fit
+        )
+    }
 
-        private fun redirect(request: WebResourceRequest?): Boolean {
-            if (request?.url.toString() == "app://hane42" || request?.url.toString() == "https://profile.intra.42.fr/") {
-                return try {
-                    redirectToMain()
-                    true
-                } catch (e: java.lang.Exception) {
-                    false
-                }
-            }
-            return false
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(duration)
+            atEnd = !atEnd
         }
     }
 }
-
