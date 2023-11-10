@@ -10,6 +10,7 @@ import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -31,34 +32,31 @@ class LogViewModelTest {
     private lateinit var timeDBRepository: TimeDBRepository
     private lateinit var getLogsUseCase: GetLogsUseCase
     private lateinit var viewModel: LogViewModel
+    private lateinit var sharedPreferenceUtils: SharedPreferenceUtilss
 
     @Mock
     private lateinit var mockHane24Api: Hane24Api
 
-    @Mock
-    private lateinit var mockSharedPreferenceUtils: SharedPreferenceUtils
 
     @Before
     fun before() {
         MockitoAnnotations.openMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
         db = Room.inMemoryDatabaseBuilder(context, TimeDatabase::class.java).build()
-        timeServerRepository = TimeServerRepository(mockHane24Api, mockSharedPreferenceUtils)
+        sharedPreferenceUtils = SharedPreferenceUtilss.initialize(context)
+        timeServerRepository = TimeServerRepository(mockHane24Api, sharedPreferenceUtils)
         timeDBRepository = TimeDBRepository(db)
-        getLogsUseCase = GetLogsUseCase(
-            timeServerRepository,
-            timeDBRepository
-        )
-        viewModel = LogViewModel(getLogsUseCase)
+        getLogsUseCase = GetLogsUseCase(timeServerRepository, timeDBRepository)
+        viewModel = LogViewModel(timeServerRepository, timeDBRepository)
     }
 
     @Test
     fun serverRepositoryTest() = runTest {
         // given
+        sharedPreferenceUtils.saveAccessToken(ACCESS_TOKEN)
 
         // when
-        `when`(mockSharedPreferenceUtils.getAccessToken()).thenAnswer { ACCESS_TOKEN }
-        `when`(mockHane24Api.getAllTagPerMonth(ACCESS_TOKEN, 2023, 11))
+        `when`(mockHane24Api.getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 11))
             .thenAnswer { MonthLogsData.data202311 }
 
         val result = timeServerRepository.getTagLogPerMonth(2023, 11, ACCESS_TOKEN)
@@ -69,10 +67,10 @@ class LogViewModelTest {
     @Test
     fun `getLogsUseCaseTest`() = runTest {
         // given
+        sharedPreferenceUtils.saveAccessToken(ACCESS_TOKEN)
 
         // when
-        `when`(mockSharedPreferenceUtils.getAccessToken()).thenAnswer { ACCESS_TOKEN }
-        `when`(mockHane24Api.getAllTagPerMonth(ACCESS_TOKEN, 2023, 11))
+        `when`(mockHane24Api.getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 11))
             .thenAnswer { MonthLogsData.data202311 }
         val result = getLogsUseCase(2023, 11)
 
@@ -84,12 +82,12 @@ class LogViewModelTest {
     @Test
     fun `log 갱신 테스트`() = runTest {
         // given
+        sharedPreferenceUtils.saveAccessToken(ACCESS_TOKEN)
 
         // when
-        `when`(mockSharedPreferenceUtils.getAccessToken()).thenAnswer { ACCESS_TOKEN }
-        `when`(mockHane24Api.getAllTagPerMonth(ACCESS_TOKEN, 2023, 11))
+        `when`(mockHane24Api.getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 11))
             .thenAnswer { MonthLogsData.data202311 }
-        `when`(mockHane24Api.getAllTagPerMonth(ACCESS_TOKEN, 2023, 10))
+        `when`(mockHane24Api.getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 10))
             .thenAnswer { MonthLogsData.data202311 }
 
         viewModel.reloadLogs(2023, 11)
@@ -99,7 +97,7 @@ class LogViewModelTest {
 
         // then
         verify(mockHane24Api, times(1))
-            .getAllTagPerMonth(ACCESS_TOKEN, 2023, 10)
+            .getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 10)
         Assert.assertEquals(2023, viewModel.year)
         Assert.assertEquals(10, viewModel.month)
         Assert.assertEquals(MonthLogsData.data202311.inOutLogs, result)

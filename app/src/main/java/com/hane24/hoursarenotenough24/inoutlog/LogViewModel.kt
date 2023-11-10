@@ -13,6 +13,7 @@ import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,15 +22,11 @@ import retrofit2.HttpException
 import java.util.Calendar
 
 class LogViewModel(
-    private val getLogsUseCase: GetLogsUseCase =
-        GetLogsUseCase(
-            TimeServerRepository(
-                Hane24Apis.hane24ApiService,
-                SharedPreferenceUtils
-            ),
-            TimeDBRepository(createDatabase())
-        )
+    timeServerRepository: TimeServerRepository,
+    timeDBRepository: TimeDBRepository
 ) : ViewModel() {
+    private val getLogsUseCase: GetLogsUseCase =
+        GetLogsUseCase(timeServerRepository, timeDBRepository)
 
     private var _year = TodayCalendarUtils.year
     val year: Int
@@ -88,7 +85,8 @@ class LogViewModel(
     fun updateLogs(year: Int, month: Int, day: Int = 1) {
         if (year == 2022 && month < 8) return
         if (year > TodayCalendarUtils.year ||
-            (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month)) {
+            (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month)
+        ) {
             return
         }
         viewModelScope.launch {

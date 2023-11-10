@@ -442,7 +442,7 @@ private fun LogTableOfDay(
 }
 
 @Composable
-fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel = LogViewModel()) {
+fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
 
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
