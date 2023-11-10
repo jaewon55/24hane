@@ -1,16 +1,15 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.*
 import com.hane24.hoursarenotenough24.database.asDomainModel
 import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.repository.TimeRepository
+import com.hane24.hoursarenotenough24.repository.TimeRepositoryC
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.*
 import retrofit2.HttpException
@@ -19,7 +18,7 @@ import java.util.*
 
 class LogListViewModel : ViewModel() {
 
-    private val repository = TimeRepository(createDatabase())
+    private val repository = TimeRepositoryC(createDatabase())
 
     private val _calendarYear = MutableLiveData(TodayCalendarUtils.year)
     val calendarYear: LiveData<Int>
@@ -33,10 +32,12 @@ class LogListViewModel : ViewModel() {
                     _calendarYear.value = _calendarYear.value?.plus(1)
                     1
                 }
+
                 value < 1 -> {
                     _calendarYear.value = _calendarYear.value?.minus(1)
                     12
                 }
+
                 else -> value
             }
             super.setValue(m)
@@ -51,24 +52,25 @@ class LogListViewModel : ViewModel() {
 
     private val logContainer = MutableLiveData<MonthTimeLogContainer>()
 
-    val calendarList = Transformations.map(logContainer) { list ->
+    val calendarList = logContainer.map { list ->
         list.getCalendarList()
     }
 
-    val calendarDateText = Transformations.map(_calendarMonth) {
+
+    val calendarDateText = _calendarMonth.map {
         String.format("%d.%d", _calendarYear.value, _calendarMonth.value)
     }
 
-    val monthAccumulationTime = Transformations.map(calendarList) {
+    val monthAccumulationTime = calendarList.map {
         val time = calendarList.value?.sumOf { it.durationTime } ?: 0
         "총 ${parseAccumulationTime(time)}"
     }
 
-    val logTableList = Transformations.map(calendarDay) {
+    val logTableList = calendarDay.map {
         logContainer.value?.getLogTableList(it, _inOutState.value ?: true) ?: emptyList()
     }
 
-    val selectedDateText = Transformations.map(calendarDay) {
+    val selectedDateText = calendarDay.map {
         val date = Calendar.getInstance()
             .apply {
                 set(
@@ -80,8 +82,8 @@ class LogListViewModel : ViewModel() {
         SimpleDateFormat("M.d EEEE", Locale("ko")).format(date)
     }
 
-    val dayAccumulationTime = Transformations.map(logTableList) {
-        val time = logContainer.value?.monthLog
+    val dayAccumulationTime = logTableList.map {
+        val time = logContainer.value?.logs
             ?.filter { it.day == _calendarDay.value }
             ?.sumOf { it.durationTime ?: 0 } ?: 0
         parseAccumulationTime(time)

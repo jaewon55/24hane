@@ -1,11 +1,10 @@
 package com.hane24.hoursarenotenough24.widget
 
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
-import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import retrofit2.HttpException
 
@@ -21,7 +20,7 @@ internal fun updateRefreshAnimationOff(views: RemoteViews, progressId: Int, butt
 
 internal suspend fun getAccumulationInfo(): AccumulationTimeInfo? {
     return try {
-        val result = Hane42Apis.hane42ApiService.getAccumulationTime(SharedPreferenceUtils.getAccessToken())
+        val result = Hane24Apis.hane24ApiService.getAccumulationTime(SharedPreferenceUtils.getAccessToken())
         state = State.SUCCESS
         result
     } catch (err:HttpException) {
@@ -39,7 +38,7 @@ internal suspend fun getAccumulationInfo(): AccumulationTimeInfo? {
 
 internal suspend fun getInOutState(): String? {
     return try {
-        val result = Hane42Apis.hane42ApiService.getMainInfo(SharedPreferenceUtils.getAccessToken()).inoutState
+        val result = Hane24Apis.hane24ApiService.getMainInfo(SharedPreferenceUtils.getAccessToken()).inoutState
         state = State.SUCCESS
         result
     } catch (err:HttpException) {

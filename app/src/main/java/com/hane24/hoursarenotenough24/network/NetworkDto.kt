@@ -1,9 +1,9 @@
 package com.hane24.hoursarenotenough24.network
 
 import com.google.gson.annotations.SerializedName
+import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.data.TimeLogItem
 import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
-import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,15 +23,16 @@ data class AccumulationTimeInfo(
     val sixMonthAccumulationTime: List<Long>
 )
 
-data class InOutTimeContainer(
-    val inOutLogs: List<InOutTimeItem>
+data class GetAllTagPerMonthDto(
+    val inOutLogs: List<TagLog>
 )
 
-data class InOutTimeItem(
+data class InOutLog(
     val inTimeStamp: Long?,
     val outTimeStamp: Long?,
     val durationSecond: Long?
 )
+
 data class ClusterPopulationInfo(
     val cluster: String,
     @SerializedName("cadet")
@@ -41,12 +42,13 @@ data class ClusterPopulationInfo(
 data class ReissueState(
     val state: String
 )
+
 data class ReissueRequestResult(
     val login: String,
     val request_at: String
 )
 
-fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
+fun GetAllTagPerMonthDto.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
     return if (inOutLogs.isEmpty()) {
         listOf(
@@ -78,18 +80,22 @@ fun InOutTimeContainer.asDatabaseDto(date: String): List<TimeDatabaseDto> {
     }
 }
 
-//fun InOutTimeContainer.asDomainModel(): List<TimeLogItem> {
-//    val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
-//    return inOutLogs.map { log ->
-//        var day: Int
-//        val inString =
-//            format.format(log.inTimeStamp * 1000).split(' ').let {
-//                day = it[0].toInt()
-//                "${it[1]}:${it[2]}:${it[3]}"
-//            }
-//        val outString =
-//            format.format(log.outTimeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
-//        TimeLogItem(day, inString, outString, log.durationSecond)
-//    }
-//}
+fun GetAllTagPerMonthDto.asDomainModel(): List<TimeLogItem> {
+    val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
+    return inOutLogs.map { log ->
+        var day: Int
+        val inTime =
+            format.format(log.inTimeStamp?.times(1000) ?: 0)
+                .split(' ')
+                .let {
+                    day = it[0].toInt()
+                    "${it[1]}:${it[2]}:${it[3]}"
+                }
+        val outTime =
+            format.format(log.outTimeStamp?.times(1000) ?: 0)
+                .split(' ')
+                .let { "${it[1]}:${it[2]}:${it[3]}" }
+        TimeLogItem(day, inTime, outTime, log.durationSecond)
+    }
+}
 

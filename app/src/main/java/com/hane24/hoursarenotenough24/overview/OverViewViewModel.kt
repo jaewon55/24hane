@@ -1,13 +1,11 @@
 package com.hane24.hoursarenotenough24.overview
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.ClusterPopulationInfo
-import com.hane24.hoursarenotenough24.network.Hane42Apis
+import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.launch
@@ -31,32 +29,32 @@ class OverViewViewModel : ViewModel() {
 
     private val _dayAccumulationTime = MutableLiveData(0L)
     val dayAccumulationTime: LiveData<Pair<String, String>> =
-        Transformations.map(_dayAccumulationTime) { parseTime(it, false) }
+        _dayAccumulationTime.map { parseTime(it, false) }
 
     private val _dayTargetTime = MutableLiveData(0L)
     val dayTargetTime: LiveData<Pair<String, String>> =
-        Transformations.map(_dayTargetTime) { parseTime(it, true) }
+        _dayTargetTime.map { parseTime(it, true) }
 
     private val _dayProgressPercent = MutableLiveData(0)
     val dayProgressPercent: LiveData<Int>
         get() = _dayProgressPercent
     val dayProgressPercentText: LiveData<String> =
-        Transformations.map(_dayProgressPercent) { it.toString() }
+        _dayProgressPercent.map { it.toString() }
 
     private val _monthAccumulationTime = MutableLiveData(0L)
     val monthAccumulationTime: LiveData<Pair<String, String>> =
-        Transformations.map(_monthAccumulationTime) { parseTime(it, false) }
+        _monthAccumulationTime.map { parseTime(it, false) }
 
     private val _monthTargetTime = MutableLiveData(0L)
     val monthTargetTime: LiveData<Pair<String, String>> =
-        Transformations.map(_monthTargetTime) { parseTime(it, true) }
+        _monthTargetTime.map { parseTime(it, true) }
 
     private val _monthProgressPercent = MutableLiveData(0)
     val monthProgressPercent: LiveData<Int>
         get() = _monthProgressPercent
 
     val monthProgressPercentText: LiveData<String> =
-        Transformations.map(_monthProgressPercent) { it.toString() }
+        _monthProgressPercent.map { it.toString() }
 
     private val _latestTagTime = MutableLiveData("")
     val latestTagTime: LiveData<String>
@@ -78,7 +76,8 @@ class OverViewViewModel : ViewModel() {
     val mainInfo: LiveData<MainInfo>
         get() = _mainInfo
 
-    private val _clusterPopulation: MutableLiveData<List<ClusterPopulationInfo>?> = MutableLiveData(null)
+    private val _clusterPopulation: MutableLiveData<List<ClusterPopulationInfo>?> =
+        MutableLiveData(null)
     val clusterPopulation: LiveData<List<ClusterPopulationInfo>?>
         get() = _clusterPopulation
 
@@ -99,7 +98,7 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetAccumulationInfoApi() {
         try {
-            _accumulationTime.value = Hane42Apis.hane42ApiService.getAccumulationTime(accessToken)
+            _accumulationTime.value = Hane24Apis.hane24ApiService.getAccumulationTime(accessToken)
             Log.i("accumulation", "${accumulationTime.value}")
 
             _accumulationTime.value?.let {
@@ -132,7 +131,7 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetCadetPerClusterApi() {
         try {
-            _clusterPopulation.value = Hane42Apis.hane42ApiService.getCadetPerCluster(accessToken)
+            _clusterPopulation.value = Hane24Apis.hane24ApiService.getCadetPerCluster(accessToken)
             _state.value = State.SUCCESS
         } catch (err: HttpException) {
             Log.i("api", "${err.message()}")
@@ -153,7 +152,7 @@ class OverViewViewModel : ViewModel() {
 
     private suspend fun useGetMainInfoApi() {
         try {
-            val mainInfo = Hane42Apis.hane42ApiService.getMainInfo(accessToken)
+            val mainInfo = Hane24Apis.hane24ApiService.getMainInfo(accessToken)
             _mainInfo.value = mainInfo
             _intraId.value = mainInfo.login
             _profileImageUrl.value = mainInfo.profileImage
@@ -190,7 +189,7 @@ class OverViewViewModel : ViewModel() {
     }
 
     fun getSeochoPopulation(): LiveData<String> {
-        return Transformations.map(mainInfo) {
+        return mainInfo.map() {
             mainInfo.value?.let {
                 "${it.seocho}"
             } ?: "0"
@@ -198,7 +197,7 @@ class OverViewViewModel : ViewModel() {
     }
 
     fun getGaepoPopulation(): LiveData<String> {
-        return Transformations.map(mainInfo) {
+        return mainInfo.map() {
             mainInfo.value?.let {
                 "${it.gaepo}"
             } ?: "0"
@@ -234,7 +233,7 @@ class OverViewViewModel : ViewModel() {
 
     fun parseTimeToPercent(items: List<Long>): List<Long> {
         val maxItem = items.maxOf { it }
-        return items.map{ (it.toDouble() / maxItem * 100L).toLong() }
+        return items.map { (it.toDouble() / maxItem * 100L).toLong() }
     }
 
     private fun getProgressPercent(time: Long, targetTime: Long?): Int {
