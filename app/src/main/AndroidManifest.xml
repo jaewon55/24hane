@@ -38,6 +38,7 @@
         <activity
             android:name=".login.LoginActivity"
             android:exported="true"
+            android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,17 +46,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".login.SplashActivity"-->
-<!--            android:exported="true"-->
-<!--            android:noHistory="true"-->
-<!--            android:theme="@style/Theme.24hane">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!---->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
