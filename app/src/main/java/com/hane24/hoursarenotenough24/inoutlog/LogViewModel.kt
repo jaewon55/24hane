@@ -1,5 +1,9 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.TagLog
@@ -14,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.util.Calendar
 
 class LogViewModel(
     private val getLogsUseCase: GetLogsUseCase =
@@ -26,21 +31,34 @@ class LogViewModel(
         )
 ) : ViewModel() {
 
-    private val _year = MutableStateFlow(TodayCalendarUtils.year)
-    val year: StateFlow<Int>
+    private var _year = TodayCalendarUtils.year
+    val year: Int
         get() = _year
 
-    private val _month = MutableStateFlow(TodayCalendarUtils.month)
-    val month: StateFlow<Int>
+    private var _month = TodayCalendarUtils.month
+    val month: Int
         get() = _month
 
-    private val _day = MutableStateFlow(TodayCalendarUtils.day)
-    val day: StateFlow<Int>
-        get() = _day
+    var day by mutableIntStateOf(TodayCalendarUtils.day)
+        private set
 
-    private val _tagLogs = MutableStateFlow<List<TagLog>>(emptyList())
-    val tagLogs: StateFlow<List<TagLog>>
+    private var _tagLogs: List<TagLog> = emptyList()
+    val tagLogs: List<TagLog>
         get() = _tagLogs
+
+    val tagLogsOfTheDay: List<TagLog>
+        get() {
+            val calendar = Calendar.getInstance()
+            return _tagLogs.filter {
+                val timeStamp = it.inTimeStamp ?: it.outTimeStamp ?: 0L
+                if (timeStamp != 0L) {
+                    calendar.timeInMillis = timeStamp * 1000
+                    calendar.get(Calendar.DAY_OF_MONTH) == day
+                } else {
+                    false
+                }
+            }
+        }
 
     private val _loadingState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean>
@@ -50,37 +68,39 @@ class LogViewModel(
     val errorSate: StateFlow<State>
         get() = _errorState
 
-    private val _inOutState = MutableStateFlow(true)
+    var inOutState by mutableStateOf(true)
+        private set
 
     init {
         viewModelScope.launch {
-            getLogs(
-                _year.value ?: TodayCalendarUtils.year,
-                _month.value ?: TodayCalendarUtils.month,
-                _day.value ?: TodayCalendarUtils.day
-            )
+            getLogs(_year, _month)
         }
     }
 
-    suspend fun reloadLogs(year: Int, month: Int, day: Int = 1) {
-        getLogs(year, month, day)
+    suspend fun reloadLogs(year: Int, month: Int) {
+        getLogs(year, month)
     }
 
-    fun calendarItemOnClick(day: Int) {
-        _day.value = day
+    fun updateDate(day: Int?) {
+        day?.let { this.day = it }
     }
 
-    fun setInOutState(isIn: Boolean) {
-        _inOutState.value = isIn
+    fun updateDate(year: Int, month: Int, day: Int) {
+        this._year = year
+        this._month = month
+        this.day = day
     }
 
-    private suspend fun getLogs(year: Int, month: Int, day: Int) {
+    fun updateInOutState(isIn: Boolean) {
+        inOutState = isIn
+    }
+
+    private suspend fun getLogs(year: Int, month: Int) {
         try {
             _loadingState.value = true
-            _tagLogs.value = getLogsUseCase(year, month)
-            _year.value = year
-            _month.value = month
-            _day.value = day
+            _tagLogs = getLogsUseCase(year, month)
+            _year = year
+            _month = month
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401
             val isServerError = err.code() == 500

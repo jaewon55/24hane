@@ -20,6 +20,9 @@ object TodayCalendarUtils {
             calendar = Calendar.getInstance()
             return calendar.get(Calendar.DAY_OF_MONTH)
         }
+
+    fun isToday(year: Int, month: Int, day: Int) =
+        year == this.year && month == this.month && day == this.day
 }
 
 fun Calendar.checkLeapYear(): Boolean {
@@ -40,4 +43,18 @@ fun Calendar.calculateDaysOfMonth() = when (get(Calendar.MONTH) + 1) {
     10 -> 31
     11 -> 30
     else -> 31
+}
+
+fun getDayOfWeekString(year: Int, month: Int, day: Int): String {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month, day)
+    return when (calendar.get(Calendar.DAY_OF_WEEK)) {
+        Calendar.SUNDAY -> "일요일"
+        Calendar.MONDAY -> "월요일"
+        Calendar.TUESDAY -> "화요일"
+        Calendar.WEDNESDAY -> "수요일"
+        Calendar.THURSDAY -> "목요일"
+        Calendar.FRIDAY -> "금요일"
+        else -> "토요일"
+    }
 }

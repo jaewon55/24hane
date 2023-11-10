@@ -2,6 +2,7 @@ package com.hane24.hoursarenotenough24.inoutlog
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,16 +38,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
-import com.hane24.hoursarenotenough24.network.InOutLog
+import com.hane24.hoursarenotenough24.data.TagLog
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils.isToday
+import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
+import com.hane24.hoursarenotenough24.utils.getDayOfWeekString
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
-
-private data class CalendarItem(
-    val dayText: String,
-    val background: Color,
-)
 
 @Composable
 private fun CalendarPageHeader(modifier: Modifier = Modifier) {
@@ -76,8 +79,9 @@ private fun CalendarPageHeader(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = "2023.11",
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp,
+                color = colorResource(id = R.color.etc_title_color),
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
         }
@@ -114,7 +118,112 @@ private fun DayOfWeekRow(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun LogCalendarRow(modifier: Modifier = Modifier, items: List<CalendarItem>) {
+private fun CalendarItem(
+    item: CalendarItem,
+    dayOnClick: (Int?) -> Unit,
+) {
+    TextButton(
+        onClick = { dayOnClick(item.dayText.toIntOrNull()) },
+        enabled = true,
+        modifier = Modifier
+            .background(
+                colorResource(id = item.background), RoundedCornerShape(10.dp)
+            )
+            .size(40.dp)
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.etc_title_color),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+        )
+    }
+}
+
+@Composable
+private fun CalendarSelectedItem(
+    item: CalendarItem,
+    dayOnClick: (Int?) -> Unit,
+) {
+    TextButton(
+        onClick = { dayOnClick(item.dayText.toIntOrNull()) },
+        enabled = item.dayText.isNotEmpty(),
+        modifier = Modifier
+            .background(
+                colorResource(id = R.color.selected_background_color), CircleShape
+            )
+            .size(40.dp)
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.selected_text_color),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+        )
+    }
+}
+
+@Composable
+private fun CalendarNextDayItem(
+    item: CalendarItem,
+) {
+    TextButton(
+        onClick = { },
+        enabled = false,
+        modifier = Modifier
+            .background(Color.Transparent)
+            .size(40.dp)
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.next_day_text),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun CalendarTodayItem(
+    item: CalendarItem,
+    dayOnClick: (Int?) -> Unit,
+) {
+    TextButton(
+        onClick = { dayOnClick(item.dayText.toIntOrNull()) },
+        enabled = true,
+        modifier = Modifier
+            .background(Color.Transparent)
+            .border(2.dp, colorResource(id = R.color.today_select_color), RoundedCornerShape(10.dp))
+            .size(40.dp)
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.today_select_color),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun CalendarBlankItem() {
+    TextButton(
+        onClick = { }, enabled = false, modifier = Modifier.size(40.dp)
+    ) {}
+}
+
+@Composable
+private fun LogCalendarRow(
+    modifier: Modifier = Modifier,
+    items: List<CalendarItem>,
+    dayOnClick: (Int?) -> Unit,
+    year: Int,
+    month: Int,
+    day: Int
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
@@ -123,28 +232,32 @@ private fun LogCalendarRow(modifier: Modifier = Modifier, items: List<CalendarIt
             .padding(vertical = 6.dp)
     ) {
         for (item in items) {
-            TextButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .background(
-                        item.background, RoundedCornerShape(10.dp)
-                    )
-                    .size(40.dp)
-            ) {
-                Text(
-                    text = item.dayText,
-                    fontSize = 14.sp,
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
+            val itemDate = item.dayText.toIntOrNull()
+            val isThisMonth = year == TodayCalendarUtils.year && month == TodayCalendarUtils.month
+            when {
+                itemDate == null -> CalendarBlankItem()
+                isThisMonth && itemDate > TodayCalendarUtils.day -> CalendarNextDayItem(item = item)
+                day == itemDate -> CalendarSelectedItem(item = item, dayOnClick = dayOnClick)
+                isThisMonth && itemDate == TodayCalendarUtils.day -> CalendarTodayItem(
+                    item = item,
+                    dayOnClick = dayOnClick
                 )
+
+                else -> CalendarItem(item = item, dayOnClick = dayOnClick)
             }
         }
     }
 }
 
 @Composable
-private fun LogCalendarGrid(modifier: Modifier = Modifier, gridItems: List<CalendarItem>) {
+private fun LogCalendarGrid(
+    modifier: Modifier = Modifier,
+    gridItems: List<CalendarItem>,
+    dayOnClick: (Int?) -> Unit,
+    year: Int,
+    month: Int,
+    day: Int,
+) {
     Column(modifier = modifier.fillMaxWidth()) {
         var fromIndex = 0
         var toIndex = 7
@@ -153,7 +266,9 @@ private fun LogCalendarGrid(modifier: Modifier = Modifier, gridItems: List<Calen
                 fromIndex = toIndex
                 toIndex = if (gridItems.size < toIndex + 7) gridItems.size else toIndex + 7
             }
-            LogCalendarRow(items = items)
+            LogCalendarRow(
+                items = items, dayOnClick = dayOnClick, year = year, month = month, day = day
+            )
         }
     }
 }
@@ -233,7 +348,14 @@ private fun LogTableOfDayHeader(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun LogTableOfDay(modifier: Modifier = Modifier, logs: List<InOutLog>) {
+private fun LogTableOfDay(
+    modifier: Modifier = Modifier,
+    year: Int,
+    month: Int,
+    day: Int,
+    logs: List<TagLog>,
+    inOutState: Boolean
+) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -241,27 +363,47 @@ private fun LogTableOfDay(modifier: Modifier = Modifier, logs: List<InOutLog>) {
         modifier = modifier
     ) {
         items(logs) { log ->
-            Row(
+            val inTimeText = parseInOutTimeStamp(log.inTimeStamp)
+            val outTimeText = parseInOutTimeStamp(log.outTimeStamp)
+            val isMissing =
+                { !inOutState || !isToday(year, month, day) || logs.lastOrNull() != log }
+            val durationSecondText =
+                log.durationSecond?.let { parseDurationSecond(it) }
+                    ?: if (isMissing()) "누락" else "-"
+
+            Row(/*TODO 누락시 배경 설정 로직 필요*/
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier.fillMaxWidth().height(26.dp)
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(26.dp)
+                    .let {
+                        if (durationSecondText != "누락") {
+                            it
+                        } else {
+                            it.background(
+                                color = colorResource(id = R.color.missing_background),
+                                RoundedCornerShape(20.dp)
+                            )
+                        }
+                    }
             ) {
                 Text(
-                    text = parseInOutTimeStamp(log.inTimeStamp),
+                    text = inTimeText,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     color = colorResource(id = R.color.etc_title_color),
                     modifier = Modifier.width(80.dp)
                 )
                 Text(
-                    text = parseInOutTimeStamp(log.outTimeStamp),
+                    text = outTimeText,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     color = colorResource(id = R.color.etc_title_color),
                     modifier = Modifier.width(80.dp)
                 )
                 Text(
-                    text = parseDurationSecond(log.durationSecond),
+                    text = durationSecondText,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     color = colorResource(id = R.color.etc_title_color),
@@ -273,42 +415,43 @@ private fun LogTableOfDay(modifier: Modifier = Modifier, logs: List<InOutLog>) {
 }
 
 @Composable
-fun CalendarPage(modifier: Modifier = Modifier) {
-    val colorArray = arrayOf(
-        colorResource(id = R.color.calendar_color1),
-        colorResource(id = R.color.calendar_color2),
-        colorResource(id = R.color.calendar_color3),
-        colorResource(id = R.color.calendar_color4),
-    )
-    val gridItems = List(35) { i ->
-        if (i < 3 || 32 < i) {
-            CalendarItem("", Color.Transparent)
-        } else {
-            CalendarItem("${i - 2}", colorArray.random())
-        }
-    }
-    val logs = listOf(
-        InOutLog(1698925447, 1698928450, 3003),
-        InOutLog(1698923101, 1698924982, 1881),
-        InOutLog(1698922413, 1698923048, 635),
-        InOutLog(1698915178, 1698922126, 6948),
-        InOutLog(1698907081, 1698914835, 7754),
-        InOutLog(1698903787, 1698906701, 2914)
-    )
+fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel = LogViewModel()) {
+    val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
         CalendarPageHeader()
         DayOfWeekRow()
-        LogCalendarGrid(gridItems = gridItems)
+        if (loadingState) {
+            LogCalendarGrid(
+                gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
+                dayOnClick = { viewModel.updateDate(it) },
+                year = viewModel.year,
+                month = viewModel.month,
+                day = viewModel.day
+            )
+        } else {/* TODO loading animation view */
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        AccumulationTimeCard(text = "총 " + parseAccumulationTime(23135))
+        AccumulationTimeCard(
+            text = "총 " + parseAccumulationTime(viewModel.tagLogs.sumOf { it.durationSecond ?: 0L })
+        )
         Spacer(modifier = Modifier.height(20.dp))
         TableDateAndAccumulationTime(
-            dateText = "11.2 목요일",
-            accumulationTimeText = parseAccumulationTime(23135)
+            dateText = "${viewModel.month}.${viewModel.day} " + getDayOfWeekString(
+                viewModel.year, viewModel.month, viewModel.day
+            ), accumulationTimeText = parseAccumulationTime(viewModel.tagLogsOfTheDay.sumOf {
+                it.durationSecond ?: 0L
+            })
         )
         Spacer(modifier = Modifier.height(8.dp))
         LogTableOfDayHeader()
-        LogTableOfDay(logs = logs.reversed())
+        LogTableOfDay(
+            logs = viewModel.tagLogsOfTheDay.reversed(),
+            year = viewModel.year,
+            month = viewModel.month,
+            day = viewModel.day,
+            inOutState = viewModel.inOutState
+        )
     }
 }
 
@@ -327,36 +470,54 @@ private fun DayOfWeekRowPreview() {
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+private fun CalendarItemPreview() {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+    ) {
+        CalendarBlankItem()
+        CalendarItem(CalendarItem("1", R.color.calendar_color1), {})
+        CalendarSelectedItem(CalendarItem("2", R.color.calendar_color1), {})
+        CalendarTodayItem(CalendarItem("3", R.color.calendar_color1), {})
+        CalendarNextDayItem(CalendarItem("4", R.color.calendar_color1))
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
 private fun LogCalendarRowItemPreview() {
     val items = listOf(
-        CalendarItem("", Color.Transparent),
-        CalendarItem("", Color.Transparent),
-        CalendarItem("", Color.Transparent),
-        CalendarItem("1", colorResource(id = R.color.calendar_color1)),
-        CalendarItem("2", colorResource(id = R.color.calendar_color2)),
-        CalendarItem("3", colorResource(id = R.color.calendar_color3)),
-        CalendarItem("4", colorResource(id = R.color.calendar_color4)),
+        CalendarItem("", R.color.transparent),
+        CalendarItem("", R.color.transparent),
+        CalendarItem("", R.color.transparent),
+        CalendarItem("1", R.color.calendar_color1),
+        CalendarItem("2", R.color.calendar_color2),
+        CalendarItem("3", R.color.calendar_color3),
+        CalendarItem("4", R.color.calendar_color4),
     )
-    LogCalendarRow(items = items)
+    LogCalendarRow(items = items, dayOnClick = {}, year = 2023, month = 11, day = 1)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun LogCalendarPreview() {
     val colorArray = arrayOf(
-        colorResource(id = R.color.calendar_color1),
-        colorResource(id = R.color.calendar_color2),
-        colorResource(id = R.color.calendar_color3),
-        colorResource(id = R.color.calendar_color4),
+        R.color.calendar_color1,
+        R.color.calendar_color2,
+        R.color.calendar_color3,
+        R.color.calendar_color4,
     )
     val gridItems = List(35) { i ->
         if (i < 3 || 32 < i) {
-            CalendarItem("", Color.Transparent)
+            CalendarItem("", R.color.transparent)
         } else {
             CalendarItem("${i - 2}", colorArray.random())
         }
     }
-    LogCalendarGrid(gridItems = gridItems)
+    LogCalendarGrid(gridItems = gridItems, dayOnClick = {}, year = 2023, month = 11, day = 1)
 }
 
 @Composable
@@ -382,23 +543,35 @@ private fun LogTableOfDayHeaderPreview() {
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun LogTableOfDayPreview() {
     val logs = listOf(
-        InOutLog(1698925447, 1698928450, 3003),
-        InOutLog(1698923101, 1698924982, 1881),
-        InOutLog(1698922413, 1698923048, 635),
-        InOutLog(1698915178, 1698922126, 6948),
-        InOutLog(1698907081, 1698914835, 7754),
-        InOutLog(1698903787, 1698906701, 2914)
+        TagLog(1698925447, 1698928450, null),
+        TagLog(1698923101, 1698924982, 1881),
+        TagLog(1698922413, 1698923048, 635),
+        TagLog(1698915178, 1698922126, null),
+        TagLog(1698907081, 1698914835, 7754),
+        TagLog(1698903787, 1698906701, 2914)
     )
-    LogTableOfDay(logs = logs.reversed())
+    LogTableOfDay(
+        logs = logs.reversed(),
+        year = TodayCalendarUtils.year,
+        month = TodayCalendarUtils.month,
+        day = TodayCalendarUtils.day,
+        inOutState = true
+    )
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun CalendarPagePreview() {
-    CalendarPage()
+//    CalendarPage()
 }
+
+private data class CalendarItem(
+    val dayText: String,
+    @ColorRes val background: Int,
+)
 
 private fun parseAccumulationTime(time: Long): String {
     var second = time
@@ -408,9 +581,7 @@ private fun parseAccumulationTime(time: Long): String {
     return String.format("%d시간 %d분", hour, min)
 }
 
-private fun parseDurationSecond(durationSecond: Long?): String {
-    /*TODO 누락 인지 확인 하는 로직 필요*/
-    if (durationSecond == null) return "-"
+private fun parseDurationSecond(durationSecond: Long): String {
     var second = durationSecond
     val hour = second / 3600
     second -= hour * 3600
@@ -422,6 +593,37 @@ private fun parseDurationSecond(durationSecond: Long?): String {
 private fun parseInOutTimeStamp(timeStamp: Long?): String {
     val dateFormat = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
     if (timeStamp == null) return "-"
-    return dateFormat.format(timeStamp * 1000).split(' ')
-        .let { "${it[1]}:${it[2]}:${it[3]}" }
+    return dateFormat.format(timeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
+}
+
+private fun List<TagLog>.asCalendarItems(year: Int, month: Int): List<CalendarItem> {
+    val calendar = Calendar.getInstance()
+    val durationSecondArray = Array(32) { 0L }
+    this.map { tagLog ->
+        if (tagLog.inTimeStamp != null) {
+            calendar.timeInMillis = tagLog.inTimeStamp * 1000
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            durationSecondArray[day] += tagLog.durationSecond ?: 0
+        }
+    }
+    calendar.set(year, month - 1, 1)
+    val itemCount = calendar.calculateDaysOfMonth() + (7 - calendar.calculateDaysOfMonth() % 7)
+    val startIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1
+    val lastIndex = startIndex + calendar.calculateDaysOfMonth() - 1
+    return List(itemCount) {
+        if (it < startIndex || lastIndex < it) {
+            CalendarItem("", R.color.transparent)
+        } else {
+            val day = it - startIndex + 1
+            CalendarItem(
+                day.toString(), when {
+                    durationSecondArray[day] == 0L -> R.color.transparent
+                    durationSecondArray[day] <= 3L * 3600 -> R.color.calendar_color1
+                    durationSecondArray[day] <= 6L * 3600 -> R.color.calendar_color2
+                    durationSecondArray[day] <= 9L * 3600 -> R.color.calendar_color3
+                    else -> R.color.calendar_color4
+                }
+            )
+        }
+    }
 }

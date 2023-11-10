@@ -22,7 +22,6 @@ import org.robolectric.RobolectricTestRunner
 
 private const val ACCESS_TOKEN = "token"
 
-
 @RunWith(RobolectricTestRunner::class)
 class LogViewModelTest {
 
@@ -96,14 +95,13 @@ class LogViewModelTest {
         viewModel.reloadLogs(2023, 11)
         viewModel.reloadLogs(2023, 10)
 
-        val result = viewModel.tagLogs.value
+        val result = viewModel.tagLogs
 
         // then
         verify(mockHane24Api, times(1))
             .getAllTagPerMonth(ACCESS_TOKEN, 2023, 10)
-        Assert.assertEquals(2023, viewModel.year.value)
-        Assert.assertEquals(10, viewModel.month.value)
+        Assert.assertEquals(2023, viewModel.year)
+        Assert.assertEquals(10, viewModel.month)
         Assert.assertEquals(MonthLogsData.data202311.inOutLogs, result)
     }
-
 }
