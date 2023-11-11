@@ -10,8 +10,8 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
-import com.hane24.hoursarenotenough24.login.SplashActivity
 import com.hane24.hoursarenotenough24.login.State
 import kotlinx.coroutines.*
 
@@ -82,7 +82,7 @@ private fun setSuccessCondition(context: Context, views: RemoteViews) {
     val refreshIntent = Intent(context, BasicWidget::class.java).also {
         it.action = "REFRESH"
     }
-    val openIntent = Intent(context, SplashActivity::class.java)
+    val openIntent = Intent(context, LoginActivity::class.java)
     val refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
     val openPendingIntent = PendingIntent.getActivity(context, 1, openIntent, PendingIntent.FLAG_IMMUTABLE)
 
@@ -105,7 +105,7 @@ private suspend fun setErrorCondition(context: Context, views: RemoteViews) {
     val refreshIntent = Intent(context, BasicWidget::class.java).also {
         it.action = "REFRESH"
     }
-    val openIntent = Intent(context, SplashActivity::class.java)
+    val openIntent = Intent(context, LoginActivity::class.java)
     val refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_IMMUTABLE)
     val openPendingIntent = PendingIntent.getActivity(context, 1, openIntent, PendingIntent.FLAG_IMMUTABLE)
     val errorText = when (state) {
