@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,6 +51,7 @@ import com.hane24.hoursarenotenough24.database.TimeDatabase
 import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
+import com.hane24.hoursarenotenough24.utils.LoadingAnimation
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils.isToday
@@ -466,15 +468,20 @@ fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
             updateLogs = { y, m, d -> viewModel.updateLogs(y, m, d) }
         )
         DayOfWeekRow()
-        LogCalendarGrid(
-            gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
-            dayOnClick = { viewModel.updateDay(it) },
-            year = viewModel.year,
-            month = viewModel.month,
-            day = viewModel.day
-        )
         if (loadingState) {
+            LoadingAnimation(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 200.dp)
+            )
         } else {/* TODO loading animation view */
+            LogCalendarGrid(
+                gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
+                dayOnClick = { viewModel.updateDay(it) },
+                year = viewModel.year,
+                month = viewModel.month,
+                day = viewModel.day
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         AccumulationTimeCard(

@@ -16,6 +16,7 @@ import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.repository.UserRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -101,11 +102,14 @@ class LogViewModel(
     }
 
     private suspend fun getLogs(year: Int, month: Int, day: Int) {
+        val yearBeforeChange = _year
+        val monthBeforeChange = _month
+
         try {
-            _loadingState.value = true
-            _tagLogs = getLogsUseCase(year, month)
             _year = year
             _month = month
+            _loadingState.value = true
+            _tagLogs = getLogsUseCase(year, month)
             this.day = day
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401
@@ -119,7 +123,11 @@ class LogViewModel(
         } catch (err: Exception) {
             _errorState.value = State.NETWORK_FAIL
         } finally {
-            _errorState.value = State.SUCCESS
+            if (_errorState.value != State.SUCCESS) {
+                _year = yearBeforeChange
+                _month = monthBeforeChange
+                _errorState.value = State.SUCCESS
+            }
             _loadingState.value = false
         }
     }
@@ -134,3 +142,4 @@ class LogViewModelFactory(
         return LogViewModel(timeServerRepository, timeDBRepository) as T
     }
 }
+
