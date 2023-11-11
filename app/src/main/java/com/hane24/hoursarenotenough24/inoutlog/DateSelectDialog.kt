@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -111,21 +112,21 @@ fun DateSelectDialog(
                         text = "취소",
                         fontWeight = FontWeight.SemiBold,
                         color = colorResource(id = R.color.dialog_color),
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .size(32.dp)
-                            .wrapContentHeight(align = Alignment.CenterVertically)
                             .clickable(
                                 onClick = { onDismissRequest() }
                             )
+                            .size(32.dp)
+                            .wrapContentHeight(align = Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.width(24.dp))
                     Text(
                         text = "확인",
                         fontWeight = FontWeight.SemiBold,
                         color = colorResource(id = R.color.dialog_color),
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .size(32.dp)
-                            .wrapContentHeight(align = Alignment.CenterVertically)
                             .clickable(
                                 onClick = {
                                     onConfirmation(
@@ -135,6 +136,8 @@ fun DateSelectDialog(
                                     onDismissRequest()
                                 }
                             )
+                            .size(32.dp)
+                            .wrapContentHeight(align = Alignment.CenterVertically)
                     )
                 }
             }
