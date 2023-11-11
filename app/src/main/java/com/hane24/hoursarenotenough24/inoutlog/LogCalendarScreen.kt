@@ -28,6 +28,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,6 +68,8 @@ private fun CalendarPageHeader(
     loadingState: Boolean,
     updateLogs: (Int, Int, Int) -> Unit = { _, _, _ -> }
 ) {
+    var openAlertDialog by remember { mutableStateOf(false) }
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -108,11 +113,7 @@ private fun CalendarPageHeader(
             fontSize = 20.sp,
             color = colorResource(id = R.color.etc_title_color),
             modifier = Modifier
-                .clickableWithoutRipple {
-                    Toast
-                        .makeText(App.instance.applicationContext, "text", Toast.LENGTH_SHORT)
-                        .show()
-                }
+                .clickableWithoutRipple { openAlertDialog = true }
                 .padding(horizontal = 20.dp)
         )
         Icon(
@@ -145,6 +146,15 @@ private fun CalendarPageHeader(
                 )
                 .padding(start = 50.dp, end = 20.dp)
                 .size(24.dp)
+        )
+    }
+
+    if (openAlertDialog) {
+        DateSelectDialog(
+            year = year,
+            month = month,
+            onDismissRequest = { openAlertDialog = false },
+            onConfirmation = { year, month -> updateLogs(year, month, 1) }
         )
     }
 }
@@ -444,66 +454,17 @@ private fun LogTableOfDay(
     }
 }
 
-//@Composable
-//private fun LogCalendarLayout(
-//    modifier: Modifier = Modifier,
-//    year: Int,
-//    month: Int,
-//    day: Int,
-//    loadingState
-//) {
-//    Column(modifier = modifier.padding(horizontal = 20.dp)) {
-//        CalendarPageHeader(
-//            year = viewModel.year,
-//            month = viewModel.month,
-//            loadingState = loadingState,
-//            updateLogs = { y, m, d -> viewModel.updateLogs(y, m, d) }
-//        )
-//        DayOfWeekRow()
-//        LogCalendarGrid(
-//            gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
-//            dayOnClick = { viewModel.updateDay(it) },
-//            year = viewModel.year,
-//            month = viewModel.month,
-//            day = viewModel.day
-//        )
-//        if (loadingState) {
-//        } else {/* TODO loading animation view */
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
-//        AccumulationTimeCard(
-//            text = "총 " + parseAccumulationTime(viewModel.tagLogs.sumOf { it.durationSecond ?: 0L })
-//        )
-//        Spacer(modifier = Modifier.height(20.dp))
-//        TableDateAndAccumulationTime(
-//            dateText = "${viewModel.month}.${viewModel.day} " + getDayOfWeekString(
-//                viewModel.year, viewModel.month, viewModel.day
-//            ), accumulationTimeText = parseAccumulationTime(viewModel.tagLogsOfTheDay.sumOf {
-//                it.durationSecond ?: 0L
-//            })
-//        )
-//        Spacer(modifier = Modifier.height(8.dp))
-//        LogTableOfDayHeader()
-//        LogTableOfDay(
-//            logs = viewModel.tagLogsOfTheDay.reversed(),
-//            year = viewModel.year,
-//            month = viewModel.month,
-//            day = viewModel.day,
-//            inOutState = viewModel.inOutState
-//        )
-//    }
-//
-//}
-
 @Composable
 fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
 
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
-        CalendarPageHeader(year = viewModel.year,
+        CalendarPageHeader(
+            year = viewModel.year,
             month = viewModel.month,
             loadingState = loadingState,
-            updateLogs = { y, m, d -> viewModel.updateLogs(y, m, d) })
+            updateLogs = { y, m, d -> viewModel.updateLogs(y, m, d) }
+        )
         DayOfWeekRow()
         LogCalendarGrid(
             gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
