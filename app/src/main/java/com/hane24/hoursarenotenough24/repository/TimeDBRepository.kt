@@ -21,6 +21,10 @@ class TimeDBRepository(private val db: TimeDatabase) {
         db.timeDatabaseDAO().insertAll(*(logs.toTypedArray()))
     }
 
+    suspend fun deleteAll() {
+        db.timeDatabaseDAO().deleteAll()
+    }
+
     private fun isLastMonthOrThisMonth(data: TimeDatabaseDto): Boolean {
         val updateTime = SimpleDateFormat("yyyyMM", Locale("ko")).format(data.updateTime)
         val dataDate = data.date.substring(0, 6)

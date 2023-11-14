@@ -34,7 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.network.BASE_URL
 
+
+private const val MONEY_GUIDELINES = BASE_URL + "redirect/money_guidelines"
+private const val INQUIRE_ATTENDANCE = BASE_URL + "redirect/question"
+private const val APP_GUIDE = BASE_URL + "redirect/usage"
+private const val APP_FEEDBACK = BASE_URL + "redirect/feedback"
 
 @Composable
 private fun EtcOptionItem(
@@ -67,7 +73,12 @@ private fun EtcOptionItem(
 }
 
 @Composable
-fun EtcOptionScreen(modifier: Modifier = Modifier) {
+fun EtcOptionScreen(
+    modifier: Modifier = Modifier,
+    openWebpage: (String) -> Unit,
+    logoutOnClick: () -> Unit,
+    reissueOnClick: () -> Unit,
+) {
     var openLicenseDialog by remember { mutableStateOf(false) }
 
     if (openLicenseDialog) {
@@ -87,28 +98,41 @@ fun EtcOptionScreen(modifier: Modifier = Modifier) {
             fontWeight = FontWeight.ExtraBold
         )
         Spacer(modifier = Modifier.height(28.dp))
-        EtcOptionItem(drawable = R.drawable.ic_card, text = R.string.card_option, onClick = {
-            /* TODO 재발급 신청 페이지 */
-        })
-        EtcOptionItem(drawable = R.drawable.ic_book, text = R.string.etc_information, onClick = {
-            /* TODO 지원금 지침 안내 webpage */
-        })
-        EtcOptionItem(drawable = R.drawable.ic_complain, text = R.string.etc_complain, onClick = {
-            /* TODO 출입기록 문의 webpage */
-        })
-        EtcOptionItem(drawable = R.drawable.ic_guide, text = R.string.etc_guide, onClick = {
-            /* TODO 이용 가이드 webpage */
-        })
-        EtcOptionItem(drawable = R.drawable.ic_feedback, text = R.string.etc_feedback, onClick = {
-            /* TODO 앱 피드백 webpage */
-        })
+        EtcOptionItem(
+            drawable = R.drawable.ic_card,
+            text = R.string.card_option,
+            onClick = { reissueOnClick() }
+        )
+        EtcOptionItem(
+            drawable = R.drawable.ic_book,
+            text = R.string.etc_information,
+            onClick = { openWebpage(MONEY_GUIDELINES) }
+        )
+        EtcOptionItem(
+            drawable = R.drawable.ic_complain,
+            text = R.string.etc_complain,
+            onClick = { openWebpage(INQUIRE_ATTENDANCE) }
+        )
+        EtcOptionItem(
+            drawable = R.drawable.ic_guide,
+            text = R.string.etc_guide,
+            onClick = { openWebpage(APP_GUIDE) }
+        )
+        EtcOptionItem(
+            drawable = R.drawable.ic_feedback,
+            text = R.string.etc_feedback,
+            onClick = { openWebpage(APP_FEEDBACK) }
+        )
         EtcOptionItem(
             drawable = R.drawable.ic_license,
             text = R.string.etc_license,
-            onClick = { openLicenseDialog = true })
-        EtcOptionItem(drawable = R.drawable.ic_logout, text = R.string.logout, onClick = {
-            /* TODO 로그아웃 */
-        })
+            onClick = { openLicenseDialog = true }
+        )
+        EtcOptionItem(
+            drawable = R.drawable.ic_logout,
+            text = R.string.logout,
+            onClick = { logoutOnClick() }
+        )
         Divider(color = Color(red = 0xD8, green = 0xD8, blue = 0xD8, alpha = 0x42))
         Spacer(modifier = Modifier.height(18.dp))
         Icon(
@@ -133,7 +157,7 @@ private fun EtcOptionItemPreview() {
 @Composable
 @Preview(showBackground = true)
 private fun EtcOptionScreenPreView() {
-    EtcOptionScreen()
+    EtcOptionScreen(openWebpage = {}, logoutOnClick = {}, reissueOnClick = {})
 }
 
 

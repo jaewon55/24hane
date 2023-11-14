@@ -27,8 +27,10 @@ class LogViewModel(
     timeServerRepository: TimeServerRepository,
     timeDBRepository: TimeDBRepository
 ) : ViewModel() {
-    private val getLogsUseCase: GetLogsUseCase =
+    private val getLogsUseCase =
         GetLogsUseCase(timeServerRepository, timeDBRepository)
+    private val deleteAllLogsUseCase =
+        DeleteAllLogsUseCase(timeDBRepository)
 
     private var _year = TodayCalendarUtils.year
     val year: Int
@@ -99,6 +101,10 @@ class LogViewModel(
 
     fun updateInOutState(isIn: Boolean) {
         inOutState = isIn
+    }
+
+    fun deleteAllLogsInDatabase() {
+        viewModelScope.launch { deleteAllLogsUseCase() }
     }
 
     private suspend fun getLogs(year: Int, month: Int, day: Int) {
