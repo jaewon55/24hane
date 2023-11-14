@@ -11,27 +11,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,12 +43,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.room.Room
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.TagLog
+import com.hane24.hoursarenotenough24.database.TimeDatabase
+import com.hane24.hoursarenotenough24.network.Hane24Apis
+import com.hane24.hoursarenotenough24.repository.TimeDBRepository
+import com.hane24.hoursarenotenough24.repository.TimeServerRepository
+import com.hane24.hoursarenotenough24.utils.LoadingAnimation
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils.isToday
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
+import com.hane24.hoursarenotenough24.utils.clickableWithoutRipple
 import com.hane24.hoursarenotenough24.utils.getDayOfWeekString
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -58,6 +70,8 @@ private fun CalendarPageHeader(
     loadingState: Boolean,
     updateLogs: (Int, Int, Int) -> Unit = { _, _, _ -> }
 ) {
+    var openAlertDialog by remember { mutableStateOf(false) }
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -65,66 +79,85 @@ private fun CalendarPageHeader(
             .fillMaxWidth()
             .padding(top = 24.dp)
     ) {
-        IconButton(
-            onClick = {
-                var newYear = year
-                val newMonth = month.minus(1).let {
-                    if (it == 0) {
-                        --newYear
-                        12
-                    } else {
-                        it
-                    }
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowLeft,
+            contentDescription = "last month",
+            tint = colorResource(
+                id = if (!loadingState && !(year == 2022 && month == 8)) {
+                    R.color.calendar_button_color
+                } else {
+                    R.color.calendar_button_disable_color
                 }
-                updateLogs(newYear, newMonth, 1)
-            },
-            enabled = !loadingState && !(year == 2022 && month == 8),
-        ) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowLeft,
-                contentDescription = "last month",
-                modifier = Modifier
-                    .padding(end = 80.dp)
-                    .size(24.dp)
-            )
-        }
-        TextButton(
-            onClick = {
-                Toast.makeText(App.instance.applicationContext, "text", Toast.LENGTH_SHORT).show()
-            },
-        ) {
-            Text(
-                text = "$year.$month",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp,
-                color = colorResource(id = R.color.etc_title_color),
-                modifier = Modifier.padding(horizontal = 20.dp),
-            )
-        }
-        IconButton(
-            onClick = {
-                var newYear = year
-                val newMonth = month.plus(1).let {
-                    if (12 < it) {
-                        ++newYear
-                        1
-                    } else {
-                        it
+            ),
+            modifier = Modifier
+                .clickableWithoutRipple(
+                    enabled = !loadingState && !(year == 2022 && month == 8),
+                    onClick = {
+                        var newYear = year
+                        val newMonth = month
+                            .minus(1)
+                            .let {
+                                if (it == 0) {
+                                    --newYear
+                                    12
+                                } else {
+                                    it
+                                }
+                            }
+                        updateLogs(newYear, newMonth, 1)
                     }
+                )
+                .padding(start = 20.dp, end = 50.dp)
+                .size(24.dp)
+        )
+        Text(text = "$year.$month",
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 20.sp,
+            color = colorResource(id = R.color.etc_title_color),
+            modifier = Modifier
+                .clickableWithoutRipple { openAlertDialog = true }
+                .padding(horizontal = 20.dp)
+        )
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowRight,
+            contentDescription = "next month",
+            tint = colorResource(
+                id = if (!loadingState && !isToday(year, month, TodayCalendarUtils.day)) {
+                    R.color.calendar_button_color
+                } else {
+                    R.color.calendar_button_disable_color
                 }
-                updateLogs(newYear, newMonth, 1)
-            },
-            enabled =
-            !loadingState && !isToday(year, month, TodayCalendarUtils.day)
-        ) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = "next month",
-                modifier = Modifier
-                    .padding(start = 80.dp)
-                    .size(24.dp)
-            )
-        }
+            ),
+            modifier = Modifier
+                .clickableWithoutRipple(
+                    enabled = !loadingState && !isToday(year, month, TodayCalendarUtils.day),
+                    onClick = {
+                        var newYear = year
+                        val newMonth = month
+                            .plus(1)
+                            .let {
+                                if (12 < it) {
+                                    ++newYear
+                                    1
+                                } else {
+                                    it
+                                }
+                            }
+                        updateLogs(newYear, newMonth, 1)
+                    },
+                )
+                .padding(start = 50.dp, end = 20.dp)
+                .size(24.dp)
+        )
+    }
+
+    if (openAlertDialog) {
+        DateSelectDialog(
+            year = year,
+            month = month,
+            onDismissRequest = { openAlertDialog = false },
+            onConfirmation = { year, month -> updateLogs(year, month, 1) }
+        )
     }
 }
 
@@ -139,7 +172,11 @@ private fun DayOfWeekRow(modifier: Modifier = Modifier) {
             .padding(vertical = 6.dp)
     ) {
         for (text in dayOfWeekStringArray) {
-            Text(text = text, fontSize = 14.sp)
+            Text(
+                text = text,
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.calendar_week_of_day_text)
+            )
         }
     }
 }
@@ -149,23 +186,19 @@ private fun CalendarItem(
     item: CalendarItem,
     dayOnClick: (Int?) -> Unit,
 ) {
-    TextButton(
-        onClick = { dayOnClick(item.dayText.toIntOrNull()) },
-        enabled = true,
+    Text(
+        text = item.dayText,
+        fontSize = 14.sp,
+        color = colorResource(id = R.color.etc_title_color),
+        textAlign = TextAlign.Center,
         modifier = Modifier
-            .background(
-                colorResource(id = item.background), RoundedCornerShape(10.dp)
+            .clickableWithoutRipple(
+                onClick = { dayOnClick(item.dayText.toIntOrNull()) }
             )
+            .background(colorResource(id = item.background), RoundedCornerShape(10.dp))
             .size(40.dp)
-    ) {
-        Text(
-            text = item.dayText,
-            fontSize = 14.sp,
-            color = colorResource(id = R.color.etc_title_color),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-        )
-    }
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
@@ -173,44 +206,38 @@ private fun CalendarSelectedItem(
     item: CalendarItem,
     dayOnClick: (Int?) -> Unit,
 ) {
-    TextButton(
-        onClick = { dayOnClick(item.dayText.toIntOrNull()) },
-        enabled = item.dayText.isNotEmpty(),
+    Text(
+        text = item.dayText,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold,
+        color = colorResource(id = R.color.selected_text_color),
+        textAlign = TextAlign.Center,
         modifier = Modifier
+            .clickableWithoutRipple(
+                onClick = { dayOnClick(item.dayText.toIntOrNull()) }
+            )
             .background(
                 colorResource(id = R.color.selected_background_color), CircleShape
             )
             .size(40.dp)
-    ) {
-        Text(
-            text = item.dayText,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.selected_text_color),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-        )
-    }
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
 private fun CalendarNextDayItem(
     item: CalendarItem,
 ) {
-    TextButton(
-        onClick = { },
-        enabled = false,
+    Text(
+        text = item.dayText,
+        fontSize = 14.sp,
+        color = colorResource(id = R.color.next_day_text),
+        textAlign = TextAlign.Center,
         modifier = Modifier
             .background(Color.Transparent)
             .size(40.dp)
-    ) {
-        Text(
-            text = item.dayText,
-            fontSize = 14.sp,
-            color = colorResource(id = R.color.next_day_text),
-            textAlign = TextAlign.Center,
-        )
-    }
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
@@ -218,28 +245,22 @@ private fun CalendarTodayItem(
     item: CalendarItem,
     dayOnClick: (Int?) -> Unit,
 ) {
-    TextButton(
-        onClick = { dayOnClick(item.dayText.toIntOrNull()) },
-        enabled = true,
+    Text(
+        text = item.dayText,
+        fontSize = 14.sp,
+        color = colorResource(id = R.color.today_select_color),
+        textAlign = TextAlign.Center,
         modifier = Modifier
+            .clickableWithoutRipple(onClick = { dayOnClick(item.dayText.toIntOrNull()) })
             .background(Color.Transparent)
-            .border(2.dp, colorResource(id = R.color.today_select_color), RoundedCornerShape(10.dp))
+            .border(
+                2.dp,
+                colorResource(id = R.color.today_select_color),
+                RoundedCornerShape(10.dp)
+            )
             .size(40.dp)
-    ) {
-        Text(
-            text = item.dayText,
-            fontSize = 14.sp,
-            color = colorResource(id = R.color.today_select_color),
-            textAlign = TextAlign.Center,
-        )
-    }
-}
-
-@Composable
-private fun CalendarBlankItem() {
-    TextButton(
-        onClick = { }, enabled = false, modifier = Modifier.size(40.dp)
-    ) {}
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
@@ -262,12 +283,11 @@ private fun LogCalendarRow(
             val itemDate = item.dayText.toIntOrNull()
             val isThisMonth = year == TodayCalendarUtils.year && month == TodayCalendarUtils.month
             when {
-                itemDate == null -> CalendarBlankItem()
+                itemDate == null -> Spacer(modifier = Modifier.size(40.dp))
                 isThisMonth && itemDate > TodayCalendarUtils.day -> CalendarNextDayItem(item = item)
                 day == itemDate -> CalendarSelectedItem(item = item, dayOnClick = dayOnClick)
                 isThisMonth && itemDate == TodayCalendarUtils.day -> CalendarTodayItem(
-                    item = item,
-                    dayOnClick = dayOnClick
+                    item = item, dayOnClick = dayOnClick
                 )
 
                 else -> CalendarItem(item = item, dayOnClick = dayOnClick)
@@ -394,27 +414,22 @@ private fun LogTableOfDay(
             val outTimeText = parseInOutTimeStamp(log.outTimeStamp)
             val isMissing =
                 { !inOutState || !isToday(year, month, day) || logs.lastOrNull() != log }
-            val durationSecondText =
-                log.durationSecond?.let { parseDurationSecond(it) }
-                    ?: if (isMissing()) "누락" else "-"
+            val durationSecondText = log.durationSecond?.let { parseDurationSecond(it) }
+                ?: if (isMissing()) "누락" else "-"
 
             Row(/*TODO 누락시 배경 설정 로직 필요*/
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(26.dp)
-                    .let {
-                        if (durationSecondText != "누락") {
-                            it
-                        } else {
-                            it.background(
-                                color = colorResource(id = R.color.missing_background),
-                                RoundedCornerShape(20.dp)
-                            )
-                        }
+                modifier = modifier.fillMaxWidth().height(26.dp).let {
+                    if (durationSecondText != "누락") {
+                        it
+                    } else {
+                        it.background(
+                            color = colorResource(id = R.color.missing_background),
+                            RoundedCornerShape(20.dp)
+                        )
                     }
-            ) {
+                }) {
                 Text(
                     text = inTimeText,
                     fontSize = 14.sp,
@@ -442,7 +457,7 @@ private fun LogTableOfDay(
 }
 
 @Composable
-fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel) {
+fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
 
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
@@ -454,6 +469,12 @@ fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel) {
         )
         DayOfWeekRow()
         if (loadingState) {
+            LoadingAnimation(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 200.dp)
+            )
+        } else {/* TODO loading animation view */
             LogCalendarGrid(
                 gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
                 dayOnClick = { viewModel.updateDay(it) },
@@ -461,7 +482,6 @@ fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel) {
                 month = viewModel.month,
                 day = viewModel.day
             )
-        } else {/* TODO loading animation view */
         }
         Spacer(modifier = Modifier.height(16.dp))
         AccumulationTimeCard(
@@ -490,11 +510,10 @@ fun CalendarPage(modifier: Modifier = Modifier, viewModel: LogViewModel) {
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun HeaderPreview() {
     CalendarPageHeader(
-        year = TodayCalendarUtils.year,
-        month = TodayCalendarUtils.month,
-        loadingState = false
+        year = TodayCalendarUtils.year, month = TodayCalendarUtils.month, loadingState = false
     )
 }
 
@@ -514,7 +533,7 @@ private fun CalendarItemPreview() {
             .fillMaxWidth()
             .padding(vertical = 6.dp)
     ) {
-        CalendarBlankItem()
+        Spacer(modifier = Modifier.size(40.dp))
         CalendarItem(CalendarItem("1", R.color.calendar_color1), {})
         CalendarSelectedItem(CalendarItem("2", R.color.calendar_color1), {})
         CalendarTodayItem(CalendarItem("3", R.color.calendar_color1), {})
@@ -601,7 +620,20 @@ private fun LogTableOfDayPreview() {
 @Composable
 @Preview(showBackground = true)
 private fun CalendarPagePreview() {
-//    CalendarPage()
+    val sharedPreferenceUtilss = SharedPreferenceUtilss.initialize(
+        LocalContext.current
+    )
+    sharedPreferenceUtilss.saveAccessToken("ACCESS_TOKEN")
+    val viewModel = LogViewModel(
+        TimeServerRepository(
+            Hane24Apis.hane24ApiService, sharedPreferenceUtilss
+        ), TimeDBRepository(
+            Room.inMemoryDatabaseBuilder(
+                LocalContext.current, TimeDatabase::class.java
+            ).build()
+        )
+    )
+    LogCalendarScreen(viewModel = viewModel)
 }
 
 private data class CalendarItem(

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/default_text"
             android:textSize="14dp"
-            tools:text="Retrofit2" />
+            tools:text="@string/retrofit2" />
 
         <TextView
             android:id="@+id/content_text"
