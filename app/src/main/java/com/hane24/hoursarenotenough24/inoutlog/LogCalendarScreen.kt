@@ -623,7 +623,7 @@ private fun CalendarPagePreview() {
     val sharedPreferenceUtilss = SharedPreferenceUtilss.initialize(
         LocalContext.current
     )
-    sharedPreferenceUtilss.saveAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDAwMDQsImVtYWlsIjoiamFld2Nob2lAc3R1ZGVudC40MnNlb3VsLmtyIiwibG9naW4iOiJqYWV3Y2hvaSIsImltYWdlX3VybCI6Imh0dHBzOi8vY2RuLmludHJhLjQyLmZyL3VzZXJzLzhhOWVlNWQ2ZmQyM2RlNDgxMWJkYjczYzczY2Y4ZDVlL2phZXdjaG9pLmpwZyIsImlzX3N0YWZmIjpmYWxzZSwiaWF0IjoxNjk5NDQ2MDAzLCJleHAiOjE3MDAwNTA4MDN9._h0QqGfocZgBL3IbbzuZgOgl9asYKczjzWj9Gd1ewOU")
+    sharedPreferenceUtilss.saveAccessToken("ACCESS_TOKEN")
     val viewModel = LogViewModel(
         TimeServerRepository(
             Hane24Apis.hane24ApiService, sharedPreferenceUtilss
