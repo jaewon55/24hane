@@ -72,6 +72,14 @@ private fun CalendarPageHeader(
 ) {
     var openAlertDialog by remember { mutableStateOf(false) }
 
+    if (openAlertDialog) {
+        DateSelectDialog(
+            year = year,
+            month = month,
+            onDismissRequest = { openAlertDialog = false },
+            onConfirmation = { year, month -> updateLogs(year, month, 1) }
+        )
+    }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -148,15 +156,6 @@ private fun CalendarPageHeader(
                 )
                 .padding(start = 50.dp, end = 20.dp)
                 .size(24.dp)
-        )
-    }
-
-    if (openAlertDialog) {
-        DateSelectDialog(
-            year = year,
-            month = month,
-            onDismissRequest = { openAlertDialog = false },
-            onConfirmation = { year, month -> updateLogs(year, month, 1) }
         )
     }
 }
