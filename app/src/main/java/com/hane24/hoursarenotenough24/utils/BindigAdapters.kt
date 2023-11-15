@@ -161,8 +161,8 @@ fun bindCalendarRecyclerView(
     recyclerView: RecyclerView,
     data: List<CalendarItem>?
 ) {
-    val adapter = recyclerView.adapter as LogListFragment.LogCalendarAdapter
-    adapter.submitList(data)
+//    val adapter = recyclerView.adapter as LogListFragment.LogCalendarAdapter
+//    adapter.submitList(data)
 }
 
 @BindingAdapter("item", "selectedYear", "selectedDay", "selectedMonth", requireAll = false)

@@ -1,39 +1,36 @@
 package com.hane24.hoursarenotenough24
 
-import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.AnimationDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
-import com.hane24.hoursarenotenough24.inoutlog.CalendarPage
 import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
 import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
+import com.hane24.hoursarenotenough24.inoutlog.LogViewModel
+import com.hane24.hoursarenotenough24.inoutlog.LogViewModelFactory
 import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
+import com.hane24.hoursarenotenough24.repository.TimeDBRepository
+import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.repository.UserRepository
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-import com.hane24.hoursarenotenough24.utils.getColorHelper
 import com.hane24.hoursarenotenough24.widget.BasicWidget
 import kotlinx.coroutines.launch
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,9 +38,19 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
     }
     private val overViewViewModel: OverViewViewModel by viewModels {
-        OverViewModelFactory(App.sharedPreferenceUtilss, UserRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss))
+        OverViewModelFactory(
+            App.sharedPreferenceUtilss,
+            UserRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss)
+        )
     }
-    private val logListViewModel: LogListViewModel by viewModels()
+
+    //    private val logListViewModel: LogListViewModel by viewModels ()
+    private val logViewModel: LogViewModel by viewModels {
+        LogViewModelFactory(
+            TimeServerRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss),
+            TimeDBRepository(createDatabase())
+        )
+    }
     private val reissueViewModel: ReissueViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(overViewViewModel::refresh) }
 
@@ -80,9 +87,11 @@ class MainActivity : AppCompatActivity() {
                     R.id.bottom_navigation_home_menu -> {
                         OverViewFragment()
                     }
+
                     R.id.bottom_navigation_calendar_menu -> {
                         LogListFragment()
                     }
+
                     else -> {
                         EtcOptionFragment()
                     }
@@ -94,11 +103,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calendarBackToToday() {
-        logListViewModel.changeCalendarDate(
+        logViewModel.updateLogs(
             TodayCalendarUtils.year,
             TodayCalendarUtils.month,
             TodayCalendarUtils.day
         )
+//        logListViewModel.changeCalendarDate(
+//            TodayCalendarUtils.year,
+//            TodayCalendarUtils.month,
+//            TodayCalendarUtils.day
+//        )
     }
 
     fun moveToFragment(fragment: Fragment) {
@@ -126,7 +140,8 @@ class MainActivity : AppCompatActivity() {
         controller.isAppearanceLightStatusBars = !currentNightMode
         controller.isAppearanceLightNavigationBars = !currentNightMode
         if (currentNightMode) {
-            binding.loadingLayout.background = AppCompatResources.getDrawable(this, R.color.default_text)
+            binding.loadingLayout.background =
+                AppCompatResources.getDrawable(this, R.color.default_text)
             binding.loadingProgressbar.setImageResource(R.drawable.loading_dark_animated_vector)
         } else {
             binding.loadingProgressbar.setImageResource(R.drawable.loading_animated_vector)

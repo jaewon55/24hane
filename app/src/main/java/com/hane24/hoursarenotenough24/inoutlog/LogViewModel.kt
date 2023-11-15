@@ -1,19 +1,22 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.TagLog
-import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.network.Hane24Apis
+import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.repository.UserRepository
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,15 +24,13 @@ import retrofit2.HttpException
 import java.util.Calendar
 
 class LogViewModel(
-    private val getLogsUseCase: GetLogsUseCase =
-        GetLogsUseCase(
-            TimeServerRepository(
-                Hane24Apis.hane24ApiService,
-                SharedPreferenceUtils
-            ),
-            TimeDBRepository(createDatabase())
-        )
+    timeServerRepository: TimeServerRepository,
+    timeDBRepository: TimeDBRepository
 ) : ViewModel() {
+    private val getLogsUseCase =
+        GetLogsUseCase(timeServerRepository, timeDBRepository)
+    private val deleteAllLogsUseCase =
+        DeleteAllLogsUseCase(timeDBRepository)
 
     private var _year = TodayCalendarUtils.year
     val year: Int
@@ -75,6 +76,7 @@ class LogViewModel(
         viewModelScope.launch {
             getLogs(_year, _month, day)
         }
+        Log.d("day_text", "init")
     }
 
     suspend fun reloadLogs(year: Int, month: Int) {
@@ -88,7 +90,8 @@ class LogViewModel(
     fun updateLogs(year: Int, month: Int, day: Int = 1) {
         if (year == 2022 && month < 8) return
         if (year > TodayCalendarUtils.year ||
-            (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month)) {
+            (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month)
+        ) {
             return
         }
         viewModelScope.launch {
@@ -100,12 +103,19 @@ class LogViewModel(
         inOutState = isIn
     }
 
+    fun deleteAllLogsInDatabase() {
+        viewModelScope.launch { deleteAllLogsUseCase() }
+    }
+
     private suspend fun getLogs(year: Int, month: Int, day: Int) {
+        val yearBeforeChange = _year
+        val monthBeforeChange = _month
+
         try {
-            _loadingState.value = true
-            _tagLogs = getLogsUseCase(year, month)
             _year = year
             _month = month
+            _loadingState.value = true
+            _tagLogs = getLogsUseCase(year, month)
             this.day = day
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401
@@ -119,8 +129,23 @@ class LogViewModel(
         } catch (err: Exception) {
             _errorState.value = State.NETWORK_FAIL
         } finally {
-            _errorState.value = State.SUCCESS
+            if (_errorState.value != State.SUCCESS) {
+                _year = yearBeforeChange
+                _month = monthBeforeChange
+                _errorState.value = State.SUCCESS
+            }
             _loadingState.value = false
         }
     }
 }
+
+class LogViewModelFactory(
+    private val timeServerRepository: TimeServerRepository,
+    private val timeDBRepository: TimeDBRepository
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return LogViewModel(timeServerRepository, timeDBRepository) as T
+    }
+}
+
