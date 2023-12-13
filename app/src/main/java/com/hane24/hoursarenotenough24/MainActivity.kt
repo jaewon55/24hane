@@ -25,6 +25,9 @@ import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
+import com.hane24.hoursarenotenough24.reissue.ReissueViewModelFactory
+import com.hane24.hoursarenotenough24.reissue.ReissueViewModelNew
+import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.repository.UserRepository
@@ -51,7 +54,14 @@ class MainActivity : AppCompatActivity() {
             TimeDBRepository(createDatabase())
         )
     }
-    private val reissueViewModel: ReissueViewModel by viewModels()
+    private val reissueViewModel: ReissueViewModelNew by viewModels {
+        ReissueViewModelFactory(
+            ReissueRepository(
+                Hane24Apis.hane24ApiService,
+                App.sharedPreferenceUtilss
+            )
+        )
+    }
     private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(overViewViewModel::refresh) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +89,6 @@ class MainActivity : AppCompatActivity() {
         val animationDrawable = binding.loadingProgressbar.drawable as AnimatedVectorDrawable
         animationDrawable.start()
         binding.bottomNavigation.setOnItemSelectedListener {
-            calendarBackToToday()
             if (it.isChecked) {
                 true
             } else {
@@ -89,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     R.id.bottom_navigation_calendar_menu -> {
+                        calendarBackToToday()
                         LogListFragment()
                     }
 
@@ -150,6 +160,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFragmentsViewModel() {
         binding.overViewViewModel = overViewViewModel
+        reissueViewModel.reissueState
     }
 
     private fun setRefresh() {
@@ -187,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         binding.swipeRefreshLayout.isRefreshing
         binding.swipeRefreshLayout.setOnRefreshListener {
             mainViewModel.refresh()
+            reissueViewModel.reload()
 //            overViewViewModel.refreshButtonOnClick()
 //            logListViewModel.refreshButtonOnClick()
 //            reissueViewModel.refreshButtonOnClick()

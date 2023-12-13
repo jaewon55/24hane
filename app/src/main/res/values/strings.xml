@@ -68,5 +68,11 @@ limitations under the License.</string>
     <string name="widget_login_error">"로그인 상태가 아닙니다. 로그인 후 다시 시도해주세요."</string>
     <string name="etc_license">라이선스</string>
     <string name="retrofit2">Retrofit2</string>
+    <string name="reissue_apply_description">신청 후 업체에 입금해주세요</string>
+    <string name="reissue_apply_additional_description">업체에서 입금 확인 후 제작이 진행됩니다.</string>
+    <string name="reissue_progress_description">제작은 약 2주간 소요됩니다</string>
+    <string name="reissue_progress_additional_description">출입카드 재발급 신청 후 업체에서 입금 확인 후 제작이 진행됩니다.</string>
+    <string name="reissue_end_description">카드를 수령해주세요</string>
+    <string name="reissue_end_additional_description">재발급 카드는 데스크에서 수령가능합니다.</string>
 
 </resources>
