@@ -61,6 +61,12 @@ class LogViewModel(
             }
         }
 
+    val totalAccumulationTime: Long
+        get() = _tagLogs.sumOf { it.durationSecond ?: 0L }
+
+    val acceptedAccumulationTime: Long
+        get() = _tagLogs.sumOf { it.durationSecond ?: 0L } - 10L
+
     private val _loadingState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean>
         get() = _loadingState

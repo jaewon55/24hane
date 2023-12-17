@@ -81,5 +81,6 @@
     <color name="in_state_color">#00BABC</color>
     <color name="overview_in_background">#33000000</color>
 
+    <color name="accumulation_card_border_color">#00000000</color>
 
 </resources>

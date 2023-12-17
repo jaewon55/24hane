@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -320,13 +321,34 @@ private fun LogCalendarGrid(
 }
 
 @Composable
-private fun AccumulationTimeCard(modifier: Modifier = Modifier, text: String) {
+private fun AccumulationTimeCard(
+    modifier: Modifier = Modifier,
+    totalAccumulationTime: Long,
+    acceptedAccumulationTime: Long,
+) {
+    var accumulationTimeState by remember { mutableStateOf(true) }
+    val text: String
+    val background: Color
+
+    if (accumulationTimeState) {
+        text = "총 " + parseAccumulationTime(totalAccumulationTime)
+        background = colorResource(id = R.color.default_text)
+    } else {
+        text = "인정 시간 " + parseAccumulationTime(acceptedAccumulationTime)
+        background = colorResource(id = R.color.selected_background_color)
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
-            .border(2.dp, colorResource(id = R.color.etc_title_color), RoundedCornerShape(10.dp))
-            .background(colorResource(id = R.color.default_text), RoundedCornerShape(10.dp))
+            .border(
+                2.dp,
+                colorResource(id = R.color.accumulation_card_border_color),
+                RoundedCornerShape(10.dp)
+            )
+            .background(background, RoundedCornerShape(10.dp))
+            .clickable { accumulationTimeState = !accumulationTimeState }
     ) {
         Text(
             text = text,
@@ -484,7 +506,8 @@ fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         AccumulationTimeCard(
-            text = "총 " + parseAccumulationTime(viewModel.tagLogs.sumOf { it.durationSecond ?: 0L })
+            totalAccumulationTime = viewModel.totalAccumulationTime,
+            acceptedAccumulationTime = viewModel.acceptedAccumulationTime,
         )
         Spacer(modifier = Modifier.height(20.dp))
         TableDateAndAccumulationTime(
@@ -578,7 +601,10 @@ private fun LogCalendarPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun AccumulationTimeCardPreview() {
-    AccumulationTimeCard(text = "총 " + parseAccumulationTime(23135))
+    AccumulationTimeCard(
+        totalAccumulationTime = 23135,
+        acceptedAccumulationTime = 23000,
+    )
 }
 
 @Composable
