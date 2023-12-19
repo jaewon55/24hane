@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,13 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
-import com.hane24.hoursarenotenough24.repository.UserRepository
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
