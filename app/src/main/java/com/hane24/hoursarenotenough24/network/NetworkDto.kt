@@ -3,7 +3,7 @@ package com.hane24.hoursarenotenough24.network
 import com.google.gson.annotations.SerializedName
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.data.TimeLogItem
-import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
+import com.hane24.hoursarenotenough24.database.TagLogDto
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,7 +24,9 @@ data class AccumulationTimeInfo(
 )
 
 data class GetAllTagPerMonthDto(
-    val inOutLogs: List<TagLog>
+    val inOutLogs: List<TagLog>,
+    val totalAccumulationTime: Long,
+    val acceptedAccumulationTime: Long,
 )
 
 data class InOutLog(
@@ -48,11 +50,11 @@ data class ReissueRequestResult(
     val request_at: String
 )
 
-fun GetAllTagPerMonthDto.asDatabaseDto(date: String): List<TimeDatabaseDto> {
+fun GetAllTagPerMonthDto.asDatabaseDto(date: String): List<TagLogDto> {
     val format = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
     return if (inOutLogs.isEmpty()) {
         listOf(
-            TimeDatabaseDto(
+            TagLogDto(
 //                0,
                 date + "00",
                 0,
@@ -68,7 +70,7 @@ fun GetAllTagPerMonthDto.asDatabaseDto(date: String): List<TimeDatabaseDto> {
                 log.outTimeStamp != null -> format.format(log.outTimeStamp * 1000)
                 else -> date + "00"
             }
-            TimeDatabaseDto(
+            TagLogDto(
 //                0,
                 dateOfLog,
                 log.inTimeStamp ?: 0,

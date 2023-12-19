@@ -1,7 +1,7 @@
 package com.hane24.hoursarenotenough24.repository
 
 import com.hane24.hoursarenotenough24.database.TimeDatabase
-import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
+import com.hane24.hoursarenotenough24.database.TagLogDto
 import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.network.asDatabaseDto
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
@@ -19,8 +19,8 @@ class TimeRepositoryC(private val db: TimeDatabase) {
 //        return db.timeDatabaseDAO().getAll()
 //    }
 
-    suspend fun getMonthOrNull(date: String): List<TimeDatabaseDto>? {
-        val dataBaseData = db.timeDatabaseDAO().getMonth(date)
+    suspend fun getMonthOrNull(date: String): List<TagLogDto>? {
+        val dataBaseData = db.timeDatabaseDAO().getTagLogMonth(date)
         return if (dataBaseData.isEmpty() || shouldReloadDataFromServer(dataBaseData[0])) {
             null
         } else {
@@ -28,7 +28,7 @@ class TimeRepositoryC(private val db: TimeDatabase) {
         }
     }
 
-    suspend fun getMonthFromServer(date: String): List<TimeDatabaseDto> {
+    suspend fun getMonthFromServer(date: String): List<TagLogDto> {
         val year = date.substring(0, 4).toInt()
         val month = date.substring(4, 6).toInt()
         val networkData = Hane24Apis
@@ -42,30 +42,22 @@ class TimeRepositoryC(private val db: TimeDatabase) {
         return monthTimeLog
     }
 
-    suspend fun getMonthNoneUpdate(date: String): List<TimeDatabaseDto> =
-        db.timeDatabaseDAO().getMonth(date)
+    suspend fun getMonthNoneUpdate(date: String): List<TagLogDto> =
+        db.timeDatabaseDAO().getTagLogMonth(date)
 
-    suspend fun getDay(date: String): List<TimeDatabaseDto> {
-        return db.timeDatabaseDAO().getDay(date)
-    }
-
-    private suspend fun insert(timeInfo: List<TimeDatabaseDto>) {
-        db.timeDatabaseDAO().insertAll(*(timeInfo.toTypedArray()))
+    private suspend fun insert(timeInfo: List<TagLogDto>) {
+        db.timeDatabaseDAO().insertTagLogAll(*(timeInfo.toTypedArray()))
     }
 
     suspend fun deleteMonth(date: String) {
-        db.timeDatabaseDAO().deleteMonth(date)
-    }
-
-    suspend fun deleteOne(date: String, inTime: Long, outTime: Long) {
-        db.timeDatabaseDAO().deleteOne(date, inTime, outTime)
+//        db.timeDatabaseDAO().deleteTagLogMonth(date)
     }
 
     suspend fun deleteAll() {
-        db.timeDatabaseDAO().deleteAll()
+        db.timeDatabaseDAO().deleteTagLogAll()
     }
 
-    private fun shouldReloadDataFromServer(data: TimeDatabaseDto): Boolean {
+    private fun shouldReloadDataFromServer(data: TagLogDto): Boolean {
         val updateTime = SimpleDateFormat("yyyyMM", Locale("ko")).format(data.updateTime)
         val dataDate = data.date.substring(0, 6)
         var y = TodayCalendarUtils.year

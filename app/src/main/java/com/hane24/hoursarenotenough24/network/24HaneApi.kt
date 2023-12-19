@@ -24,7 +24,7 @@ interface Hane24Api {
         @Header("Authorization") token: String?
     ): MainInfo
 
-    @GET("/v2/tag-log/getAllTagPerMonth")
+    @GET("/v3/tag-log/getAllTagPerMonth")
     suspend fun getAllTagPerMonth(
         @Header("Authorization") token: String?,
         @Query("year") year: Int,

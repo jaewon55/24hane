@@ -61,11 +61,13 @@ class LogViewModel(
             }
         }
 
+    private var _totalAccumulationTime = 0L
     val totalAccumulationTime: Long
-        get() = _tagLogs.sumOf { it.durationSecond ?: 0L }
+        get() = _totalAccumulationTime
 
+    private var _acceptedAccumulationTime = 0L
     val acceptedAccumulationTime: Long
-        get() = _tagLogs.sumOf { it.durationSecond ?: 0L } - 10L
+        get() = _acceptedAccumulationTime
 
     private val _loadingState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean>
@@ -82,7 +84,6 @@ class LogViewModel(
         viewModelScope.launch {
             getLogs(_year, _month, day)
         }
-        Log.d("day_text", "init")
     }
 
     suspend fun reloadLogs(year: Int, month: Int) {
@@ -121,7 +122,11 @@ class LogViewModel(
             _year = year
             _month = month
             _loadingState.value = true
-            _tagLogs = getLogsUseCase(year, month)
+            getLogsUseCase(year, month).also {
+                _tagLogs = it.tagLogs
+                _totalAccumulationTime = it.totalAccumulationTime
+                _acceptedAccumulationTime = it.acceptedAccumulationTime
+            }
             this.day = day
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401

@@ -1,8 +1,8 @@
 package com.hane24.hoursarenotenough24.data
 
 import com.hane24.hoursarenotenough24.R
-import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
-import com.hane24.hoursarenotenough24.network.InOutLog
+import com.hane24.hoursarenotenough24.database.AccumulationTimeDto
+import com.hane24.hoursarenotenough24.database.TagLogDto
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
 import java.text.SimpleDateFormat
@@ -98,29 +98,40 @@ data class TagLog(
     val durationSecond: Long?
 )
 
-fun List<TagLog>.asDatabaseDto(year: Int, month: Int): List<TimeDatabaseDto> {
-    val date = String.format("%4d%02d", year, month)
-    val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
-    return if (isEmpty()) {
-        listOf(
-            TimeDatabaseDto(
-                date + "00", 0, 0, 0, System.currentTimeMillis()
+data class AccumulationTimeWithTagLog(
+    val totalAccumulationTime: Long,
+    val acceptedAccumulationTime: Long,
+    val tagLogs: List<TagLog>,
+) {
+    fun asDatabaseAccumulationTimeDto(year: Int, month: Int): AccumulationTimeDto {
+        val date = String.format("%4d%02d", year, month)
+        return AccumulationTimeDto(date, totalAccumulationTime, acceptedAccumulationTime)
+    }
+
+    fun asDatabaseTagLogDto(year: Int, month: Int): List<TagLogDto> {
+        val date = String.format("%4d%02d", year, month)
+        val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale("ko", "KR"))
+        return if (tagLogs.isEmpty()) {
+            listOf(
+                TagLogDto(
+                    date + "00", 0, 0, 0, System.currentTimeMillis()
+                )
             )
-        )
-    } else {
-        map { log ->
-            val dateOfLog = when {
-                log.inTimeStamp != null -> simpleDateFormat.format(log.inTimeStamp * 1000)
-                log.outTimeStamp != null -> simpleDateFormat.format(log.outTimeStamp * 1000)
-                else -> date + "00"
+        } else {
+            tagLogs.map { log ->
+                val dateOfLog = when {
+                    log.inTimeStamp != null -> simpleDateFormat.format(log.inTimeStamp * 1000)
+                    log.outTimeStamp != null -> simpleDateFormat.format(log.outTimeStamp * 1000)
+                    else -> date + "00"
+                }
+                TagLogDto(
+                    dateOfLog,
+                    log.inTimeStamp ?: 0,
+                    log.outTimeStamp ?: 0,
+                    log.durationSecond,
+                    System.currentTimeMillis()
+                )
             }
-            TimeDatabaseDto(
-                dateOfLog,
-                log.inTimeStamp ?: 0,
-                log.outTimeStamp ?: 0,
-                log.durationSecond,
-                System.currentTimeMillis()
-            )
         }
     }
 }
