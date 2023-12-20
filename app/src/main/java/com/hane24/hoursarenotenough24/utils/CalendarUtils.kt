@@ -47,7 +47,7 @@ fun Calendar.calculateDaysOfMonth() = when (get(Calendar.MONTH) + 1) {
 
 fun getDayOfWeekString(year: Int, month: Int, day: Int): String {
     val calendar = Calendar.getInstance()
-    calendar.set(year, month, day)
+    calendar.set(year, month - 1, day)
     return when (calendar.get(Calendar.DAY_OF_WEEK)) {
         Calendar.SUNDAY -> "일요일"
         Calendar.MONDAY -> "월요일"

@@ -79,5 +79,7 @@
     <color name="overview_graph_type_text_color">#9B9797</color>
     <color name="overview_curr_status_color">#FFFFFF</color>
 
+    <color name="accumulation_card_border_color">#FFFFFF</color>
+
 
 </resources>

@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.database.TimeDatabase
-import com.hane24.hoursarenotenough24.database.TimeDatabaseDto
+import com.hane24.hoursarenotenough24.database.TagLogDto
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -30,7 +30,7 @@ class TimeDBRepositoryTest {
     @Test
     fun `읽기 테스트`() = runTest {
         //given
-        val timeDto = TimeDatabaseDto(
+        val timeDto = TagLogDto(
             "20230930",
             100,
             1001,
@@ -38,7 +38,7 @@ class TimeDBRepositoryTest {
             System.currentTimeMillis()
         )
 
-        db.timeDatabaseDAO().insertAll(timeDto)
+        db.timeDatabaseDAO().insertTagLogAll(timeDto)
 
         //when
         val result = timeDBRepository.getTagLogPerMonth(2023, 9)

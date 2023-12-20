@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,13 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
-import com.hane24.hoursarenotenough24.repository.UserRepository
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -61,6 +56,14 @@ class LogViewModel(
             }
         }
 
+    private var _totalAccumulationTime = 0L
+    val totalAccumulationTime: Long
+        get() = _totalAccumulationTime
+
+    private var _acceptedAccumulationTime = 0L
+    val acceptedAccumulationTime: Long
+        get() = _acceptedAccumulationTime
+
     private val _loadingState = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean>
         get() = _loadingState
@@ -76,7 +79,6 @@ class LogViewModel(
         viewModelScope.launch {
             getLogs(_year, _month, day)
         }
-        Log.d("day_text", "init")
     }
 
     suspend fun reloadLogs(year: Int, month: Int) {
@@ -115,7 +117,11 @@ class LogViewModel(
             _year = year
             _month = month
             _loadingState.value = true
-            _tagLogs = getLogsUseCase(year, month)
+            getLogsUseCase(year, month).also {
+                _tagLogs = it.tagLogs
+                _totalAccumulationTime = it.totalAccumulationTime
+                _acceptedAccumulationTime = it.acceptedAccumulationTime
+            }
             this.day = day
         } catch (err: HttpException) {
             val isLoginFail = err.code() == 401

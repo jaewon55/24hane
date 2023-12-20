@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(tableName = "tagging_log", primaryKeys = ["date", "inTimeStamp", "outTimeStamp"])
-data class TimeDatabaseDto(
+data class TagLogDto(
 //    @PrimaryKey(autoGenerate = true)
 //    val id: Long,
     @ColumnInfo
@@ -22,7 +22,17 @@ data class TimeDatabaseDto(
     val updateTime: Long
 )
 
-fun List<TimeDatabaseDto>.asDomainModel(): List<TimeLogItem> {
+@Entity(tableName = "accumulation_time", primaryKeys = ["date"])
+data class AccumulationTimeDto(
+    @ColumnInfo
+    val date: String,
+    @ColumnInfo
+    val totalAccumulationTime: Long?,
+    @ColumnInfo
+    val acceptedAccumulationTime: Long?,
+)
+
+fun List<TagLogDto>.asDomainModel(): List<TimeLogItem> {
     val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
     return map { log ->
         val day = log.date.substring(6..7).toInt()

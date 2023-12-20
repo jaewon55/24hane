@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.repository
 
+import com.hane24.hoursarenotenough24.data.AccumulationTimeWithTagLog
 import com.hane24.hoursarenotenough24.data.DomainModelDto
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.network.Hane24Api
@@ -15,10 +16,14 @@ class TimeServerRepository(
         year: Int,
         month: Int,
         token: String? = sharedPreferenceUtils.getAccessToken()
-    ): List<TagLog> =
-        hane24Apis.getAllTagPerMonth(
-            token,
-            year,
-            month
-        ).inOutLogs
+    ): AccumulationTimeWithTagLog {
+        val allTagPerMonthDto = hane24Apis.getAllTagPerMonth(token, year, month)
+        return allTagPerMonthDto.let {
+            AccumulationTimeWithTagLog(
+                it.totalAccumulationTime,
+                it.acceptedAccumulationTime,
+                it.inOutLogs
+            )
+        }
+    }
 }
