@@ -6,17 +6,17 @@ import java.util.Calendar
 import java.util.Locale
 
 class GraphInfo(private val accumulationTimes: List<Long>, private val isMonth: Boolean) {
-    private val percentTimes = parseTimeToPercent()
+    private val percentTimes: List<Long> = parseTimeToPercent()
 
     fun calculateGraphHeight(
         index: Int,
         density: Float = App.instance.applicationContext.resources.displayMetrics.density
     ): Int {
         val value = percentTimes[index]
-        val maxHeight = 77
+        val maxHeight = 87
         val whiteHeight = (maxHeight * (value * 0.01)).toInt() + 10 // maxHeight * percent + minHeight
 
-        return (whiteHeight * density).toInt()
+        return whiteHeight
     }
 
     private fun parseTimeToPercent(): List<Long> {
@@ -40,6 +40,7 @@ class GraphInfo(private val accumulationTimes: List<Long>, private val isMonth: 
         if (isMonth) {
             val format = SimpleDateFormat("yyyy.M", Locale("ko"))
 
+            calendar.add(Calendar.MONTH, -index)
             return format.format(calendar.time)
         } else {
             val format = SimpleDateFormat("M.d(E)", Locale("ko"))
