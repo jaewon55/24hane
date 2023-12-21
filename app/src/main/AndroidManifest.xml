@@ -24,8 +24,8 @@
             android:resource="@array/preloaded_fonts" />
 
         <receiver
-            android:name=".widget.BasicWidget"
-            android:exported="false">
+            android:name=".widget.AppWidgetReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

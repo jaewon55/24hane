@@ -32,7 +32,6 @@ import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.repository.UserRepository
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-import com.hane24.hoursarenotenough24.widget.BasicWidget
 import kotlinx.coroutines.launch
 
 
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
         setContentView(binding.root)
-        refreshWidget()
+//        refreshWidget()
         setStatusAndNavigationBar()
         setFragmentsViewModel()
         setRefresh()
@@ -134,14 +133,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
-            this.action = "ANIM_OFF"
-        })
+//        this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
+//            this.action = "ANIM_OFF"
+//        })
     }
 
-    private fun refreshWidget() = this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
-        this.action = "REFRESH"
-    })
+//    private fun refreshWidget() = this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
+//        this.action = "REFRESH"
+//    })
 
     private fun setStatusAndNavigationBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
