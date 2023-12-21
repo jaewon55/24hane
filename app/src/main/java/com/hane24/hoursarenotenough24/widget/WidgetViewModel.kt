@@ -6,6 +6,7 @@ import androidx.glance.appwidget.updateAll
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.overview.ParseTimeUseCase
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,7 +27,7 @@ enum class WidgetState {
 
 class WidgetViewModel(
     private val hane24Api: Hane24Api,
-    private val token: String?
+    private val sharedPreferenceUtilss: SharedPreferenceUtilss
 ) {
     private val _widget = MyAppWidget()
 
@@ -46,10 +47,10 @@ class WidgetViewModel(
         _widget.updateAll(context)
 
         try {
-            val accTimeInfo: AccumulationTimeInfo = hane24Api.getAccumulationTime(token)
+            val accTimeInfo: AccumulationTimeInfo = hane24Api.getAccumulationTime(sharedPreferenceUtilss.getAccessToken())
 
             _monthAccumulationTime.value = accTimeInfo.monthAccumulationTime
-            _acceptedAccumulationTime.value = accTimeInfo.todayAccumulationTime
+            _acceptedAccumulationTime.value = accTimeInfo.monthlyAcceptedAccumulationTime
         } catch (err: Exception) {
             if (err is HttpException && err.code() == 401) {
                 _state.value = WidgetState.LOGIN_ERROR

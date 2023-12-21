@@ -1,6 +1,7 @@
 package com.hane24.hoursarenotenough24.widget
 
 import android.content.Context
+import android.text.format.DateFormat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,6 +41,10 @@ import com.hane24.hoursarenotenough24.network.Hane24Apis
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Date
+import java.util.Locale
 
 class AppWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = MyAppWidget()
@@ -49,7 +54,7 @@ class MyAppWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val viewModel = WidgetViewModel(
             Hane24Apis.hane24ApiService,
-            App.sharedPreferenceUtilss.getAccessToken()
+            App.sharedPreferenceUtilss
         )
 
         viewModel.updateWidget(context)
@@ -63,8 +68,6 @@ class MyAppWidget : GlanceAppWidget() {
 
 @Composable
 fun WidgetUI(viewModel: WidgetViewModel) {
-
-
     val state by viewModel.state.collectAsState()
     val monthTime by viewModel.monthAccumulationTimeInfo.collectAsState()
     val acceptedTime by viewModel.acceptedAccumulationTime.collectAsState()
@@ -136,23 +139,29 @@ fun WidgetTitle(onClick: suspend () -> Unit, state: WidgetState) {
         fontSize = TextUnit(10.0f, TextUnitType.Sp)
     )
 
+    val currTimeFormat = SimpleDateFormat("MM.dd HH:mm", Locale("ko"))
+
     Row {
         Column {
             Text(text = "24HANE", style = titleStyle)
-            Text(text = "12.24 11:01 기준", style = timeStyle)
+            Text(text = "${currTimeFormat.format(System.currentTimeMillis())} 기준", style = timeStyle)
         }
         if (state == WidgetState.LOADING) {
-            CircularProgressIndicator(modifier = GlanceModifier.size(16.dp))
+            Box(contentAlignment = Alignment.TopEnd) {
+                CircularProgressIndicator(modifier = GlanceModifier.size(16.dp))
+            }
         } else {
-            Image(
-                modifier = GlanceModifier.clickable {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        onClick()
-                    }
-                }.size(16.dp),
-                provider = AndroidResourceImageProvider(R.drawable.ic_widget_refresh),
-                contentDescription = "widget_refresh"
-            )
+            Box(contentAlignment = Alignment.TopEnd) {
+                Image(
+                    modifier = GlanceModifier.clickable {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            onClick()
+                        }
+                    }.size(16.dp),
+                    provider = AndroidResourceImageProvider(R.drawable.ic_widget_refresh),
+                    contentDescription = "widget_refresh"
+                )
+            }
         }
     }
 }

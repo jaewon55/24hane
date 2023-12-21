@@ -31,7 +31,7 @@ interface Hane24Api {
         @Query("month") month: Int,
     ): GetAllTagPerMonthDto
 
-    @GET("/v2/tag-log/accumulationTimes")
+    @GET("/v3/tag-log/accumulationTimes")
     suspend fun getAccumulationTime(
         @Header("Authorization") token: String?,
     ): AccumulationTimeInfo
