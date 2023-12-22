@@ -17,6 +17,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -48,7 +49,7 @@ class MyAppWidget : GlanceAppWidget() {
             // create your AppWidget here
             WidgetUI(viewModel)
             LaunchedEffect(viewModel.state.collectAsState().value == WidgetState.INIT) {
-                RefreshAction.refresh(viewModel, context, id)
+                RefreshAction.refresh(viewModel, context)
 
             }
         }
@@ -120,22 +121,22 @@ class RefreshAction : ActionCallback {
     ) {
         Log.i("widget", "onAction Called")
 
-        refresh(viewModel, context, glanceId)
+        refresh(viewModel, context)
     }
 
     companion object {
-        suspend fun refresh(viewModel: WidgetViewModel, context: Context, glanceId: GlanceId) {
+        suspend fun refresh(viewModel: WidgetViewModel, context: Context) {
             viewModel.updateLoading()
-            MyAppWidget().update(context, glanceId)
+            MyAppWidget().updateAll(context)
 
             try {
                 viewModel.refresh()
             } catch (err: Exception) {
                 viewModel.updateError(err)
-                MyAppWidget().update(context, glanceId)
+                MyAppWidget().updateAll(context)
             } finally {
                 viewModel.refreshComplete()
-                MyAppWidget().update(context, glanceId)
+                MyAppWidget().updateAll(context)
             }
         }
     }
