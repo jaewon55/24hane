@@ -1,8 +1,5 @@
 package com.hane24.hoursarenotenough24.widget
 
-import android.content.Context
-import android.util.Log
-import androidx.glance.appwidget.updateAll
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.overview.ParseTimeUseCase
@@ -19,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import retrofit2.HttpException
 
 enum class WidgetState {
+    INIT,
     LOADING,
     LOGIN_ERROR,
     UNKNOWN_ERROR,
@@ -29,41 +27,43 @@ class WidgetViewModel(
     private val hane24Api: Hane24Api,
     private val sharedPreferenceUtilss: SharedPreferenceUtilss
 ) {
-    private val _widget = MyAppWidget()
-
     private val _monthAccumulationTime = MutableStateFlow(0L)
-    val monthAccumulationTimeInfo: StateFlow<Pair<String, String>> = _monthAccumulationTime.map { ParseTimeUseCase().parseAccumulationTime(it) }
-        .stateIn(CoroutineScope(Dispatchers.Default), SharingStarted.Lazily, "0" to "0")
+    val monthAccumulationTimeInfo: StateFlow<Pair<String, String>> =
+        _monthAccumulationTime.map { ParseTimeUseCase().parseAccumulationTime(it) }
+            .stateIn(CoroutineScope(Dispatchers.Default), SharingStarted.Lazily, "0" to "0")
 
     private val _acceptedAccumulationTime = MutableStateFlow(0L)
-    val acceptedAccumulationTime: StateFlow<Pair<String, String>> = _acceptedAccumulationTime.map { ParseTimeUseCase().parseAccumulationTime(it) }
-        .stateIn(CoroutineScope(Dispatchers.Default), SharingStarted.Lazily, "0" to "0")
+    val acceptedAccumulationTime: StateFlow<Pair<String, String>> =
+        _acceptedAccumulationTime.map { ParseTimeUseCase().parseAccumulationTime(it) }
+            .stateIn(CoroutineScope(Dispatchers.Default), SharingStarted.Lazily, "0" to "0")
 
-    private val _state = MutableStateFlow<WidgetState>(WidgetState.LOADING)
+    private val _state = MutableStateFlow<WidgetState>(WidgetState.INIT)
     val state = _state.asStateFlow()
 
-    suspend fun updateWidget(context: Context) {
+    fun updateLoading() {
         _state.value = WidgetState.LOADING
-        _widget.updateAll(context)
+    }
 
-        try {
-            val accTimeInfo: AccumulationTimeInfo = hane24Api.getAccumulationTime(sharedPreferenceUtilss.getAccessToken())
+    suspend fun refresh() {
+        val accTimeInfo: AccumulationTimeInfo =
+            hane24Api.getAccumulationTime(sharedPreferenceUtilss.getAccessToken())
 
-            _monthAccumulationTime.value = accTimeInfo.monthAccumulationTime
-            _acceptedAccumulationTime.value = accTimeInfo.monthlyAcceptedAccumulationTime
-        } catch (err: Exception) {
-            if (err is HttpException && err.code() == 401) {
-                _state.value = WidgetState.LOGIN_ERROR
-            } else {
-                _state.value = WidgetState.UNKNOWN_ERROR
-            }
-            _widget.updateAll(context)
-        } finally {
-            if (_state.value == WidgetState.LOGIN_ERROR || _state.value == WidgetState.UNKNOWN_ERROR) {
-                delay(2000)
-            }
-            _state.value = WidgetState.COMPLETE
-            _widget.updateAll(context)
+        _monthAccumulationTime.value = accTimeInfo.monthAccumulationTime
+        _acceptedAccumulationTime.value = accTimeInfo.monthlyAcceptedAccumulationTime
+    }
+
+    fun updateError(err: Exception) {
+        if (err is HttpException && err.code() == 401) {
+            _state.value = WidgetState.LOGIN_ERROR
+        } else {
+            _state.value = WidgetState.UNKNOWN_ERROR
         }
+    }
+
+    suspend fun refreshComplete() {
+        if (state.value == WidgetState.LOGIN_ERROR || state.value == WidgetState.UNKNOWN_ERROR) {
+            delay(2000)
+        }
+        _state.value = WidgetState.COMPLETE
     }
 }
