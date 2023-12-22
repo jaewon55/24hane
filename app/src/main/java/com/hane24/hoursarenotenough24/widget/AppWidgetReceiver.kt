@@ -7,11 +7,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
+import androidx.glance.AndroidResourceImageProvider
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.Action
 import androidx.glance.action.ActionParameters
+import androidx.glance.action.clickable
+import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.ActionCallback
@@ -20,11 +24,15 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
 import androidx.glance.layout.Column
+import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.text.Text
 import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
@@ -96,6 +104,44 @@ fun WidgetCompletePage(
         Spacer(modifier = GlanceModifier.height(13.dp))
         WidgetContent(title = "월 누적 시간", time = monthTime, isChecked = false)
         Spacer(modifier = GlanceModifier.height(16.dp))
+        WidgetContent(title = "인정 시간", time = acceptedTime, isChecked = true)
+    }
+}
+
+@Composable
+fun WidgetCompletePageV2(
+    onClick: Action,
+    state: WidgetState,
+    monthTime: Pair<String, String>,
+    acceptedTime: Pair<String, String>
+) {
+    Column(
+        modifier = GlanceModifier.fillMaxSize()
+            .background(ImageProvider(R.drawable.app_widget_background))
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(modifier = GlanceModifier.fillMaxWidth()) {
+            WidgetContent(title = "월 누적 시간", time = monthTime, isChecked = false)
+            if (state == WidgetState.LOADING || state == WidgetState.INIT) {
+                Box(modifier = GlanceModifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
+                    CircularProgressIndicator(modifier = GlanceModifier.size(16.dp))
+                }
+            } else {
+                Box(modifier = GlanceModifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
+                    Image(
+                        modifier = GlanceModifier.clickable(
+                            onClick = onClick
+                        )
+                            .size(16.dp),
+                        provider = AndroidResourceImageProvider(R.drawable.ic_widget_refresh),
+                        contentDescription = "widget_refresh"
+                    )
+                }
+            }
+        }
+        Spacer(modifier = GlanceModifier.height(4.dp))
         WidgetContent(title = "인정 시간", time = acceptedTime, isChecked = true)
     }
 }
