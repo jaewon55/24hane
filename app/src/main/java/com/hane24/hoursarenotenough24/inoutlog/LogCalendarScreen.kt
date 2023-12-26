@@ -666,20 +666,18 @@ private data class CalendarItem(
     @ColorRes val background: Int,
 )
 
-private fun parseAccumulationTime(time: Long): String {
-    var second = time
+private fun parseAccumulationTime(second: Long): String {
     val hour = second / 3600
-    second -= hour * 3600
-    val min = second / 60
+    val min = (second % 3600) / 60
     return String.format("%d시간 %d분", hour, min)
 }
 
 private fun parseDurationSecond(durationSecond: Long): String {
     var second = durationSecond
     val hour = second / 3600
-    second -= hour * 3600
+    second %= 3600
     val min = second / 60
-    second -= min * 60
+    second %= 60
     return String.format("%02d:%02d:%02d", hour, min, second)
 }
 
