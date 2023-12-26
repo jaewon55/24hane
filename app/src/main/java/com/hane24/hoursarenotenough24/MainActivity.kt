@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    //    private val logListViewModel: LogListViewModel by viewModels ()
     private val logViewModel: LogViewModel by viewModels {
         LogViewModelFactory(
             TimeServerRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss),
@@ -159,6 +158,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFragmentsViewModel() {
         binding.overViewViewModel = overViewViewModel
+        logViewModel.updateInOutState(overViewViewModel.inOutState.value)
         reissueViewModel.reissueState
     }
 
