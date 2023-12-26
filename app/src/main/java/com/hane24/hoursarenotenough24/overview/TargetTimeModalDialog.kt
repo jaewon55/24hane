@@ -1,4 +1,4 @@
-package com.hane24.hoursarenotenough24.inoutlog
+package com.hane24.hoursarenotenough24.overview
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,19 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.utils.NumberPicker
-import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
-
 
 @Composable
-fun DateSelectDialog(
-    year: Int,
-    month: Int,
+fun TargetTimeModalDialog(
+    currentTargetTime: Int,
     onDismissRequest: () -> Unit,
-    onConfirmation: (Int, Int) -> Unit
+    onConfirmation: (Int) -> Unit
 ) {
-    var yearValue by remember { mutableIntStateOf(year - 2022) }
-    var monthValue by remember { mutableIntStateOf(if (year == 2022) month - 8 else month - 1) }
-
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -51,13 +45,15 @@ fun DateSelectDialog(
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
+            var targetTimeValue by remember { mutableIntStateOf(currentTargetTime - 12) }
+
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize(),
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -66,38 +62,13 @@ fun DateSelectDialog(
                 ) {
                     NumberPicker(
                         minValue = 0,
-                        maxValue = TodayCalendarUtils.year - 2022,
-                        value = yearValue.let {
-                            it
-                        },
-                        displayedValues = Array(TodayCalendarUtils.year - 2021) { "${2022 + it}년" },
+                        maxValue = 12,
+                        value = targetTimeValue,
+                        displayedValues = Array(13) { "${it + 12} 시간" },
                         setOnValueChangedListener = { new ->
-                            yearValue = new
-                            if (new == 0) monthValue = 0
+                            targetTimeValue = new
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                    )
-                    NumberPicker(
-                        minValue = 0,
-                        maxValue = when (yearValue) {
-                            0 -> 4
-                            TodayCalendarUtils.year - 2022 -> TodayCalendarUtils.month - 1
-                            else -> 11
-                        },
-                        value = monthValue,
-                        displayedValues = Array(
-                            when (yearValue) {
-                                0 -> 5
-                                TodayCalendarUtils.year - 2022 -> TodayCalendarUtils.month
-                                else -> 12
-                            }
-                        ) { "${if (yearValue == 0) 8 + it else 1 + it}월" },
-                        modifier = Modifier
-                            .weight(1f),
-                        setOnValueChangedListener = { new ->
-                            monthValue = new
-                        }
+                        modifier = Modifier.fillMaxWidth(0.6f)
                     )
                 }
                 Row(
@@ -128,10 +99,7 @@ fun DateSelectDialog(
                         modifier = Modifier
                             .clickable(
                                 onClick = {
-                                    onConfirmation(
-                                        2022 + yearValue,
-                                        monthValue + if (yearValue == 0) 8 else 1
-                                    )
+                                    onConfirmation(targetTimeValue + 12)
                                     onDismissRequest()
                                 }
                             )
@@ -144,8 +112,11 @@ fun DateSelectDialog(
     }
 }
 
+@Preview
 @Composable
-@Preview(showBackground = true)
-private fun DateSelectDialogPreview() {
-    DateSelectDialog(2023, 11, onDismissRequest = {}, onConfirmation = { _, _ -> })
+private fun TargetTimeModalDialogPreview() {
+    TargetTimeModalDialog(currentTargetTime = 12, onDismissRequest = { /*TODO*/ }, onConfirmation = {})
 }
+
+
+

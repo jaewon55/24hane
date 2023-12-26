@@ -1,30 +1,20 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -40,12 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -126,23 +113,9 @@ fun ContentOfDayTimeCard(
     contentColor: Color,
     mainMessage: String,
     subMessage: String,
+    durationSecond: Long
 ) {
     var openDialog by remember { mutableStateOf(false) }
-    val inTimeStamp = 1703550806445L
-    var durationHour by remember { mutableLongStateOf(0L) }
-    var durationMinute by remember { mutableLongStateOf(0L) }
-    var durationSecond by remember { mutableLongStateOf(0L) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            val second = (System.currentTimeMillis() - inTimeStamp) / 1000
-
-            durationHour = second / 3600
-            durationMinute = (second % 3600) / 60
-            durationSecond = second % 60
-            delay(1000)
-        }
-    }
 
     if (openDialog) {
         InfoModalDialog(
@@ -177,19 +150,40 @@ fun ContentOfDayTimeCard(
                 fontSize = 16.sp,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CustomText(text = "$durationHour", color = contentColor, fontSize = 20.sp)
+                CustomText(
+                    text = "${durationSecond / 3600}",
+                    color = contentColor,
+                    fontSize = 20.sp
+                )
                 CustomText(text = "시간 ", color = contentColor, fontSize = 16.sp)
-                CustomText(text = "$durationMinute", color = contentColor, fontSize = 20.sp)
+                CustomText(
+                    text = "${(durationSecond % 3600) / 60}",
+                    color = contentColor,
+                    fontSize = 20.sp
+                )
                 CustomText(text = "분 ", color = contentColor, fontSize = 16.sp)
-                CustomText(text = "$durationSecond", color = contentColor, fontSize = 20.sp)
-                CustomText(text = "초", color = contentColor, fontSize = 16.sp)
             }
         }
     }
 }
 
 @Composable
-fun BehindContentOfDayTimeCard(modifier: Modifier = Modifier) {
+fun BehindContentOfDayTimeCard(
+    modifier: Modifier = Modifier,
+    durationSecond: Long,
+    targetTime: Int,
+    saveTargetTimeListener: (Int) -> Unit
+) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        TargetTimeModalDialog(
+            currentTargetTime = targetTime,
+            onDismissRequest = { openDialog = false },
+            onConfirmation = saveTargetTimeListener
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -210,19 +204,31 @@ fun BehindContentOfDayTimeCard(modifier: Modifier = Modifier) {
                     color = Color(0xFF333333),
                     fontSize = 16.sp,
                 )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    CustomText(text = "12", color = Color(0xFF333333), fontSize = 20.sp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickableWithoutRipple { openDialog = true }
+                ) {
+                    CustomText(text = "$targetTime", color = Color(0xFF333333), fontSize = 20.sp)
                     CustomText(text = "시간 ", color = Color(0xFF333333), fontSize = 16.sp)
                 }
             }
         }
         Spacer(modifier = Modifier.height(14.dp))
-        GradientCircularProgress(percentage = 0.5f, radius = 60.dp, stroke = 8.dp)
+        GradientCircularProgress(
+            percentage = (durationSecond / (targetTime * 3600f)),
+            radius = 60.dp,
+            stroke = 8.dp
+        )
     }
 }
 
 @Composable
-fun ContentOfMonthTimeCard(modifier: Modifier = Modifier, contentColor: Color) {
+fun ContentOfMonthTimeCard(
+    modifier: Modifier = Modifier,
+    contentColor: Color,
+    accumulationHours: String,
+    accumulationMinutes: String,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -232,9 +238,9 @@ fun ContentOfMonthTimeCard(modifier: Modifier = Modifier, contentColor: Color) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            CustomText(text = "0", color = contentColor, fontSize = 20.sp)
+            CustomText(text = accumulationHours, color = contentColor, fontSize = 20.sp)
             CustomText(text = "시간 ", color = contentColor, fontSize = 16.sp)
-            CustomText(text = "5", color = contentColor, fontSize = 20.sp)
+            CustomText(text = accumulationMinutes, color = contentColor, fontSize = 20.sp)
             CustomText(text = "분", color = contentColor, fontSize = 16.sp)
         }
     }
@@ -243,6 +249,8 @@ fun ContentOfMonthTimeCard(modifier: Modifier = Modifier, contentColor: Color) {
 @Composable
 fun BehindContentOfMonthTimeCard(
     modifier: Modifier = Modifier,
+    acceptedHours: String,
+    acceptedMinutes: String,
     mainMessage: String,
     subMessage: String,
 ) {
@@ -276,12 +284,93 @@ fun BehindContentOfMonthTimeCard(
         ) {
             CustomText(text = "인정 시간", color = Color(0xFF735BF2), fontSize = 16.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CustomText(text = "0", color = Color(0xFF735BF2), fontSize = 20.sp)
+                CustomText(text = acceptedHours, color = Color(0xFF735BF2), fontSize = 20.sp)
                 CustomText(text = "시간 ", color = Color(0xFF735BF2), fontSize = 16.sp)
-                CustomText(text = "5", color = Color(0xFF735BF2), fontSize = 20.sp)
+                CustomText(text = acceptedMinutes, color = Color(0xFF735BF2), fontSize = 20.sp)
                 CustomText(text = "분", color = Color(0xFF735BF2), fontSize = 16.sp)
             }
         }
+    }
+}
+
+@Composable
+fun TimeCardView(
+    todayAccumulationTime: Long, /* 서버에 저장된 todayAccumulationTime(ms) */
+    dayTargetTime: Int, /* 목표 시간(최소 12시간) */
+    inTimeStamp: Long?, /* if (inOutState가 IN) 마지막 입장 시간(ms) else null */
+    monthAccumulationTime: Pair<String, String>, /* 월 누적 시간 hour to minute */
+    monthAcceptedTime: Pair<String, String>, /* v3에서 추가된 인정 시간 hour to minute */
+    tagLatencyNotice: Pair<String, String>, /* v3에서 추가된 tagLatencyNotice 서버에서 받아온 title to content */
+    fundInfoNotice: Pair<String, String>, /* v3에서 추가된 fundInfoNotice 서버에서 받아온 title to content */
+    saveTargetTimeListener: (Int) -> Unit, /* targetTime 저장 함수 */
+) {
+    var durationSecond by remember {
+        val ms = if (inTimeStamp != null) {
+            System.currentTimeMillis() - inTimeStamp + todayAccumulationTime
+        } else {
+            todayAccumulationTime
+        }
+        mutableLongStateOf(ms / 1000)
+    }
+
+    LaunchedEffect(Unit) {
+        while (inTimeStamp != null) {
+            durationSecond =
+                (System.currentTimeMillis() - inTimeStamp + todayAccumulationTime) / 1000
+            delay((60 - durationSecond % 60) * 1000)
+        }
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.Transparent)
+    ) {
+        Spacer(modifier = Modifier.height(30.dp))
+        ExpandedAnimationCard(
+            expandedHeight = 270.dp,
+            background = Color.White,
+            content = { modifier, color ->
+                ContentOfDayTimeCard(
+                    modifier,
+                    color,
+                    tagLatencyNotice.first,
+                    tagLatencyNotice.second,
+                    durationSecond,
+                )
+            },
+            contentBehind = { modifier ->
+                BehindContentOfDayTimeCard(
+                    modifier,
+                    durationSecond,
+                    dayTargetTime,
+                    saveTargetTimeListener,
+                )
+            }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        ExpandedAnimationCard(
+            expandedHeight = 130.dp,
+            background = Color(0xFF735BF2),
+            content = { modifier, color ->
+                ContentOfMonthTimeCard(
+                    modifier,
+                    color,
+                    monthAccumulationTime.first,
+                    monthAccumulationTime.second
+                )
+            },
+            contentBehind = { modifier ->
+                BehindContentOfMonthTimeCard(
+                    modifier,
+                    monthAcceptedTime.first,
+                    monthAcceptedTime.second,
+                    fundInfoNotice.first,
+                    fundInfoNotice.second
+                )
+            },
+        )
     }
 }
 
@@ -291,8 +380,23 @@ fun ExpandedAnimationDayCardPreview() {
     ExpandedAnimationCard(
         260.dp,
         background = Color.White,
-        { p1, p2 -> ContentOfDayTimeCard(p1, p2, "", "") },
-        { BehindContentOfDayTimeCard(it) }
+        { p1, p2 ->
+            ContentOfDayTimeCard(
+                p1,
+                p2,
+                "",
+                "",
+                0L,
+            )
+        },
+        { modifier ->
+            BehindContentOfDayTimeCard(
+                modifier,
+                0,
+                12,
+                {}
+            )
+        }
     )
 }
 
@@ -302,38 +406,27 @@ fun ExpandedAnimationMonthCardPreview() {
     ExpandedAnimationCard(
         130.dp,
         background = Color(0xFF735BF2),
-        { p1, p2 -> ContentOfMonthTimeCard(p1, p2) },
-        { BehindContentOfMonthTimeCard(it, "", "") }
+        { p1, p2 -> ContentOfMonthTimeCard(p1, p2, "0", "5") },
+        { BehindContentOfMonthTimeCard(it, "0", "5", "", "") }
     )
 }
 
-@Preview()
+@Preview(backgroundColor = 0xFFF5F5F5, showBackground = true)
 @Composable
 fun TimeCardPreview() {
     val m1 = "입실 중 이용 시간은 \n실제 기록과 다를 수 있습니다."
     val s1 = "입실 / 퇴실 태깅에 유의해주세요."
     val m2 = "인정 시간은 지원금 산정 시\n반영 되는 시간입니다."
     val s2 = "1일 최대 12시간"
-    Log.d("tt", "${System.currentTimeMillis()}")
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color(0xFFF5F5F5))
-    ) {
-        Spacer(modifier = Modifier.height(30.dp))
-        ExpandedAnimationCard(
-            260.dp,
-            background = Color.White,
-            { p1, p2 -> ContentOfDayTimeCard(p1, p2, m1, s1) },
-            { BehindContentOfDayTimeCard(it) }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        ExpandedAnimationCard(
-            130.dp,
-            background = Color(0xFF735BF2),
-            { p1, p2 -> ContentOfMonthTimeCard(p1, p2) },
-            { BehindContentOfMonthTimeCard(it, m2, s2) }
-        )
-    }
+
+    TimeCardView(
+        todayAccumulationTime = ((3600L * 1) + (60L * 0)) * 1000,
+        dayTargetTime = 12,
+        inTimeStamp = 1703577908187L,
+        monthAccumulationTime = "0" to "5",
+        monthAcceptedTime = "0" to "5",
+        tagLatencyNotice = m1 to s1,
+        fundInfoNotice = m2 to s2,
+        {}
+    )
 }

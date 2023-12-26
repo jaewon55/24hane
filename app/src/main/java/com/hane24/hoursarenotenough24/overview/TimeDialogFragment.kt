@@ -7,7 +7,6 @@ import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.hane24.hoursarenotenough24.databinding.FragmentOverviewDialogBinding
-import kotlinx.coroutines.flow.toList
 
 class TimeDialogFragment(private val isMonth: Boolean) : DialogFragment() {
     private val binding by lazy { FragmentOverviewDialogBinding.inflate(layoutInflater) }
