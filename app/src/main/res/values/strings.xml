@@ -12,7 +12,7 @@
     <string name="open_source_license">OpenSourceLicense</string>
     <string name="widget_error">연결된 네트워크가 없어요.</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="app_widget_description">This is an app widget description</string>
+    <string name="app_widget_description">간편하게 42Seoul 출입시간을 확인할 수 있는 위젯입니다.</string>
     <string name="_24hoursarenotenough">24HoursAreNotEnough</string>
     <string name="today_card_title">Today</string>
     <string name="month_card_title">Month</string>

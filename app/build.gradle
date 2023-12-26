@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation 'androidx.compose.animation:animation-graphics-android:1.5.4'
     implementation "androidx.activity:activity-compose:1.8.0"
+    implementation 'androidx.glance:glance-appwidget:1.0.0'
 
 
     // Room

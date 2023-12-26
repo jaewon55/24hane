@@ -20,7 +20,8 @@ data class AccumulationTimeInfo(
     val todayAccumulationTime: Long,
     val monthAccumulationTime: Long,
     val sixWeekAccumulationTime: List<Long>,
-    val sixMonthAccumulationTime: List<Long>
+    val sixMonthAccumulationTime: List<Long>,
+    val monthlyAcceptedAccumulationTime: Long
 )
 
 data class GetAllTagPerMonthDto(
