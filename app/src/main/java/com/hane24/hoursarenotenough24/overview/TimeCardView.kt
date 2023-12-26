@@ -1,6 +1,5 @@
 package com.hane24.hoursarenotenough24.overview
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -173,7 +172,18 @@ fun BehindContentOfDayTimeCard(
     modifier: Modifier = Modifier,
     durationSecond: Long,
     targetTime: Int,
+    saveTargetTimeListener: (Int) -> Unit
 ) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    if (openDialog) {
+        TargetTimeModalDialog(
+            currentTargetTime = targetTime,
+            onDismissRequest = { openDialog = false },
+            onConfirmation = saveTargetTimeListener
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -194,7 +204,10 @@ fun BehindContentOfDayTimeCard(
                     color = Color(0xFF333333),
                     fontSize = 16.sp,
                 )
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickableWithoutRipple { openDialog = true }
+                ) {
                     CustomText(text = "$targetTime", color = Color(0xFF333333), fontSize = 20.sp)
                     CustomText(text = "시간 ", color = Color(0xFF333333), fontSize = 16.sp)
                 }
@@ -302,7 +315,8 @@ fun TimeCardView(
 
     LaunchedEffect(Unit) {
         while (inTimeStamp != null) {
-            durationSecond = (System.currentTimeMillis() - inTimeStamp + todayAccumulationTime) / 1000
+            durationSecond =
+                (System.currentTimeMillis() - inTimeStamp + todayAccumulationTime) / 1000
             delay((60 - durationSecond % 60) * 1000)
         }
     }
@@ -331,6 +345,7 @@ fun TimeCardView(
                     modifier,
                     durationSecond,
                     dayTargetTime,
+                    saveTargetTimeListener,
                 )
             }
         )
@@ -378,7 +393,8 @@ fun ExpandedAnimationDayCardPreview() {
             BehindContentOfDayTimeCard(
                 modifier,
                 0,
-                12
+                12,
+                {}
             )
         }
     )
@@ -402,7 +418,6 @@ fun TimeCardPreview() {
     val s1 = "입실 / 퇴실 태깅에 유의해주세요."
     val m2 = "인정 시간은 지원금 산정 시\n반영 되는 시간입니다."
     val s2 = "1일 최대 12시간"
-    Log.d("tt", "${System.currentTimeMillis()}")
 
     TimeCardView(
         todayAccumulationTime = ((3600L * 1) + (60L * 0)) * 1000,
