@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -45,6 +44,10 @@ fun OverviewScreen() {
 //    val profileUrl by viewModel.profileImageUrl.collectAsState()
     val inOut = false
     val scrollState = rememberScrollState()
+    val m1 = "입실 중 이용 시간은 \n실제 기록과 다를 수 있습니다."
+    val s1 = "입실 / 퇴실 태깅에 유의해주세요."
+    val m2 = "인정 시간은 지원금 산정 시\n반영 되는 시간입니다."
+    val s2 = "1일 최대 12시간"
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -68,24 +71,21 @@ fun OverviewScreen() {
                 "https://cdn.intra.42.fr/users/cf44b163dd848ae2308f4b1b4fd4b6ed/seongjki.JPG",
                 inOut
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ExpandedAnimationCard(
-                260.dp,
-                background = Color.White,
-                { p1, p2 -> ContentOfDayTimeCard(p1, p2, "", "") },
-                { BehindContentOfDayTimeCard(it) }
-            )
-            Spacer(modifier = Modifier.height(22.dp))
-            ExpandedAnimationCard(
-                130.dp,
-                background = Color(0xFF735BF2),
-                { p1, p2 -> ContentOfMonthTimeCard(p1, p2) },
-                { BehindContentOfMonthTimeCard(it, "", "") }
+            TimeCardView(
+                todayAccumulationTime = ((3600L * 1) + (60L * 0)) * 1000,
+                dayTargetTime = 12,
+                inTimeStamp = 1703577908187L,
+                monthAccumulationTime = "0" to "5",
+                monthAcceptedTime = "0" to "5",
+                tagLatencyNotice = m1 to s1,
+                fundInfoNotice = m2 to s2,
+                {}
             )
             Spacer(modifier = Modifier.height(22.dp))
             TimeGraphViewPager()
             Spacer(modifier = Modifier.height(22.dp))
             PopulationCard(inOut)
+            Spacer(modifier = Modifier.height(22.dp))
         }
     }
 }

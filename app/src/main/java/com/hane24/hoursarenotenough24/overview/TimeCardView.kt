@@ -68,8 +68,8 @@ fun ExpandedAnimationCard(
         backgroundColor = cardBackground,
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
+            .fillMaxWidth()
             .animateContentSize()
-            .width(330.dp)
             .height(if (expanded) expandedHeight else 80.dp)
             .padding(1.dp)
             .clickableWithoutRipple {
