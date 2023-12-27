@@ -2,6 +2,7 @@ package com.hane24.hoursarenotenough24.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -25,8 +26,7 @@ fun PopulationCard(inOut: Boolean = true) {
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
-            .width(330.dp)
-            .height(80.dp)
+            .fillMaxWidth()
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
