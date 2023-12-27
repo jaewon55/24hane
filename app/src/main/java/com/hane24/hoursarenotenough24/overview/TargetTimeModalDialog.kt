@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.overview
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,11 +40,12 @@ fun TargetTimeModalDialog(
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
+            backgroundColor = colorResource(id = R.color.overview_in_color),
+            shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
         ) {
             var targetTimeValue by remember { mutableIntStateOf(currentTargetTime - 12) }
 
@@ -113,6 +115,7 @@ fun TargetTimeModalDialog(
 }
 
 @Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun TargetTimeModalDialogPreview() {
     TargetTimeModalDialog(currentTargetTime = 12, onDismissRequest = { /*TODO*/ }, onConfirmation = {})

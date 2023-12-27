@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.reissue
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -121,12 +122,14 @@ fun ReissueDialog(
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun ReissueDialogPreview() {
     ReissueDialog(isApply = true, onDismissRequest = {}, onConfirmation = {})
 }
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun ReissueDialogDonePreview() {
     ReissueDialog(isApply = false, onDismissRequest = {}, onConfirmation = {})
 }

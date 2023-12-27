@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,11 +46,12 @@ fun DateSelectDialog(
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
+            backgroundColor = colorResource(id = R.color.overview_in_color),
+            shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -146,6 +148,7 @@ fun DateSelectDialog(
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun DateSelectDialogPreview() {
     DateSelectDialog(2023, 11, onDismissRequest = {}, onConfirmation = { _, _ -> })
 }
