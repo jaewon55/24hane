@@ -186,19 +186,26 @@ private fun CalendarItem(
     item: CalendarItem,
     dayOnClick: (Int?) -> Unit,
 ) {
-    Text(
-        text = item.dayText,
-        fontSize = 14.sp,
-        color = colorResource(id = R.color.etc_title_color),
-        textAlign = TextAlign.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
+            .size(40.dp)
             .clickableWithoutRipple(
                 onClick = { dayOnClick(item.dayText.toIntOrNull()) }
             )
-            .background(colorResource(id = item.background), RoundedCornerShape(10.dp))
-            .size(40.dp)
-            .wrapContentHeight(align = Alignment.CenterVertically)
-    )
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.etc_title_color),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .size(30.dp)
+                .background(colorResource(id = item.background), RoundedCornerShape(10.dp))
+                .wrapContentHeight(align = Alignment.CenterVertically)
+        )
+
+    }
 }
 
 @Composable
@@ -206,38 +213,51 @@ private fun CalendarSelectedItem(
     item: CalendarItem,
     dayOnClick: (Int?) -> Unit,
 ) {
-    Text(
-        text = item.dayText,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Bold,
-        color = colorResource(id = R.color.selected_text_color),
-        textAlign = TextAlign.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
+            .size(40.dp)
             .clickableWithoutRipple(
                 onClick = { dayOnClick(item.dayText.toIntOrNull()) }
             )
-            .background(
-                colorResource(id = R.color.selected_background_color), CircleShape
-            )
-            .size(40.dp)
-            .wrapContentHeight(align = Alignment.CenterVertically)
-    )
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.selected_text_color),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .size(30.dp)
+                .background(
+                    colorResource(id = R.color.selected_background_color), CircleShape
+                )
+                .wrapContentHeight(align = Alignment.CenterVertically)
+        )
+
+    }
 }
 
 @Composable
 private fun CalendarNextDayItem(
     item: CalendarItem,
 ) {
-    Text(
-        text = item.dayText,
-        fontSize = 14.sp,
-        color = colorResource(id = R.color.next_day_text),
-        textAlign = TextAlign.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(Color.Transparent)
             .size(40.dp)
-            .wrapContentHeight(align = Alignment.CenterVertically)
-    )
+    ) {
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.next_day_text),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .background(Color.Transparent)
+                .size(30.dp)
+                .wrapContentHeight(align = Alignment.CenterVertically)
+        )
+    }
 }
 
 @Composable
@@ -245,23 +265,28 @@ private fun CalendarTodayItem(
     item: CalendarItem,
     dayOnClick: (Int?) -> Unit,
 ) {
-    Text(
-        text = item.dayText,
-        fontSize = 14.sp,
-        color = colorResource(id = R.color.today_select_color),
-        textAlign = TextAlign.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clickableWithoutRipple(onClick = { dayOnClick(item.dayText.toIntOrNull()) })
-            .background(Color.Transparent)
-            .border(
-                2.dp,
-                colorResource(id = R.color.today_select_color),
-                RoundedCornerShape(10.dp)
-            )
             .size(40.dp)
-            .wrapContentHeight(align = Alignment.CenterVertically)
-    )
-}
+            .clickableWithoutRipple(onClick = { dayOnClick(item.dayText.toIntOrNull()) })
+    ){
+        Text(
+            text = item.dayText,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.today_select_color),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .background(Color.Transparent)
+                .border(
+                    2.dp,
+                    colorResource(id = R.color.today_select_color),
+                    RoundedCornerShape(10.dp)
+                )
+                .size(30.dp)
+                .wrapContentHeight(align = Alignment.CenterVertically)
+        )
+    }}
 
 @Composable
 private fun LogCalendarRow(
@@ -277,7 +302,7 @@ private fun LogCalendarRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp)
+            .padding(vertical = 2.dp)
     ) {
         for (item in items) {
             val itemDate = item.dayText.toIntOrNull()
@@ -495,7 +520,7 @@ fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
                     .fillMaxWidth()
                     .defaultMinSize(minHeight = 200.dp)
             )
-        } else {/* TODO loading animation view */
+        } else {
             LogCalendarGrid(
                 gridItems = viewModel.tagLogs.asCalendarItems(viewModel.year, viewModel.month),
                 dayOnClick = { viewModel.updateDay(it) },
@@ -550,6 +575,7 @@ private fun DayOfWeekRowPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun CalendarItemPreview() {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth()
@@ -587,14 +613,14 @@ private fun LogCalendarPreview() {
         R.color.calendar_color3,
         R.color.calendar_color4,
     )
-    val gridItems = List(35) { i ->
-        if (i < 3 || 32 < i) {
+    val gridItems = List(42) { i ->
+        if (i < 5 || 35 < i) {
             CalendarItem("", R.color.transparent)
         } else {
-            CalendarItem("${i - 2}", colorArray.random())
+            CalendarItem("${i - 4}", colorArray.random())
         }
     }
-    LogCalendarGrid(gridItems = gridItems, dayOnClick = {}, year = 2023, month = 11, day = 1)
+    LogCalendarGrid(gridItems = gridItems, dayOnClick = {}, year = 2023, month = 12, day = 1)
 }
 
 @Composable
@@ -698,9 +724,9 @@ private fun List<TagLog>.asCalendarItems(year: Int, month: Int): List<CalendarIt
         }
     }
     calendar.set(year, month - 1, 1)
-    val itemCount = calendar.calculateDaysOfMonth() + (7 - calendar.calculateDaysOfMonth() % 7)
     val startIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1
     val lastIndex = startIndex + calendar.calculateDaysOfMonth() - 1
+    val itemCount = (lastIndex + 7) / 7 * 7
     return List(itemCount) {
         if (it < startIndex || lastIndex < it) {
             CalendarItem("", R.color.transparent)
