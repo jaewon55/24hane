@@ -41,6 +41,7 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
     val inOut = mainInfo.inoutState == "IN"
     val graphInfo by viewModel.accumulationGraphInfo.collectAsState()
     val accumulationTimeInfo by viewModel.accumulationTime.collectAsState()
+    val dayTargetTime by viewModel.dayTargetTime.collectAsState()
     val monthAccumulationTime by viewModel.monthAccumulationTime.collectAsState()
     val acceptedAccumulationTime by viewModel.acceptedAccumulationTime.collectAsState()
     val tagAt = mainInfo.tagAt.split("-", "T", ":", "Z").let {
@@ -83,13 +84,15 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
             Column(Modifier.verticalScroll(scrollState)) {
                 TimeCardView(
                     todayAccumulationTime = accumulationTimeInfo?.todayAccumulationTime ?: 0L,
-                    dayTargetTime = App.sharedPreferenceUtilss.getDayTargetTime() / 3600,
+                    dayTargetTime = dayTargetTime,
                     inTimeStamp = if (inOut) tagAt else null,
                     monthAccumulationTime = monthAccumulationTime,
                     monthAcceptedTime = acceptedAccumulationTime,
                     tagLatencyNotice = mainInfo.infoMessages.tagLatencyNotice.title to mainInfo.infoMessages.tagLatencyNotice.content,
                     fundInfoNotice = mainInfo.infoMessages.fundInfoNotice.title to mainInfo.infoMessages.fundInfoNotice.content
-                ) {}
+                ) {
+                    viewModel.onClickSaveTargetTime(false, it)
+                }
                 Spacer(modifier = Modifier.height(22.dp))
                 TimeGraphViewPager(graphInfo = graphInfo)
                 Spacer(modifier = Modifier.height(22.dp))

@@ -2,7 +2,9 @@ package com.hane24.hoursarenotenough24.overview
 
 class ParseTimeUseCase {
     fun parseTargetTime(time: Int): Int {
-        return time / 3600
+        val parsedTime = time / 3600
+
+        return if (parsedTime < 12) 12 else parsedTime
     }
 
     fun parseAccumulationTime(accumulationTime: Long?): Pair<String, String> {
