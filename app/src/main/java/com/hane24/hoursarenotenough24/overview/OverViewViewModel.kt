@@ -1,15 +1,13 @@
 package com.hane24.hoursarenotenough24.overview
 
 import androidx.lifecycle.*
-import com.hane24.hoursarenotenough24.error.ExceptionFactory
-import com.hane24.hoursarenotenough24.error.ExceptionHandler
-import com.hane24.hoursarenotenough24.error.ExceptionHandlerFactory
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
+import com.hane24.hoursarenotenough24.network.InfoMessage
+import com.hane24.hoursarenotenough24.network.InfoMessages
 import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.repository.UserRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
 class OverViewViewModel(
     sharedPreferenceUtilss: SharedPreferenceUtilss,
     userRepository: UserRepository,
-): ViewModel() {
+) : ViewModel() {
 
     /**
      * UseCase
@@ -32,7 +30,6 @@ class OverViewViewModel(
     private val changeTargetTimeUseCase = ChangeTargetTimeUseCase(sharedPreferenceUtilss)
     private val getUserInfoUseCase = GetUserInfoUseCase(userRepository)
     private val calculateProgressUseCase = CalculateProgressUseCase()
-
 
 
     /**
@@ -64,18 +61,22 @@ class OverViewViewModel(
         accumulationTime.map { parseTimeUseCase.parseAccumulationTime(it?.monthAccumulationTime) }
             .stateIn(viewModelScope, SharingStarted.Lazily, "0" to "0")
 
+    val acceptedAccumulationTime: StateFlow<Pair<String, String>> =
+        accumulationTime.map { parseTimeUseCase.parseAccumulationTime(it?.monthlyAcceptedAccumulationTime) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, "0" to "0")
+
     val dayProgressPercent: StateFlow<Int> =
         accumulationTime.combine(_dayTargetTime) { acc, target ->
             calculateProgressUseCase(acc?.todayAccumulationTime, target)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, 0)
-
-    val monthProgressPercent: StateFlow<Int> =
-        accumulationTime.combine(_monthTargetTime) { acc, target ->
-            calculateProgressUseCase(acc?.monthAccumulationTime, target)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, 0)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
     val accumulationGraphInfo: StateFlow<List<GraphInfo>> =
-        accumulationTime.map { transformGraphInfo(it?.sixWeekAccumulationTime, it?.sixMonthAccumulationTime) }
+        accumulationTime.map {
+            transformGraphInfo(
+                it?.sixWeekAccumulationTime,
+                it?.sixMonthAccumulationTime
+            )
+        }
             .stateIn(
                 viewModelScope,
                 SharingStarted.Lazily,
@@ -89,23 +90,36 @@ class OverViewViewModel(
      *  MainInfo
      */
 
-    private val _mainInfo = MutableStateFlow<MainInfo?>(null)
+    private val _mainInfo = MutableStateFlow(
+        MainInfo(
+            login = "marvin",
+            profileImage = "",
+            inoutState = "OUT",
+            tagAt = "2023-12-22T12:45:56.000Z",
+            gaepo = 0,
+            InfoMessages(
+                fundInfoNotice = InfoMessage("", ""),
+                tagLatencyNotice = InfoMessage("", "")
+            )
+        )
+    )
+    val mainInfo = _mainInfo.asStateFlow()
 
     val intraId: StateFlow<String> =
-        _mainInfo.map { it?.login ?: "marvin" }
+        _mainInfo.map { it.login }
             .stateIn(viewModelScope, SharingStarted.Lazily, "marvin")
 
     val profileImageUrl: StateFlow<String> =
-        _mainInfo.map { it?.profileImage ?: "" }
+        _mainInfo.map { it.profileImage }
             .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
     val inOutState: StateFlow<Boolean> =
-        _mainInfo.map { it?.inoutState == "IN" }
+        _mainInfo.map { it.inoutState == "IN" }
             .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    val populationSeochoAndGaepo: StateFlow<Pair<Int, Int>> =
-        _mainInfo.map { transformPopulationOfSeochoAndGaepo(it) }
-            .stateIn(viewModelScope, SharingStarted.Lazily, 0 to 0)
+    val populationGaepo: StateFlow<Int> =
+        _mainInfo.map { transformPopulationOfGaepo(it) }
+            .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
     /**
      *  State
@@ -114,9 +128,10 @@ class OverViewViewModel(
     private val _state = MutableStateFlow<State?>(null)
     val state = _state.asStateFlow()
 
-    val initState: StateFlow<Boolean> = _mainInfo.combine(accumulationTime) { mainInfo: MainInfo?, accTime: AccumulationTimeInfo? ->
-        mainInfo != null && accTime != null
-    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val initState: StateFlow<Boolean> =
+        _mainInfo.combine(accumulationTime) { mainInfo: MainInfo?, accTime: AccumulationTimeInfo? ->
+            mainInfo != null && accTime != null
+        }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
 
     private val _refreshLoading = MutableStateFlow(false)
@@ -139,11 +154,8 @@ class OverViewViewModel(
         _state.value = State.SUCCESS
     }
 
-    private fun transformPopulationOfSeochoAndGaepo(mainInfo: MainInfo?): Pair<Int, Int> {
-        val seocho = mainInfo?.seocho ?: 0
-        val gaepo = mainInfo?.gaepo ?: 0
-
-        return seocho to gaepo
+    private fun transformPopulationOfGaepo(mainInfo: MainInfo?): Int {
+        return mainInfo?.gaepo ?: 0
     }
 
     suspend fun refresh() {
@@ -184,7 +196,10 @@ class OverViewViewModel(
         }
     }
 
-    private fun transformGraphInfo(timeOfWeek: List<Long>?, timeOfMonth: List<Long>?): List<GraphInfo> {
+    private fun transformGraphInfo(
+        timeOfWeek: List<Long>?,
+        timeOfMonth: List<Long>?
+    ): List<GraphInfo> {
         val default = listOf(0L, 0L, 0L, 0L, 0L, 0L)
         val weekGraphInfo = GraphInfo(timeOfWeek ?: default, false)
         val monthGraphInfo = GraphInfo(timeOfMonth ?: default, true)
@@ -196,7 +211,7 @@ class OverViewViewModel(
 class OverViewModelFactory(
     private val sharedPreferenceUtilss: SharedPreferenceUtilss,
     private val userRepository: UserRepository
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return OverViewViewModel(sharedPreferenceUtilss, userRepository) as T

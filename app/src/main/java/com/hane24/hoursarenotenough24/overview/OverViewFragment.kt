@@ -74,8 +74,7 @@ class OverViewFragment : Fragment() {
 //        return binding.root
         return ComposeView(requireContext()).apply {
             setContent {
-                OverviewScreen(
-                )
+                OverviewScreen(viewModel)
             }
         }
     }

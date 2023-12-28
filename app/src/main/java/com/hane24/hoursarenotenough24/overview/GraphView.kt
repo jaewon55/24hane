@@ -55,7 +55,32 @@ import kotlin.math.floor
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Preview(backgroundColor = 0x000000)
-fun TimeGraphViewPager(modifier: Modifier = Modifier) {
+fun TimeGraphViewPager(
+    modifier: Modifier = Modifier, graphInfo: List<GraphInfo> = listOf(
+        GraphInfo(
+            listOf(
+                22990,
+                223639,
+                164895,
+                195015,
+                135654,
+                142993
+            ),
+            false
+        ),
+        GraphInfo(
+            listOf(
+                446713,
+                705377,
+                466280,
+                153657,
+                464216,
+                375666
+            ),
+            true
+        )
+    )
+) {
     val pageState = rememberPagerState { 2 }
 
 
@@ -73,44 +98,19 @@ fun TimeGraphViewPager(modifier: Modifier = Modifier) {
         selectedIdx = idx
     }
 
-    val graphInfo = listOf(
-            GraphInfo(
-                listOf(
-                    22990,
-                    223639,
-                    164895,
-                    195015,
-                    135654,
-                    142993
-                ),
-                false
-            ),
-            GraphInfo(
-                listOf(
-                    446713,
-                    705377,
-                    466280,
-                    153657,
-                    464216,
-                    375666
-                ),
-                true
-            )
-        )
-
-    Card(shape = RoundedCornerShape(20.dp)) {
-        Column(modifier = Modifier.padding(vertical = 28.dp, horizontal = 20.dp)) {
-            HorizontalPager(state = pageState, pageSpacing = 20.dp) { page ->
-                Column {
-                    GraphTitle(page)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    GraphInfoCard(page, graphInfo, selectedIdx ?: 0)
-                    TimeGraph(page, selectedIdx ?: 0, onClick, graphInfo)
+        Card(shape = RoundedCornerShape(20.dp)) {
+            Column(modifier = Modifier.padding(vertical = 28.dp, horizontal = 20.dp)) {
+                HorizontalPager(state = pageState, pageSpacing = 20.dp) { page ->
+                    Column {
+                        GraphTitle(page)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        GraphInfoCard(page, graphInfo, selectedIdx ?: 0)
+                        TimeGraph(page, selectedIdx ?: 0, onClick, graphInfo)
+                    }
                 }
+                DotPageIndicator(onClick = moveToPage, currentPage = pageState.currentPage)
             }
-            DotPageIndicator(onClick = moveToPage, currentPage = pageState.currentPage)
         }
-    }
 }
 
 @Composable

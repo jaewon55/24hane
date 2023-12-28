@@ -19,7 +19,7 @@ interface Hane24Api {
         @Header("Authorization") token: String?
     ): Response<String?>
 
-    @GET("/v2/tag-log/maininfo")
+    @GET("/v3/tag-log/maininfo")
     suspend fun getMainInfo(
         @Header("Authorization") token: String?
     ): MainInfo
