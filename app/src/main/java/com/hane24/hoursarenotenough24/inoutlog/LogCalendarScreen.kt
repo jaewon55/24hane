@@ -421,6 +421,7 @@ private fun LogTableOfDayHeader(modifier: Modifier = Modifier) {
             fontSize = 15.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.etc_title_color),
             modifier = Modifier.width(80.dp)
         )
         Text(
@@ -428,6 +429,7 @@ private fun LogTableOfDayHeader(modifier: Modifier = Modifier) {
             fontSize = 15.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.etc_title_color),
             modifier = Modifier.width(80.dp)
         )
         Text(
@@ -435,6 +437,7 @@ private fun LogTableOfDayHeader(modifier: Modifier = Modifier) {
             fontSize = 15.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.etc_title_color),
             modifier = Modifier.width(80.dp)
         )
     }
@@ -643,6 +646,7 @@ private fun TableDateAndAccumulationTimePreview() {
 
 @Composable
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun LogTableOfDayHeaderPreview() {
     LogTableOfDayHeader()
 }
