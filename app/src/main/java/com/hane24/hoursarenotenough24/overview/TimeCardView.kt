@@ -327,7 +327,6 @@ fun TimeCardView(
             .fillMaxWidth()
             .background(color = Color.Transparent)
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
         ExpandedAnimationCard(
             expandedHeight = 270.dp,
             background = Color.White,

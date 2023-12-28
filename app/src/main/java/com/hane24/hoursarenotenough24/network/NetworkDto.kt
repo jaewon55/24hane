@@ -13,7 +13,17 @@ data class MainInfo(
     val inoutState: String,
     val tagAt: String,
     val gaepo: Int,
-    val seocho: Int
+    val infoMessages: InfoMessages
+)
+
+data class InfoMessages(
+    val fundInfoNotice: InfoMessage,
+    val tagLatencyNotice: InfoMessage
+)
+
+data class InfoMessage(
+    val title: String,
+    val content: String
 )
 
 data class AccumulationTimeInfo(

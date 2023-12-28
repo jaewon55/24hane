@@ -3,9 +3,7 @@ package com.hane24.hoursarenotenough24.overview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -22,7 +20,10 @@ import com.hane24.hoursarenotenough24.R
 
 @Composable
 @Preview
-fun PopulationCard(inOut: Boolean = true) {
+fun PopulationCard(
+    inOut: Boolean = true,
+    population: Int = 123
+) {
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
@@ -41,7 +42,7 @@ fun PopulationCard(inOut: Boolean = true) {
             )
             Row {
                 Text(
-                    "321",
+                    population.toString(),
                     modifier = Modifier.alignByBaseline(),
                     fontSize = TextUnit(20.0f, TextUnitType.Sp),
                     color = colorResource(R.color.default_text),

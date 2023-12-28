@@ -18,41 +18,49 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
+import java.util.Calendar
 
 @Composable
-@Preview
-fun OverviewScreen() {
-//    val viewModel: OverViewViewModel = viewModel(
-//        factory = OverViewModelFactory(
-//            App.sharedPreferenceUtilss,
-//            UserRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss)
-//        )
-//    )
-//    val profileUrl by viewModel.profileImageUrl.collectAsState()
-    val inOut = false
+fun OverviewScreen(viewModel: OverViewViewModel) {
+    val mainInfo by viewModel.mainInfo.collectAsState()
+    val inOut = mainInfo.inoutState == "IN"
+    val graphInfo by viewModel.accumulationGraphInfo.collectAsState()
+    val accumulationTimeInfo by viewModel.accumulationTime.collectAsState()
+    val monthAccumulationTime by viewModel.monthAccumulationTime.collectAsState()
+    val acceptedAccumulationTime by viewModel.acceptedAccumulationTime.collectAsState()
+    val tagAt = mainInfo.tagAt.split("-", "T", ":", "Z").let {
+        val calendar = Calendar.getInstance()
+        calendar.set(
+            it[0].toInt(),
+            it[1].toInt(),
+            it[2].toInt(),
+            it[3].toInt(),
+            it[4].toInt(),
+            it[5].toDouble().toInt()
+        )
+        calendar.timeInMillis
+    }
     val scrollState = rememberScrollState()
-    val m1 = "입실 중 이용 시간은 \n실제 기록과 다를 수 있습니다."
-    val s1 = "입실 / 퇴실 태깅에 유의해주세요."
-    val m2 = "인정 시간은 지원금 산정 시\n반영 되는 시간입니다."
-    val s2 = "1일 최대 12시간"
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(colorResource(R.color.overview_in_color))
-        .verticalScroll(scrollState)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.overview_in_color))
     ) {
         if (inOut) {
             Image(
@@ -68,31 +76,34 @@ fun OverviewScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OverviewProfile(
-                "https://cdn.intra.42.fr/users/cf44b163dd848ae2308f4b1b4fd4b6ed/seongjki.JPG",
+                mainInfo.login,
+                mainInfo.profileImage,
                 inOut
             )
-            TimeCardView(
-                todayAccumulationTime = ((3600L * 1) + (60L * 0)) * 1000,
-                dayTargetTime = 12,
-                inTimeStamp = 1703577908187L,
-                monthAccumulationTime = "0" to "5",
-                monthAcceptedTime = "0" to "5",
-                tagLatencyNotice = m1 to s1,
-                fundInfoNotice = m2 to s2,
-                {}
-            )
-            Spacer(modifier = Modifier.height(22.dp))
-            TimeGraphViewPager()
-            Spacer(modifier = Modifier.height(22.dp))
-            PopulationCard(inOut)
-            Spacer(modifier = Modifier.height(22.dp))
+            Column(Modifier.verticalScroll(scrollState)) {
+                TimeCardView(
+                    todayAccumulationTime = accumulationTimeInfo?.todayAccumulationTime ?: 0L,
+                    dayTargetTime = App.sharedPreferenceUtilss.getDayTargetTime() / 3600,
+                    inTimeStamp = if (inOut) tagAt else null,
+                    monthAccumulationTime = monthAccumulationTime,
+                    monthAcceptedTime = acceptedAccumulationTime,
+                    tagLatencyNotice = mainInfo.infoMessages.tagLatencyNotice.title to mainInfo.infoMessages.tagLatencyNotice.content,
+                    fundInfoNotice = mainInfo.infoMessages.fundInfoNotice.title to mainInfo.infoMessages.fundInfoNotice.content
+                ) {}
+                Spacer(modifier = Modifier.height(22.dp))
+                TimeGraphViewPager(graphInfo = graphInfo)
+                Spacer(modifier = Modifier.height(22.dp))
+                PopulationCard(inOut, mainInfo.gaepo)
+                Spacer(modifier = Modifier.height(22.dp))
+            }
+
         }
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun OverviewProfile(profileUrl: String, inout: Boolean) {
+fun OverviewProfile(intraId: String, profileUrl: String, inout: Boolean) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -112,7 +123,7 @@ fun OverviewProfile(profileUrl: String, inout: Boolean) {
         Spacer(modifier = Modifier.width(10.dp))
         Row {
             Text(
-                text = "seongjki",
+                text = intraId,
                 color = if (inout) colorResource(R.color.intra_id_in_color) else colorResource(R.color.intra_id_out_color),
                 fontSize = TextUnit(20.0f, TextUnitType.Sp),
             )
