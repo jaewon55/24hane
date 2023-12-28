@@ -25,10 +25,11 @@ fun GradientCircularProgress(
     percentage: Float,
     radius: Dp,
     stroke: Dp,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize() // diameter
+        modifier = modifier // diameter
     ) {
         Row(
             verticalAlignment = Alignment.Bottom
