@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -78,18 +77,17 @@ fun ExpandedAnimationCard(
             },
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(start = 20.dp, end = 14.dp, top = 28.dp)
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 28.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 content(
-                    Modifier.width(270.dp),
+                    Modifier.fillMaxWidth(0.93f),
                     if (cardBackground == Color.White) Color(0xFF333333) else Color.White
                 )
-                Spacer(modifier = Modifier.width(10.dp))
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
                     contentDescription = null,
@@ -98,11 +96,9 @@ fun ExpandedAnimationCard(
                 )
             }
             Spacer(modifier = Modifier.height(18.dp))
-            contentBehind(
-                Modifier
-                    .fillMaxWidth()
-                    .alpha(if (expanded) 1f else 0f)
-            )
+            if (expanded) {
+                contentBehind(Modifier.fillMaxWidth(0.93f))
+            }
         }
     }
 }
@@ -134,7 +130,8 @@ fun ContentOfDayTimeCard(
             painter = painterResource(id = R.drawable.info_circle),
             contentDescription = "information modal open",
             tint = Color(0x9B, 0x97, 0x97),
-            modifier = Modifier.clickableWithoutRipple { openDialog = true }
+            modifier = Modifier
+                .clickableWithoutRipple { openDialog = true }
         )
         Spacer(modifier = Modifier.width(3.dp))
         Row(
@@ -142,7 +139,6 @@ fun ContentOfDayTimeCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .paddingFromBaseline(bottom = 8.dp)
         ) {
             CustomText(
                 text = "이용 시간",
@@ -186,18 +182,17 @@ fun BehindContentOfDayTimeCard(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.padding(start = 19.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 19.dp, end = 26.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .paddingFromBaseline(bottom = 8.dp)
             ) {
                 CustomText(
                     text = "목표 시간",
@@ -217,7 +212,7 @@ fun BehindContentOfDayTimeCard(
         GradientCircularProgress(
             percentage = (durationSecond / (targetTime * 3600f)),
             radius = 60.dp,
-            stroke = 8.dp
+            stroke = 8.dp,
         )
     }
 }
@@ -232,7 +227,7 @@ fun ContentOfMonthTimeCard(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier.paddingFromBaseline(bottom = 8.dp)
+        modifier = modifier
     ) {
         CustomText(text = "월 누적 시간", color = contentColor, fontSize = 16.sp)
         Row(
@@ -266,13 +261,15 @@ fun BehindContentOfMonthTimeCard(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(end = 26.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
         Icon(
             painter = painterResource(id = R.drawable.info_circle),
             contentDescription = "information modal open",
             tint = Color(0x9B, 0x97, 0x97),
-            modifier = Modifier.clickableWithoutRipple { openDialog = true }
+            modifier = Modifier
+                .clickableWithoutRipple { openDialog = true }
+                .padding(top = 3.dp)
         )
         Spacer(modifier = Modifier.width(3.dp))
         Row(
@@ -280,7 +277,6 @@ fun BehindContentOfMonthTimeCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .paddingFromBaseline(bottom = 8.dp)
         ) {
             CustomText(text = "인정 시간", color = Color(0xFF735BF2), fontSize = 16.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
