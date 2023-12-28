@@ -7,7 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.fragment.app.activityViewModels
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.transition.TransitionInflater
@@ -42,11 +47,17 @@ class EtcOptionFragment : Fragment() {
         swipeRefreshLayout.isEnabled = false
         return ComposeView(requireContext()).apply {
             setContent {
-                EtcOptionScreen(
-                    openWebpage = { url -> startActivity(createOpenUriIntent(url)) },
-                    logoutOnClick = ::logOutOnClick,
-                    reissueOnClick = ::reissueOnClick,
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.overview_in_color))
+                ) {
+                    EtcOptionScreen(
+                        openWebpage = { url -> startActivity(createOpenUriIntent(url)) },
+                        logoutOnClick = ::logOutOnClick,
+                        reissueOnClick = ::reissueOnClick,
+                    )
+                }
             }
         }
     }

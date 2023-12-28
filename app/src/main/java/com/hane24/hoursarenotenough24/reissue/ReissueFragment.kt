@@ -9,7 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.transition.TransitionInflater
@@ -57,13 +62,19 @@ class ReissueFragment : Fragment() {
 //        binding.reissueApplyButton.setOnClickListener { viewModel.clickReissueButton(requireActivity()) }
         return ComposeView(requireContext()).apply {
             setContent {
-                ReissueScreen(
-                    viewModel = reissueViewModel,
-                    openWebpage = { url ->
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                    },
-                    backButtonOnClick = backPressedCallback::handleOnBackPressed
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.overview_in_color))
+                ) {
+                    ReissueScreen(
+                        viewModel = reissueViewModel,
+                        openWebpage = { url ->
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                        },
+                        backButtonOnClick = backPressedCallback::handleOnBackPressed
+                    )
+                }
             }
         }
     }

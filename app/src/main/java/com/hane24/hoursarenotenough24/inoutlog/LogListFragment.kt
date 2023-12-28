@@ -4,7 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -39,7 +44,13 @@ class LogListFragment : Fragment() {
 //        return binding.root
         return ComposeView(requireContext()).apply {
             setContent {
-                LogCalendarScreen(viewModel = viewModel)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.overview_in_color))
+                ) {
+                    LogCalendarScreen(viewModel = viewModel)
+                }
             }
         }
     }
