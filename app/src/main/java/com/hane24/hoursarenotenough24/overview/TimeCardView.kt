@@ -47,8 +47,15 @@ private fun CustomText(
     text: String,
     color: Color,
     fontSize: TextUnit,
+    modifier: Modifier = Modifier
 ) {
-    Text(text = text, fontSize = fontSize, fontWeight = FontWeight.Bold, color = color)
+    Text(
+        text = text,
+        fontSize = fontSize,
+        fontWeight = FontWeight.Bold,
+        color = color,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -148,15 +155,23 @@ fun ContentOfDayTimeCard(
                 CustomText(
                     text = "${durationSecond / 3600}",
                     color = contentColor,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    modifier = Modifier.alignByBaseline()
                 )
-                CustomText(text = "시간 ", color = contentColor, fontSize = 16.sp)
+                CustomText(
+                    text = "시간 ", color = contentColor, fontSize = 16.sp,
+                    modifier = Modifier.alignByBaseline()
+                )
                 CustomText(
                     text = "${(durationSecond % 3600) / 60}",
                     color = contentColor,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    modifier = Modifier.alignByBaseline()
                 )
-                CustomText(text = "분 ", color = contentColor, fontSize = 16.sp)
+                CustomText(
+                    text = "분 ", color = contentColor, fontSize = 16.sp,
+                    modifier = Modifier.alignByBaseline()
+                )
             }
         }
     }
@@ -202,8 +217,14 @@ fun BehindContentOfDayTimeCard(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickableWithoutRipple { openDialog = true }
                 ) {
-                    CustomText(text = "$targetTime", color = Color(0xFF333333), fontSize = 20.sp)
-                    CustomText(text = "시간 ", color = Color(0xFF333333), fontSize = 16.sp)
+                    CustomText(
+                        text = "$targetTime", color = Color(0xFF333333), fontSize = 20.sp,
+                        modifier = Modifier.alignByBaseline()
+                    )
+                    CustomText(
+                        text = "시간 ", color = Color(0xFF333333), fontSize = 16.sp,
+                        modifier = Modifier.alignByBaseline()
+                    )
                 }
             }
         }
@@ -232,10 +253,22 @@ fun ContentOfMonthTimeCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            CustomText(text = accumulationHours, color = contentColor, fontSize = 20.sp)
-            CustomText(text = "시간 ", color = contentColor, fontSize = 16.sp)
-            CustomText(text = accumulationMinutes, color = contentColor, fontSize = 20.sp)
-            CustomText(text = "분", color = contentColor, fontSize = 16.sp)
+            CustomText(
+                text = accumulationHours, color = contentColor, fontSize = 20.sp,
+                modifier = Modifier.alignByBaseline()
+            )
+            CustomText(
+                text = "시간 ", color = contentColor, fontSize = 16.sp,
+                modifier = Modifier.alignByBaseline()
+            )
+            CustomText(
+                text = accumulationMinutes, color = contentColor, fontSize = 20.sp,
+                modifier = Modifier.alignByBaseline()
+            )
+            CustomText(
+                text = "분", color = contentColor, fontSize = 16.sp,
+                modifier = Modifier.alignByBaseline()
+            )
         }
     }
 }
@@ -279,10 +312,22 @@ fun BehindContentOfMonthTimeCard(
         ) {
             CustomText(text = "인정 시간", color = Color(0xFF735BF2), fontSize = 16.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CustomText(text = acceptedHours, color = Color(0xFF735BF2), fontSize = 20.sp)
-                CustomText(text = "시간 ", color = Color(0xFF735BF2), fontSize = 16.sp)
-                CustomText(text = acceptedMinutes, color = Color(0xFF735BF2), fontSize = 20.sp)
-                CustomText(text = "분", color = Color(0xFF735BF2), fontSize = 16.sp)
+                CustomText(
+                    text = acceptedHours, color = Color(0xFF735BF2), fontSize = 20.sp,
+                    modifier = Modifier.alignByBaseline()
+                )
+                CustomText(
+                    text = "시간 ", color = Color(0xFF735BF2), fontSize = 16.sp,
+                    modifier = Modifier.alignByBaseline()
+                )
+                CustomText(
+                    text = acceptedMinutes, color = Color(0xFF735BF2), fontSize = 20.sp,
+                    modifier = Modifier.alignByBaseline()
+                )
+                CustomText(
+                    text = "분", color = Color(0xFF735BF2), fontSize = 16.sp,
+                    modifier = Modifier.alignByBaseline()
+                )
             }
         }
     }
