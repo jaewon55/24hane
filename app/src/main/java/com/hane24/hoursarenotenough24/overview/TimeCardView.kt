@@ -53,7 +53,6 @@ private fun CustomText(
 
 @Composable
 fun ExpandedAnimationCard(
-    expandedHeight: Dp,
     background: Color,
     content: @Composable (Modifier, Color) -> Unit,
     contentBehind: @Composable (Modifier) -> Unit
@@ -69,7 +68,6 @@ fun ExpandedAnimationCard(
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .height(if (expanded) expandedHeight else 80.dp)
             .padding(1.dp)
             .clickableWithoutRipple {
                 expanded = !expanded
@@ -78,7 +76,8 @@ fun ExpandedAnimationCard(
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 28.dp)
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 28.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -95,8 +94,8 @@ fun ExpandedAnimationCard(
                     modifier = Modifier.rotate(rotationAngle),
                 )
             }
-            Spacer(modifier = Modifier.height(18.dp))
             if (expanded) {
+                Spacer(modifier = Modifier.height(18.dp))
                 contentBehind(Modifier.fillMaxWidth(0.93f))
             }
         }
@@ -325,7 +324,6 @@ fun TimeCardView(
     ) {
         Spacer(modifier = Modifier.height(30.dp))
         ExpandedAnimationCard(
-            expandedHeight = 270.dp,
             background = Color.White,
             content = { modifier, color ->
                 ContentOfDayTimeCard(
@@ -347,7 +345,6 @@ fun TimeCardView(
         )
         Spacer(modifier = Modifier.height(16.dp))
         ExpandedAnimationCard(
-            expandedHeight = 130.dp,
             background = Color(0xFF735BF2),
             content = { modifier, color ->
                 ContentOfMonthTimeCard(
@@ -374,7 +371,6 @@ fun TimeCardView(
 @Composable
 fun ExpandedAnimationDayCardPreview() {
     ExpandedAnimationCard(
-        260.dp,
         background = Color.White,
         { p1, p2 ->
             ContentOfDayTimeCard(
@@ -400,7 +396,6 @@ fun ExpandedAnimationDayCardPreview() {
 @Composable
 fun ExpandedAnimationMonthCardPreview() {
     ExpandedAnimationCard(
-        130.dp,
         background = Color(0xFF735BF2),
         { p1, p2 -> ContentOfMonthTimeCard(p1, p2, "0", "5") },
         { BehindContentOfMonthTimeCard(it, "0", "5", "", "") }
