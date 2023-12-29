@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -57,11 +59,12 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
 
         calendar.timeInMillis
     }
-
-
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 30.dp),
+        modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 30.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OverviewProfile(

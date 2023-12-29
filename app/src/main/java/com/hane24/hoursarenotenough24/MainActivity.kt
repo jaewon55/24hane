@@ -148,7 +148,6 @@ fun Hane24(
                 modifier = Modifier
                     .padding(it)
                     .pullRefresh(state)
-                    .verticalScroll(scrollState)
             ) {
                 NavigationGraph(
                     navController = navController,
