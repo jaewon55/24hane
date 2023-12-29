@@ -38,7 +38,7 @@ class CustomWebViewClient(private val loading: MutableState<Boolean>, private va
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         context.startActivity(intent).also {
             val accessToken = parseAccessToken()
-            App.sharedPreferenceUtilss.saveAccessToken(accessToken)
+            App.sharedPreferenceUtils.saveAccessToken(accessToken)
             cookieManager.removeAllCookies {}
             context.finish()
         }

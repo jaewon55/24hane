@@ -22,12 +22,14 @@ import com.hane24.hoursarenotenough24.login.LoginActivity
 import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.overview.OverviewScreen
-import com.hane24.hoursarenotenough24.reissue.ReissueFragment
+import com.hane24.hoursarenotenough24.reissue.ReissueScreen
+import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
 
 sealed class Navigation(val route: String, @DrawableRes val defaultIcon: Int, @DrawableRes val selectedIcon: Int) {
     object Overview : Navigation("overview", R.drawable.ic_home, R.drawable.ic_home_selected)
     object LogCalendar : Navigation("log_calendar", R.drawable.ic_calendar, R.drawable.ic_calendar_selected)
     object Option : Navigation("option", R.drawable.ic_menu, R.drawable.ic_menu_selected)
+    object Reissue : Navigation("reissue", R.drawable.ic_card, R.drawable.ic_card)
 }
 
 @Composable
@@ -35,17 +37,12 @@ fun NavigationGraph(
     navController: NavHostController,
     overViewViewModel: OverViewViewModel,
     logViewModel: LogViewModel,
+    reissueViewModel: ReissueViewModel
 ) {
     val context = LocalContext.current as FragmentActivity
-    fun reissueOnClick() {
-        context.supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainerView, ReissueFragment())
-            .commit()
-    }
 
     fun logOutOnClick() {
-        App.sharedPreferenceUtilss.saveAccessToken("")
+        App.sharedPreferenceUtils.saveAccessToken("")
         logViewModel.deleteAllLogsInDatabase()
 
         val intent = Intent(context, LoginActivity::class.java)
@@ -62,7 +59,14 @@ fun NavigationGraph(
             LogCalendarScreen(viewModel = logViewModel)
         }
         composable(Navigation.Option.route) {
-            EtcOptionScreen(logoutOnClick = ::logOutOnClick, reissueOnClick = ::reissueOnClick)
+            EtcOptionScreen(logoutOnClick = ::logOutOnClick, reissueOnClick = {
+                navController.navigate(Navigation.Reissue.route)
+            })
+        }
+        composable(Navigation.Reissue.route) {
+            ReissueScreen(viewModel = reissueViewModel) {
+                navController.navigate(Navigation.Option.route)
+            }
         }
     }
 }
@@ -101,7 +105,6 @@ fun BottomNav(navController: NavHostController) {
                     } else {
                         Icon(painter = painterResource(item.selectedIcon), contentDescription = "${item.route} btn")
                     }
-
                 })
         }
     }

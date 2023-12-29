@@ -1,9 +1,9 @@
 package com.hane24.hoursarenotenough24.overview
 
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 
 class ChangeTargetTimeUseCase(
-    private val sharedPreferenceUtils: SharedPreferenceUtilss
+    private val sharedPreferenceUtils: SharedPreferenceUtils
 ) {
     fun changeMonthTargetTime(time: Int) {
         sharedPreferenceUtils.saveMonthTargetTime(time)

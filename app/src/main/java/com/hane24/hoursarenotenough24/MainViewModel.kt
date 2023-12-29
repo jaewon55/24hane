@@ -19,7 +19,7 @@ class MainViewModel(
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-    suspend fun refresh() {
+    fun refresh() = viewModelScope.launch {
         try {
             _loading.value = true
             overViewRefresh()

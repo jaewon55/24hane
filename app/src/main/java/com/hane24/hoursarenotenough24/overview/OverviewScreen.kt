@@ -58,48 +58,34 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
         calendar.timeInMillis
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(R.color.overview_in_color))
+
+
+    Column(
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (inOut) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(R.drawable.in_background),
-                contentDescription = "background",
-                contentScale = ContentScale.FillHeight
-            )
-        }
-
-        Column(
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OverviewProfile(
-                mainInfo.login,
-                mainInfo.profileImage,
-                inOut
-            )
-            Column {
-                TimeCardView(
-                    todayAccumulationTime = accumulationTimeInfo?.todayAccumulationTime ?: 0L,
-                    dayTargetTime = dayTargetTime,
-                    inTimeStamp = if (inOut) tagAt else null,
-                    monthAccumulationTime = monthAccumulationTime,
-                    monthAcceptedTime = acceptedAccumulationTime,
-                    tagLatencyNotice = mainInfo.infoMessages.tagLatencyNotice.title to mainInfo.infoMessages.tagLatencyNotice.content,
-                    fundInfoNotice = mainInfo.infoMessages.fundInfoNotice.title to mainInfo.infoMessages.fundInfoNotice.content
-                ) {
-                    viewModel.onClickSaveTargetTime(false, it)
-                }
-                Spacer(modifier = Modifier.height(22.dp))
-                TimeGraphViewPager(graphInfo = graphInfo)
-                Spacer(modifier = Modifier.height(22.dp))
-                PopulationCard(inOut, mainInfo.gaepo)
-                Spacer(modifier = Modifier.height(22.dp))
+        OverviewProfile(
+            mainInfo.login,
+            mainInfo.profileImage,
+            inOut
+        )
+        Column {
+            TimeCardView(
+                todayAccumulationTime = accumulationTimeInfo?.todayAccumulationTime ?: 0L,
+                dayTargetTime = dayTargetTime,
+                inTimeStamp = if (inOut) tagAt else null,
+                monthAccumulationTime = monthAccumulationTime,
+                monthAcceptedTime = acceptedAccumulationTime,
+                tagLatencyNotice = mainInfo.infoMessages.tagLatencyNotice.title to mainInfo.infoMessages.tagLatencyNotice.content,
+                fundInfoNotice = mainInfo.infoMessages.fundInfoNotice.title to mainInfo.infoMessages.fundInfoNotice.content
+            ) {
+                viewModel.onClickSaveTargetTime(false, it)
             }
-
+            Spacer(modifier = Modifier.height(22.dp))
+            TimeGraphViewPager(graphInfo = graphInfo)
+            Spacer(modifier = Modifier.height(22.dp))
+            PopulationCard(inOut, mainInfo.gaepo)
+            Spacer(modifier = Modifier.height(22.dp))
         }
     }
 }

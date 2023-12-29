@@ -7,36 +7,42 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hane24.hoursarenotenough24.database.createDatabase
-import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
 import com.hane24.hoursarenotenough24.inoutlog.LogViewModel
 import com.hane24.hoursarenotenough24.inoutlog.LogViewModelFactory
 import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModelFactory
-import com.hane24.hoursarenotenough24.reissue.ReissueViewModelNew
+import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
 import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
@@ -45,27 +51,24 @@ import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy {
-        ActivityMainBinding.inflate(layoutInflater).apply { lifecycleOwner = this@MainActivity }
-    }
     private val overViewViewModel: OverViewViewModel by viewModels {
         OverViewModelFactory(
-            App.sharedPreferenceUtilss,
-            UserRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss)
+            App.sharedPreferenceUtils,
+            UserRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtils)
         )
     }
 
     private val logViewModel: LogViewModel by viewModels {
         LogViewModelFactory(
-            TimeServerRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtilss),
+            TimeServerRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtils),
             TimeDBRepository(createDatabase())
         )
     }
-    private val reissueViewModel: ReissueViewModelNew by viewModels {
+    private val reissueViewModel: ReissueViewModel by viewModels {
         ReissueViewModelFactory(
             ReissueRepository(
                 Hane24Apis.hane24ApiService,
-                App.sharedPreferenceUtilss
+                App.sharedPreferenceUtils
             )
         )
     }
@@ -91,12 +94,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun moveToFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainerView, fragment)
-            .commit()
-    }
 
 
     private fun setStatusAndNavigationBar() {
@@ -105,22 +102,7 @@ class MainActivity : AppCompatActivity() {
                 Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
         controller.isAppearanceLightStatusBars = !currentNightMode
         controller.isAppearanceLightNavigationBars = !currentNightMode
-        if (currentNightMode) {
-            binding.loadingLayout.background =
-                AppCompatResources.getDrawable(this, R.color.default_text)
-            binding.loadingProgressbar.setImageResource(R.drawable.loading_dark_animated_vector)
-        } else {
-            binding.loadingProgressbar.setImageResource(R.drawable.loading_animated_vector)
-        }
     }
-
-//    private fun setRefresh() {
-//        binding.swipeRefreshLayout.isRefreshing
-//        binding.swipeRefreshLayout.setOnRefreshListener {
-//            mainViewModel.refresh()
-//            reissueViewModel.reload()
-//        }
-//    }
 }
 
 
@@ -131,32 +113,56 @@ fun Hane24(
     overViewModel: OverViewViewModel,
     logViewModel: LogViewModel,
     mainViewModel: MainViewModel,
-    reissueViewModel: ReissueViewModelNew
+    reissueViewModel: ReissueViewModel
 ) {
     val refreshScope = rememberCoroutineScope()
+
+    fun refresh() = refreshScope.launch {
+        mainViewModel.refresh()
+        reissueViewModel.reload()
+    }
+
     val navController = rememberNavController()
     val scrollState = rememberScrollState()
-    var refreshing by remember { mutableStateOf(false) }
-//    fun refresh() = refreshScope.launch {
-//        refreshing = true
-//        mainViewModel.refresh()
-//        reissueViewModel.reload()
-//        refreshing = false
-//    }
+    val mainLoading by mainViewModel.loading.collectAsState()
+    val reissueLoading by reissueViewModel.loadingState.collectAsState()
+    val state = rememberPullRefreshState(mainLoading && reissueLoading, ::refresh)
+    val inOut by overViewModel.inOutState.collectAsState()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-//    val state = rememberPullRefreshState(refreshing, ::refresh)
-
-    Scaffold(bottomBar = { BottomNav(navController) }) {
-        Column(
-            modifier = Modifier
-                .padding(it)
-                .verticalScroll(scrollState)
-        ) {
-            NavigationGraph(
-                navController = navController,
-                overViewViewModel = overViewModel,
-                logViewModel = logViewModel
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.overview_in_color))
+    ) {
+        if (inOut && navBackStackEntry?.destination?.route == Navigation.Overview.route) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(R.drawable.in_background),
+                contentDescription = "background",
+                contentScale = ContentScale.FillHeight
             )
+        }
+        Scaffold(bottomBar = { BottomNav(navController) }, backgroundColor = Color.Transparent) {
+            Box(
+                modifier = Modifier
+                    .padding(it)
+                    .pullRefresh(state)
+                    .verticalScroll(scrollState)
+            ) {
+                NavigationGraph(
+                    navController = navController,
+                    overViewViewModel = overViewModel,
+                    logViewModel = logViewModel,
+                    reissueViewModel = reissueViewModel
+                )
+                PullRefreshIndicator(
+                    refreshing = mainLoading && reissueLoading,
+                    state = state,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                )
+
+            }
         }
     }
 }

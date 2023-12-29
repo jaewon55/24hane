@@ -1,7 +1,6 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.room.Room
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.database.TimeDatabase
@@ -53,7 +51,7 @@ import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.utils.LoadingAnimation
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils.isToday
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
@@ -675,13 +673,13 @@ private fun LogTableOfDayPreview() {
 @Composable
 @Preview(showBackground = true)
 private fun CalendarPagePreview() {
-    val sharedPreferenceUtilss = SharedPreferenceUtilss.initialize(
+    val sharedPreferenceUtils = SharedPreferenceUtils.initialize(
         LocalContext.current
     )
-    sharedPreferenceUtilss.saveAccessToken("ACCESS_TOKEN")
+    sharedPreferenceUtils.saveAccessToken("ACCESS_TOKEN")
     val viewModel = LogViewModel(
         TimeServerRepository(
-            Hane24Apis.hane24ApiService, sharedPreferenceUtilss
+            Hane24Apis.hane24ApiService, sharedPreferenceUtils
         ), TimeDBRepository(
             Room.inMemoryDatabaseBuilder(
                 LocalContext.current, TimeDatabase::class.java

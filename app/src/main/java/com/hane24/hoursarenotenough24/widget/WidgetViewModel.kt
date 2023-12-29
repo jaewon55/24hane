@@ -3,7 +3,7 @@ package com.hane24.hoursarenotenough24.widget
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.overview.ParseTimeUseCase
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,7 +25,7 @@ enum class WidgetState {
 
 class WidgetViewModel(
     private val hane24Api: Hane24Api,
-    private val sharedPreferenceUtilss: SharedPreferenceUtilss
+    private val sharedPreferenceUtils: SharedPreferenceUtils
 ) {
     private val _monthAccumulationTime = MutableStateFlow(0L)
     val monthAccumulationTimeInfo: StateFlow<Pair<String, String>> =
@@ -46,7 +46,7 @@ class WidgetViewModel(
 
     suspend fun refresh() {
         val accTimeInfo: AccumulationTimeInfo =
-            hane24Api.getAccumulationTime(sharedPreferenceUtilss.getAccessToken())
+            hane24Api.getAccumulationTime(sharedPreferenceUtils.getAccessToken())
 
         _monthAccumulationTime.value = accTimeInfo.monthAccumulationTime
         _acceptedAccumulationTime.value = accTimeInfo.monthlyAcceptedAccumulationTime

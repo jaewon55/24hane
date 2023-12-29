@@ -1,6 +1,8 @@
 package com.hane24.hoursarenotenough24.reissue
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -48,7 +50,7 @@ import com.hane24.hoursarenotenough24.network.BASE_URL
 import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.utils.LoadingAnimation
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.clickableWithoutRipple
 
 
@@ -207,11 +209,14 @@ private fun ReissueApplyButton(
 
 @Composable
 fun ReissueScreen(
-    viewModel: ReissueViewModelNew,
-    openWebpage: (String) -> Unit,
+    viewModel: ReissueViewModel,
     backButtonOnClick: () -> Unit,
 ) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+
+    fun openWebpage(url: String): Intent {
+        return Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -293,13 +298,12 @@ private fun ReissueStateCardPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun ReissueScreenPreview() {
     ReissueScreen(
-        ReissueViewModelNew(
+        ReissueViewModel(
             ReissueRepository(
                 Hane24Apis.hane24ApiService,
-                SharedPreferenceUtilss.initialize(LocalContext.current)
+                SharedPreferenceUtils.initialize(LocalContext.current)
             )
         ),
-        openWebpage = {},
         backButtonOnClick = {}
     )
 }

@@ -47,7 +47,7 @@ import kotlinx.coroutines.delay
 
 class LoginActivity : ComponentActivity() {
     private var backgroundColor: Color = Color.White
-    private val viewModel: LoginViewModel by viewModels { LoginViewModelFactory(App.sharedPreferenceUtilss) }
+    private val viewModel: LoginViewModel by viewModels { LoginViewModelFactory(App.sharedPreferenceUtils) }
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {

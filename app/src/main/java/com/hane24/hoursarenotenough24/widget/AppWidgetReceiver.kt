@@ -42,7 +42,7 @@ import com.hane24.hoursarenotenough24.widget.component.WidgetTitle
 
 private val viewModel = WidgetViewModel(
     Hane24Apis.hane24ApiService,
-    App.sharedPreferenceUtilss
+    App.sharedPreferenceUtils
 )
 
 class AppWidgetReceiver : GlanceAppWidgetReceiver() {
