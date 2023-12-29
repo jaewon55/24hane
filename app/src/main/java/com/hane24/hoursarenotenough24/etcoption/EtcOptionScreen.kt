@@ -1,5 +1,7 @@
 package com.hane24.hoursarenotenough24.etcoption
 
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -24,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,7 +36,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.login.State
 import com.hane24.hoursarenotenough24.network.BASE_URL
 
 
@@ -75,11 +81,14 @@ private fun EtcOptionItem(
 @Composable
 fun EtcOptionScreen(
     modifier: Modifier = Modifier,
-    openWebpage: (String) -> Unit,
     logoutOnClick: () -> Unit,
     reissueOnClick: () -> Unit,
 ) {
     var openLicenseDialog by remember { mutableStateOf(false) }
+
+    fun openWebpage(url: String): Intent {
+        return Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    }
 
     if (openLicenseDialog) {
         LicenseDialog(onDismissRequest = { openLicenseDialog = false })
@@ -154,10 +163,5 @@ private fun EtcOptionItemPreview() {
     )
 }
 
-@Composable
-@Preview(showBackground = true)
-private fun EtcOptionScreenPreView() {
-    EtcOptionScreen(openWebpage = {}, logoutOnClick = {}, reissueOnClick = {})
-}
 
 

@@ -1,5 +1,6 @@
 package com.hane24.hoursarenotenough24.overview
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import java.util.Calendar
 
@@ -48,15 +46,17 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
         val calendar = Calendar.getInstance()
         calendar.set(
             it[0].toInt(),
-            it[1].toInt(),
+            it[1].toInt() - 1,
             it[2].toInt(),
-            it[3].toInt(),
+            it[3].toInt() + 9,
             it[4].toInt(),
             it[5].toDouble().toInt()
         )
+        Log.i("tag_at", "tag_at: $it")
+        Log.i("tag_at", "tag_at: ${calendar.timeInMillis}")
+
         calendar.timeInMillis
     }
-    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -81,7 +81,7 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
                 mainInfo.profileImage,
                 inOut
             )
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column {
                 TimeCardView(
                     todayAccumulationTime = accumulationTimeInfo?.todayAccumulationTime ?: 0L,
                     dayTargetTime = dayTargetTime,

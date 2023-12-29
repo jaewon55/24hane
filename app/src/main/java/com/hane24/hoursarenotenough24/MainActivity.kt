@@ -1,37 +1,46 @@
 package com.hane24.hoursarenotenough24
 
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.graphics.drawable.AnimatedVectorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.compose.rememberNavController
 import com.hane24.hoursarenotenough24.database.createDatabase
 import com.hane24.hoursarenotenough24.databinding.ActivityMainBinding
-import com.hane24.hoursarenotenough24.etcoption.EtcOptionFragment
-import com.hane24.hoursarenotenough24.inoutlog.LogListFragment
-import com.hane24.hoursarenotenough24.inoutlog.LogListViewModel
 import com.hane24.hoursarenotenough24.inoutlog.LogViewModel
 import com.hane24.hoursarenotenough24.inoutlog.LogViewModelFactory
 import com.hane24.hoursarenotenough24.network.Hane24Apis
-import com.hane24.hoursarenotenough24.overview.OverViewFragment
 import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
-import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModelFactory
 import com.hane24.hoursarenotenough24.reissue.ReissueViewModelNew
 import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.repository.UserRepository
-import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.launch
 
 
@@ -64,16 +73,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        binding.lifecycleOwner = this
-        binding.mainViewModel = mainViewModel
-        setContentView(binding.root)
-//        refreshWidget()
+        setContent {
+            Hane24(
+                overViewModel = overViewViewModel,
+                logViewModel = logViewModel,
+                mainViewModel = mainViewModel,
+                reissueViewModel = reissueViewModel
+            )
+        }
         setStatusAndNavigationBar()
-        setFragmentsViewModel()
-        setRefresh()
-        setBottomNavigation()
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.errorHandler.collect {
@@ -83,46 +91,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBottomNavigation() {
-        val animationDrawable = binding.loadingProgressbar.drawable as AnimatedVectorDrawable
-        animationDrawable.start()
-        binding.bottomNavigation.setOnItemSelectedListener {
-            if (it.isChecked) {
-                true
-            } else {
-                val fragment = when (it.itemId) {
-                    R.id.bottom_navigation_home_menu -> {
-                        OverViewFragment()
-                    }
-
-                    R.id.bottom_navigation_calendar_menu -> {
-                        calendarBackToToday()
-                        LogListFragment()
-                    }
-
-                    else -> {
-                        EtcOptionFragment()
-                    }
-                }
-                moveToFragment(fragment)
-                true
-            }
-        }
-    }
-
-    private fun calendarBackToToday() {
-        logViewModel.updateLogs(
-            TodayCalendarUtils.year,
-            TodayCalendarUtils.month,
-            TodayCalendarUtils.day
-        )
-//        logListViewModel.changeCalendarDate(
-//            TodayCalendarUtils.year,
-//            TodayCalendarUtils.month,
-//            TodayCalendarUtils.day
-//        )
-    }
-
     fun moveToFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
@@ -130,16 +98,6 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onStop() {
-        super.onStop()
-//        this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
-//            this.action = "ANIM_OFF"
-//        })
-    }
-
-//    private fun refreshWidget() = this.sendBroadcast(Intent(this, BasicWidget::class.java).apply {
-//        this.action = "REFRESH"
-//    })
 
     private fun setStatusAndNavigationBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
@@ -156,67 +114,49 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFragmentsViewModel() {
-        binding.overViewViewModel = overViewViewModel
-        logViewModel.updateInOutState(overViewViewModel.inOutState.value)
-        reissueViewModel.reissueState
-    }
+//    private fun setRefresh() {
+//        binding.swipeRefreshLayout.isRefreshing
+//        binding.swipeRefreshLayout.setOnRefreshListener {
+//            mainViewModel.refresh()
+//            reissueViewModel.reload()
+//        }
+//    }
+}
 
-    private fun setRefresh() {
-//        lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                overViewViewModel.refreshLoading.collect {
-//                    if (!it
-//                        && logListViewModel.loadingState.value == false
-//                        && reissueViewModel.loadingState.value == false
-//                        && binding.swipeRefreshLayout.isRefreshing
-//                    ) {
-//                        binding.swipeRefreshLayout.isRefreshing = false
-//                    }
-//                }
-//            }
-//        }
-//        logListViewModel.loadingState.observe(this) {
-//            if (!it
-//                && overViewViewModel.refreshLoading.value == false
-//                && reissueViewModel.loadingState.value == false
-//                && binding.swipeRefreshLayout.isRefreshing
-//            ) {
-//                binding.swipeRefreshLayout.isRefreshing = false
-//            }
-//        }
-//        reissueViewModel.loadingState.observe(this) {
-//            if (!it
-//                && logListViewModel.loadingState.value == false
-//                && overViewViewModel.refreshLoading.value == false
-//                && binding.swipeRefreshLayout.isRefreshing
-//            ) {
-//                binding.swipeRefreshLayout.isRefreshing = false
-//            }
-//        }
-        binding.swipeRefreshLayout.isRefreshing
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            mainViewModel.refresh()
-            reissueViewModel.reload()
-//            overViewViewModel.refreshButtonOnClick()
-//            logListViewModel.refreshButtonOnClick()
-//            reissueViewModel.refreshButtonOnClick()
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun Hane24(
+    overViewModel: OverViewViewModel,
+    logViewModel: LogViewModel,
+    mainViewModel: MainViewModel,
+    reissueViewModel: ReissueViewModelNew
+) {
+    val refreshScope = rememberCoroutineScope()
+    val navController = rememberNavController()
+    val scrollState = rememberScrollState()
+    var refreshing by remember { mutableStateOf(false) }
+//    fun refresh() = refreshScope.launch {
+//        refreshing = true
+//        mainViewModel.refresh()
+//        reissueViewModel.reload()
+//        refreshing = false
+//    }
+
+//    val state = rememberPullRefreshState(refreshing, ::refresh)
+
+    Scaffold(bottomBar = { BottomNav(navController) }) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .verticalScroll(scrollState)
+        ) {
+            NavigationGraph(
+                navController = navController,
+                overViewViewModel = overViewModel,
+                logViewModel = logViewModel
+            )
         }
     }
-
-//    private fun logOutOnClick() {
-//        SharedPreferenceUtils.saveAccessToken("")
-//
-//        val intent = Intent(this, LoginActivity::class.java)
-//            .putExtra("loginState", State.LOGIN_FAIL)
-//            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//        startActivity(intent).also { finish() }
-//    }
-//
-//    private fun licenseOnClick() {
-//        val dialog = LicenseDialogFragment()
-//        supportFragmentManager.let {
-//            dialog.show(it, "OpenSourceLicenses")
-//        }
-//    }
 }

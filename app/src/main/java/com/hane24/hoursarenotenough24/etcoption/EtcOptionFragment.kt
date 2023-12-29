@@ -53,7 +53,6 @@ class EtcOptionFragment : Fragment() {
                         .background(colorResource(R.color.overview_in_color))
                 ) {
                     EtcOptionScreen(
-                        openWebpage = { url -> startActivity(createOpenUriIntent(url)) },
                         logoutOnClick = ::logOutOnClick,
                         reissueOnClick = ::reissueOnClick,
                     )
@@ -83,14 +82,6 @@ class EtcOptionFragment : Fragment() {
             .beginTransaction()
             .replace(R.id.fragmentContainerView, ReissueFragment())
             .commit()
-//        binding.etcCardLayout.setOnClickListener {
-//            binding.etcCardLayout.isSelected = true
-//            requireActivity()
-//                .supportFragmentManager
-//                .beginTransaction()
-//                .replace(R.id.fragmentContainerView, ReissueFragment())
-//                .commit()
-//        }
     }
 
 //    private fun setInformationBtnClick() {

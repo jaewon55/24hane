@@ -44,12 +44,10 @@ class ReissueViewModelNew(
         }
     }
 
-    fun reload() {
-        viewModelScope.launch {
-            _loadingState.value = true
-            getReissueState()
-            _loadingState.value = false
-        }
+    suspend fun reload() {
+        _loadingState.value = true
+        getReissueState()
+        _loadingState.value = false
     }
 
     fun reissueApply() {
