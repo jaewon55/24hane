@@ -34,6 +34,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.hane24.hoursarenotenough24.R
 import java.util.Calendar
+import java.util.TimeZone
 
 @Composable
 fun OverviewScreen(viewModel: OverViewViewModel) {
@@ -45,7 +46,7 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
     val monthAccumulationTime by viewModel.monthAccumulationTime.collectAsState()
     val acceptedAccumulationTime by viewModel.acceptedAccumulationTime.collectAsState()
     val tagAt = mainInfo.tagAt.split("-", "T", ":", "Z").let {
-        val calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         calendar.set(
             it[0].toInt(),
             it[1].toInt() - 1,
