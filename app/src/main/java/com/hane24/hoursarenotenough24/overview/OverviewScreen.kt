@@ -50,7 +50,7 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
             it[0].toInt(),
             it[1].toInt() - 1,
             it[2].toInt(),
-            it[3].toInt() + 9,
+            it[3].toInt(),
             it[4].toInt(),
             it[5].toDouble().toInt()
         )

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.utils.clickableWithoutRipple
+import com.hane24.hoursarenotenough24.utils.getCurrentUTCTimeInMillis
 import kotlinx.coroutines.delay
 
 
@@ -346,7 +347,7 @@ fun TimeCardView(
 ) {
     var durationSecond by remember {
         val ms = if (inTimeStamp != null) {
-            System.currentTimeMillis() - inTimeStamp + todayAccumulationTime
+            getCurrentUTCTimeInMillis() - inTimeStamp + todayAccumulationTime
         } else {
             todayAccumulationTime
         }
@@ -356,7 +357,7 @@ fun TimeCardView(
     LaunchedEffect(Unit) {
         while (inTimeStamp != null) {
             durationSecond =
-                (System.currentTimeMillis() - inTimeStamp + todayAccumulationTime) / 1000
+                (getCurrentUTCTimeInMillis() - inTimeStamp + todayAccumulationTime) / 1000
             delay((60 - durationSecond % 60) * 1000)
         }
     }
