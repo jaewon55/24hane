@@ -47,6 +47,7 @@ import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.repository.UserRepository
+import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import kotlinx.coroutines.launch
 
 
@@ -93,7 +94,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 
     private fun setStatusAndNavigationBar() {
@@ -143,7 +143,20 @@ fun Hane24(
                 contentScale = ContentScale.FillHeight
             )
         }
-        Scaffold(bottomBar = { BottomNav(navController) }, backgroundColor = Color.Transparent) {
+        Scaffold(
+            bottomBar = {
+                BottomNav(
+                    navController
+                ) {
+                    logViewModel.updateLogs(
+                        TodayCalendarUtils.year,
+                        TodayCalendarUtils.month,
+                        TodayCalendarUtils.day
+                    )
+                }
+            },
+            backgroundColor = Color.Transparent
+        ) {
             Box(
                 modifier = Modifier
                     .padding(it)
