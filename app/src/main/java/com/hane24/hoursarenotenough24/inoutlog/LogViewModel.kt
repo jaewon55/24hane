@@ -16,7 +16,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class LogViewModel(
     timeServerRepository: TimeServerRepository,
@@ -72,7 +75,10 @@ class LogViewModel(
     val errorSate: StateFlow<State>
         get() = _errorState
 
-    var inOutState by mutableStateOf(true)
+    var inOutState by mutableStateOf(false)
+        private set
+
+    var tagAtTimeStamp : Long? = null
         private set
 
     init {
@@ -101,8 +107,24 @@ class LogViewModel(
         }
     }
 
-    fun updateInOutState(isIn: Boolean) {
+    fun updateInOutState(isIn: Boolean, tagAtUtc: String) {
         inOutState = isIn
+        if (inOutState) {
+            tagAtTimeStamp = tagAtUtc.split("-", "T", ":", "Z").let {
+                val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                calendar.set(
+                    it[0].toInt(),
+                    it[1].toInt() - 1,
+                    it[2].toInt(),
+                    it[3].toInt(),
+                    it[4].toInt(),
+                    it[5].toDouble().toInt()
+                )
+                calendar.timeInMillis / 1000
+            }
+        } else {
+            tagAtTimeStamp = null
+        }
     }
 
     fun deleteAllLogsInDatabase() {

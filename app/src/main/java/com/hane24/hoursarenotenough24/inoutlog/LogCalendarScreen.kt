@@ -270,7 +270,7 @@ private fun CalendarTodayItem(
         modifier = Modifier
             .size(40.dp)
             .clickableWithoutRipple(onClick = { dayOnClick(item.dayText.toIntOrNull()) })
-    ){
+    ) {
         Text(
             text = item.dayText,
             fontSize = 14.sp,
@@ -286,7 +286,8 @@ private fun CalendarTodayItem(
                 .size(30.dp)
                 .wrapContentHeight(align = Alignment.CenterVertically)
         )
-    }}
+    }
+}
 
 @Composable
 private fun LogCalendarRow(
@@ -446,11 +447,9 @@ private fun LogTableOfDayHeader(modifier: Modifier = Modifier) {
 @Composable
 private fun LogTableOfDay(
     modifier: Modifier = Modifier,
-    year: Int,
-    month: Int,
-    day: Int,
     logs: List<TagLog>,
-    inOutState: Boolean
+    inOutState: Boolean,
+    tagAtTimeStamp: Long
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -462,9 +461,9 @@ private fun LogTableOfDay(
             val inTimeText = parseInOutTimeStamp(log.inTimeStamp)
             val outTimeText = parseInOutTimeStamp(log.outTimeStamp)
             val isMissing =
-                { !inOutState || !isToday(year, month, day) || logs.lastOrNull() != log }
+                log.inTimeStamp == null || !inOutState || log.inTimeStamp != tagAtTimeStamp
             val durationSecondText = log.durationSecond?.let { parseDurationSecond(it) }
-                ?: if (isMissing()) "누락" else "-"
+                ?: if (isMissing) "누락" else "-"
 
             Row(/*TODO 누락시 배경 설정 로직 필요*/
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -510,8 +509,11 @@ fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
-    Column(modifier = modifier.padding(horizontal = 20.dp)
-        .verticalScroll(scrollState)) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .verticalScroll(scrollState)
+    ) {
         CalendarPageHeader(
             year = viewModel.year,
             month = viewModel.month,
@@ -551,10 +553,8 @@ fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
         LogTableOfDayHeader()
         LogTableOfDay(
             logs = viewModel.tagLogsOfTheDay.reversed(),
-            year = viewModel.year,
-            month = viewModel.month,
-            day = viewModel.day,
-            inOutState = viewModel.inOutState
+            inOutState = viewModel.inOutState,
+            tagAtTimeStamp = viewModel.tagAtTimeStamp ?: 0
         )
     }
 }
@@ -667,10 +667,8 @@ private fun LogTableOfDayPreview() {
     )
     LogTableOfDay(
         logs = logs.reversed(),
-        year = TodayCalendarUtils.year,
-        month = TodayCalendarUtils.month,
-        day = TodayCalendarUtils.day,
-        inOutState = true
+        inOutState = true,
+        tagAtTimeStamp = 1698925447
     )
 }
 
@@ -714,9 +712,9 @@ private fun parseDurationSecond(durationSecond: Long): String {
 }
 
 private fun parseInOutTimeStamp(timeStamp: Long?): String {
-    val dateFormat = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
     if (timeStamp == null) return "-"
-    return dateFormat.format(timeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
+    val dateFormat = SimpleDateFormat("HH:mm:ss", Locale("ko", "KR"))
+    return dateFormat.format(timeStamp * 1000)
 }
 
 private fun List<TagLog>.asCalendarItems(year: Int, month: Int): List<CalendarItem> {
