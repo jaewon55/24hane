@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane24Api
+import com.hane24.hoursarenotenough24.network.InfoMessage
+import com.hane24.hoursarenotenough24.network.InfoMessages
 import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
 import com.hane24.hoursarenotenough24.overview.OverViewViewModel
@@ -36,6 +38,7 @@ class OverViewModelTest {
     private lateinit var sharedPreferenceUtils: SharedPreferenceUtils
     private lateinit var userRepository: UserRepository
     private lateinit var context: Context
+
     @Mock
     private lateinit var hane24Api: Hane24Api
 
@@ -57,7 +60,13 @@ class OverViewModelTest {
 
         //when
         Mockito.`when`(hane24Api.getMainInfo(sharedPreferenceUtils.getAccessToken())).thenAnswer {
-            MainInfo("test", "test", "IN", "", 10, 10)
+            MainInfo(
+                "test",
+                "test",
+                "IN",
+                "",
+                10,
+                InfoMessages(InfoMessage("", ""), InfoMessage("", "")))
         }
         viewModel.refresh()
 
@@ -67,7 +76,7 @@ class OverViewModelTest {
         Assert.assertEquals("test", viewModel.intraId.first())
         Assert.assertEquals("test", viewModel.profileImageUrl.first())
         Assert.assertEquals(true, viewModel.inOutState.first())
-        Assert.assertEquals(10 to 10, viewModel.populationSeochoAndGaepo.first())
+        Assert.assertEquals(10, viewModel.populationGaepo.first())
     }
 
     @Test
@@ -78,13 +87,15 @@ class OverViewModelTest {
             7200,
             7200 * 4,
             listOf(1L, 1L, 1L, 1L, 1L, 1L),
-            listOf(1L, 1L, 1L, 1L, 1L, 1L)
+            listOf(1L, 1L, 1L, 1L, 1L, 1L),
+            7200 * 4
         )
 
         //when
-        Mockito.`when`(hane24Api.getAccumulationTime(sharedPreferenceUtils.getAccessToken())).thenAnswer {
-            accTime
-        }
+        Mockito.`when`(hane24Api.getAccumulationTime(sharedPreferenceUtils.getAccessToken()))
+            .thenAnswer {
+                accTime
+            }
         viewModel.refresh()
 
         //then
@@ -93,6 +104,7 @@ class OverViewModelTest {
         Assert.assertEquals(accTime, viewModel.accumulationTime.first())
         Assert.assertEquals("2" to "0", viewModel.dayAccumulationTime.first())
         Assert.assertEquals("8" to "0", viewModel.monthAccumulationTime.first())
+        Assert.assertEquals("8" to "0", viewModel.acceptedAccumulationTime.first())
     }
 
     @After

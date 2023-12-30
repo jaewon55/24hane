@@ -81,7 +81,7 @@ class GraphInfoTes {
     fun `높이 계산 테스트`() {
         //given
         val graphInfo = GraphInfo(List(6) { it + 1L }, true)
-        val expected = (77 * (100 / 6) * 0.01 + 10).toInt()
+        val expected = (87 * (100 / 6) * 0.01 + 10).toInt()
 
         //when
         val result = graphInfo.calculateGraphHeight(0, 1.0f)
