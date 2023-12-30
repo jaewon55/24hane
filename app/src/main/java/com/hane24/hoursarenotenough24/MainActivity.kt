@@ -73,7 +73,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
     }
-    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(overViewViewModel::refresh, logViewModel::reloadLogs, reissueViewModel::reload) }
+    private val mainViewModel: MainViewModel by viewModels {
+        MainViewModelFactory(
+            overViewViewModel::refresh,
+            logViewModel::reloadLogs,
+            reissueViewModel::reload
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +108,16 @@ class MainActivity : AppCompatActivity() {
                 Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
         controller.isAppearanceLightStatusBars = !currentNightMode
         controller.isAppearanceLightNavigationBars = !currentNightMode
+    }
+
+    private fun setViewModelObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                overViewViewModel.mainInfo.collect {
+                    logViewModel.updateInOutState(it.inoutState == "IN", it.tagAt)
+                }
+            }
+        }
     }
 }
 
