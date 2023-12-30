@@ -2,7 +2,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/app_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
-    android:minWidth="110dp"
+    android:minWidth="180dp"
     android:minHeight="70dp"
     android:maxResizeWidth="180dp"
     android:maxResizeHeight="110dp"
