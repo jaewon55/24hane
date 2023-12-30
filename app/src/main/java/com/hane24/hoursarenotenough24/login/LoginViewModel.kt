@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.network.Hane24Apis
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,9 +12,9 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 
-class LoginViewModel(sharedPreferenceUtilss: SharedPreferenceUtilss) : ViewModel() {
+class LoginViewModel(sharedPreferenceUtils: SharedPreferenceUtils) : ViewModel() {
 
-    private val accessToken = sharedPreferenceUtilss.getAccessToken()
+    private val accessToken = sharedPreferenceUtils.getAccessToken()
     private val _state = MutableStateFlow<Boolean>(false)
     val state: StateFlow<Boolean> = _state.asStateFlow()
 
@@ -39,8 +38,8 @@ class LoginViewModel(sharedPreferenceUtilss: SharedPreferenceUtilss) : ViewModel
 }
 
 @Suppress("UNCHECKED_CAST")
-class LoginViewModelFactory(private val sharedPreferenceUtilss: SharedPreferenceUtilss): ViewModelProvider.Factory {
+class LoginViewModelFactory(private val sharedPreferenceUtils: SharedPreferenceUtils): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginViewModel(sharedPreferenceUtilss) as T
+        return LoginViewModel(sharedPreferenceUtils) as T
     }
 }

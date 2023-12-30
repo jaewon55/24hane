@@ -39,7 +39,7 @@ fun WidgetTitle(onClick: Action, state: WidgetState) {
 
     val currTimeFormat = SimpleDateFormat("MM.dd HH:mm", Locale("ko"))
 
-    Row(modifier = GlanceModifier.fillMaxWidth()) {
+    Row(modifier = GlanceModifier) {
         Column {
             Text(text = "24HANE", style = titleStyle)
             Text(text = "${currTimeFormat.format(System.currentTimeMillis())} 기준", style = timeStyle)

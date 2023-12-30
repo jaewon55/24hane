@@ -58,3 +58,9 @@ fun getDayOfWeekString(year: Int, month: Int, day: Int): String {
         else -> "토요일"
     }
 }
+
+fun getCurrentUTCTimeInMillis(): Long {
+    val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    return calendar.timeInMillis
+}
+

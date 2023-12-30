@@ -1,7 +1,6 @@
 package com.hane24.hoursarenotenough24.inoutlog
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,8 +20,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -45,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.room.Room
-import com.hane24.hoursarenotenough24.App
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.data.TagLog
 import com.hane24.hoursarenotenough24.database.TimeDatabase
@@ -53,7 +53,7 @@ import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.utils.LoadingAnimation
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils
 import com.hane24.hoursarenotenough24.utils.TodayCalendarUtils.isToday
 import com.hane24.hoursarenotenough24.utils.calculateDaysOfMonth
@@ -270,7 +270,7 @@ private fun CalendarTodayItem(
         modifier = Modifier
             .size(40.dp)
             .clickableWithoutRipple(onClick = { dayOnClick(item.dayText.toIntOrNull()) })
-    ){
+    ) {
         Text(
             text = item.dayText,
             fontSize = 14.sp,
@@ -286,7 +286,8 @@ private fun CalendarTodayItem(
                 .size(30.dp)
                 .wrapContentHeight(align = Alignment.CenterVertically)
         )
-    }}
+    }
+}
 
 @Composable
 private fun LogCalendarRow(
@@ -446,25 +447,23 @@ private fun LogTableOfDayHeader(modifier: Modifier = Modifier) {
 @Composable
 private fun LogTableOfDay(
     modifier: Modifier = Modifier,
-    year: Int,
-    month: Int,
-    day: Int,
     logs: List<TagLog>,
-    inOutState: Boolean
+    inOutState: Boolean,
+    tagAtTimeStamp: Long
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp),
         contentPadding = PaddingValues(vertical = 2.dp),
-        modifier = modifier
+        modifier = modifier.height(250.dp)
     ) {
         items(logs) { log ->
             val inTimeText = parseInOutTimeStamp(log.inTimeStamp)
             val outTimeText = parseInOutTimeStamp(log.outTimeStamp)
             val isMissing =
-                { !inOutState || !isToday(year, month, day) || logs.lastOrNull() != log }
+                log.inTimeStamp == null || !inOutState || log.inTimeStamp != tagAtTimeStamp
             val durationSecondText = log.durationSecond?.let { parseDurationSecond(it) }
-                ?: if (isMissing()) "누락" else "-"
+                ?: if (isMissing) "누락" else "-"
 
             Row(/*TODO 누락시 배경 설정 로직 필요*/
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -508,8 +507,13 @@ private fun LogTableOfDay(
 @Composable
 fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
 
-    Column(modifier = modifier.padding(horizontal = 20.dp)) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .verticalScroll(scrollState)
+    ) {
         CalendarPageHeader(
             year = viewModel.year,
             month = viewModel.month,
@@ -549,10 +553,8 @@ fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
         LogTableOfDayHeader()
         LogTableOfDay(
             logs = viewModel.tagLogsOfTheDay.reversed(),
-            year = viewModel.year,
-            month = viewModel.month,
-            day = viewModel.day,
-            inOutState = viewModel.inOutState
+            inOutState = viewModel.inOutState,
+            tagAtTimeStamp = viewModel.tagAtTimeStamp ?: 0
         )
     }
 }
@@ -665,23 +667,21 @@ private fun LogTableOfDayPreview() {
     )
     LogTableOfDay(
         logs = logs.reversed(),
-        year = TodayCalendarUtils.year,
-        month = TodayCalendarUtils.month,
-        day = TodayCalendarUtils.day,
-        inOutState = true
+        inOutState = true,
+        tagAtTimeStamp = 1698925447
     )
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun CalendarPagePreview() {
-    val sharedPreferenceUtilss = SharedPreferenceUtilss.initialize(
+    val sharedPreferenceUtils = SharedPreferenceUtils.initialize(
         LocalContext.current
     )
-    sharedPreferenceUtilss.saveAccessToken("ACCESS_TOKEN")
+    sharedPreferenceUtils.saveAccessToken("ACCESS_TOKEN")
     val viewModel = LogViewModel(
         TimeServerRepository(
-            Hane24Apis.hane24ApiService, sharedPreferenceUtilss
+            Hane24Apis.hane24ApiService, sharedPreferenceUtils
         ), TimeDBRepository(
             Room.inMemoryDatabaseBuilder(
                 LocalContext.current, TimeDatabase::class.java
@@ -712,9 +712,9 @@ private fun parseDurationSecond(durationSecond: Long): String {
 }
 
 private fun parseInOutTimeStamp(timeStamp: Long?): String {
-    val dateFormat = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
     if (timeStamp == null) return "-"
-    return dateFormat.format(timeStamp * 1000).split(' ').let { "${it[1]}:${it[2]}:${it[3]}" }
+    val dateFormat = SimpleDateFormat("HH:mm:ss", Locale("ko", "KR"))
+    return dateFormat.format(timeStamp * 1000)
 }
 
 private fun List<TagLog>.asCalendarItems(year: Int, month: Int): List<CalendarItem> {

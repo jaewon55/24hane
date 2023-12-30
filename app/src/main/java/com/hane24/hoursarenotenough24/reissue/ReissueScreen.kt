@@ -1,10 +1,13 @@
 package com.hane24.hoursarenotenough24.reissue
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -48,7 +53,7 @@ import com.hane24.hoursarenotenough24.network.BASE_URL
 import com.hane24.hoursarenotenough24.network.Hane24Apis
 import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.utils.LoadingAnimation
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import com.hane24.hoursarenotenough24.utils.clickableWithoutRipple
 
 
@@ -207,18 +212,23 @@ private fun ReissueApplyButton(
 
 @Composable
 fun ReissueScreen(
-    viewModel: ReissueViewModelNew,
-    openWebpage: (String) -> Unit,
+    viewModel: ReissueViewModel,
     backButtonOnClick: () -> Unit,
 ) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
+
+    fun openWebpage(url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(
             horizontal = 30.dp,
             vertical = 20.dp
-        )
+        ).verticalScroll(scrollState)
     ) {
         ReissueHeader(backButtonOnClick = backButtonOnClick)
         Text(
@@ -236,7 +246,7 @@ fun ReissueScreen(
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.log_list_background),
             modifier = Modifier
-                .clickableWithoutRipple {
+                .clickable {
                     openWebpage(BASE_URL + "redirect/reissuance_guidelines")
                 }
                 .fillMaxWidth()
@@ -293,13 +303,12 @@ private fun ReissueStateCardPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 private fun ReissueScreenPreview() {
     ReissueScreen(
-        ReissueViewModelNew(
+        ReissueViewModel(
             ReissueRepository(
                 Hane24Apis.hane24ApiService,
-                SharedPreferenceUtilss.initialize(LocalContext.current)
+                SharedPreferenceUtils.initialize(LocalContext.current)
             )
         ),
-        openWebpage = {},
         backButtonOnClick = {}
     )
 }

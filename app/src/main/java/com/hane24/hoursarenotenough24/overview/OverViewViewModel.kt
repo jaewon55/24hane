@@ -7,7 +7,7 @@ import com.hane24.hoursarenotenough24.network.InfoMessage
 import com.hane24.hoursarenotenough24.network.InfoMessages
 import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.repository.UserRepository
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
+import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class OverViewViewModel(
-    sharedPreferenceUtilss: SharedPreferenceUtilss,
+    sharedPreferenceUtils: SharedPreferenceUtils,
     userRepository: UserRepository,
 ) : ViewModel() {
 
@@ -27,7 +27,7 @@ class OverViewViewModel(
      */
 
     private val parseTimeUseCase = ParseTimeUseCase()
-    private val changeTargetTimeUseCase = ChangeTargetTimeUseCase(sharedPreferenceUtilss)
+    private val changeTargetTimeUseCase = ChangeTargetTimeUseCase(sharedPreferenceUtils)
     private val getUserInfoUseCase = GetUserInfoUseCase(userRepository)
     private val calculateProgressUseCase = CalculateProgressUseCase()
 
@@ -139,8 +139,8 @@ class OverViewViewModel(
 
     init {
         viewModelScope.launch {
-            _dayTargetTime.value = sharedPreferenceUtilss.getDayTargetTime()
-            _monthTargetTime.value = sharedPreferenceUtilss.getMonthTargetTime()
+            _dayTargetTime.value = sharedPreferenceUtils.getDayTargetTime()
+            _monthTargetTime.value = sharedPreferenceUtils.getMonthTargetTime()
             refresh()
         }
     }
@@ -209,11 +209,11 @@ class OverViewViewModel(
 }
 
 class OverViewModelFactory(
-    private val sharedPreferenceUtilss: SharedPreferenceUtilss,
+    private val sharedPreferenceUtils: SharedPreferenceUtils,
     private val userRepository: UserRepository
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return OverViewViewModel(sharedPreferenceUtilss, userRepository) as T
+        return OverViewViewModel(sharedPreferenceUtils, userRepository) as T
     }
 }

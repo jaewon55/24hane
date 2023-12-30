@@ -1,146 +1,128 @@
 package com.hane24.hoursarenotenough24.reissue
 
-import android.util.Log
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.network.Hane24Apis
-import com.hane24.hoursarenotenough24.network.ReissueRequestResult
-import com.hane24.hoursarenotenough24.network.ReissueState
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
+import com.hane24.hoursarenotenough24.repository.ReissueRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class ReissueViewModel : ViewModel() {
-    private val accessToken = SharedPreferenceUtils.getAccessToken()
+enum class ReissueState {
+    NONE,
+    APPLY,
+    IN_PROGRESS,
+    PICK_UP_REQUESTED,
+    DONE,
+}
 
-    private val _reissueState: MutableLiveData<ReissueState?> = MutableLiveData(null)
-    val reissueState: LiveData<ReissueState?>
-        get() = _reissueState
+class ReissueViewModel(
+    private val reissueRepository: ReissueRepository
+) : ViewModel() {
 
-    private val _reissueResult: MutableLiveData<ReissueRequestResult?> = MutableLiveData(null)
-    val reissueResult: LiveData<ReissueRequestResult?>
-        get() = _reissueResult
+    var reissueState by mutableStateOf(ReissueState.NONE)
+        private set
 
-    private val _loadingState = MutableLiveData(true)
-    val loadingState: LiveData<Boolean>
+    private val _loadingState = MutableStateFlow(true)
+    val loadingState: StateFlow<Boolean>
         get() = _loadingState
 
-    private val _errorState = MutableLiveData<State>()
-    val errorState: LiveData<State>
-        get() = _errorState
+    private val _errorSate = MutableStateFlow(State.SUCCESS)
+    val errorState: StateFlow<State>
+        get() = _errorSate
 
     init {
         viewModelScope.launch {
             _loadingState.value = true
-            useGetReissueStateApi()
+            getReissueState()
             _loadingState.value = false
         }
     }
 
-    fun clickReissueButton(activity: FragmentActivity) {
-        ReissueWarningDialog.showReissueDialog(activity.supportFragmentManager)
+    fun reload() = viewModelScope.launch {
+        _loadingState.value = true
+        getReissueState()
+        _loadingState.value = false
     }
 
-    fun clickReissueOkButton() {
+    fun reissueApply() {
         viewModelScope.launch {
             _loadingState.value = true
-            _reissueState.value?.let {
-                when (it.state) {
-                    "none", "done" -> usePostReissueApi()
-                    "pick_up_requested" -> usePatchReissueFinish()
-                }
-            }
+            postReissueRequest()
+            getReissueState()
             _loadingState.value = false
         }
     }
 
-    fun refreshButtonOnClick() {
+    fun reissueFinish() {
         viewModelScope.launch {
             _loadingState.value = true
-            useGetReissueStateApi()
+            patchReissueFinish()
+            getReissueState()
             _loadingState.value = false
-            Log.i("state", "state: ${reissueState.value}")
         }
     }
 
-    private val arr = arrayOf(
-        ReissueState("none"),
-        ReissueState("apply"),
-        ReissueState("in_progress"),
-        ReissueState("pick_up_requested"),
-        ReissueState("done")
-    )
-
-    private var idx = 0
-        set(value) {
-            field = if (value == 5) 0 else value
-        }
-
-    fun testStateChange() {
-        _reissueState.value = arr[idx++]
-    }
-
-    private suspend fun useGetReissueStateApi() {
+    private suspend fun getReissueState() {
         try {
-            _reissueState.value = Hane24Apis.hane24ApiService.getReissueState(accessToken)
-        } catch (err: HttpException) {
-            when (err.code()) {
-                404 -> {
-                    _reissueState.value = null
-                }
-                503 -> {
-                    _errorState.value = State.SERVER_FAIL
-                }
+            val state = reissueRepository.getState().state
+            reissueState = when (state) {
+                "none" -> ReissueState.NONE
+                "apply" -> ReissueState.APPLY
+                "in_progress" -> ReissueState.IN_PROGRESS
+                "pick_up_requested" -> ReissueState.PICK_UP_REQUESTED
+                "done" -> ReissueState.DONE
+                else -> throw Exception("network error")
             }
         } catch (e: Exception) {
-            _errorState.value = State.NETWORK_FAIL
+            _errorSate.value = State.NETWORK_FAIL
         } finally {
-            _errorState.value = State.SUCCESS
+            _errorSate.value = State.SUCCESS
         }
     }
 
-    private suspend fun usePostReissueApi() {
+    private suspend fun postReissueRequest() {
         try {
-            _reissueResult.value = Hane24Apis.hane24ApiService.postReissueRequest(accessToken)
-            useGetReissueStateApi()
-        } catch (err: HttpException) {
-            when (err.code()) {
-                404 -> {
-                    _reissueState.value = null
-                }
-                503 -> {
-                    _errorState.value = State.SERVER_FAIL
-                }
+            reissueRepository.reissue()
+            getReissueState()
+        } catch (error: HttpException) {
+            when (error.code()) {
+                404, 503 -> _errorSate.value = State.SERVER_FAIL
             }
         } catch (e: Exception) {
-            _errorState.value = State.NETWORK_FAIL
+            _errorSate.value = State.NETWORK_FAIL
         } finally {
-            _errorState.value = State.SUCCESS
+            _errorSate.value = State.SUCCESS
         }
     }
 
-    private suspend fun usePatchReissueFinish() {
+    private suspend fun patchReissueFinish() {
         try {
-            _reissueResult.value = Hane24Apis.hane24ApiService.patchReissueFinish(accessToken)
-            useGetReissueStateApi()
-        } catch (err: HttpException) {
-            when (err.code()) {
-                404 -> {
-                    _reissueState.value = null
-                }
-                503 -> {
-                    _errorState.value = State.SERVER_FAIL
-                }
+            reissueRepository.finish()
+            getReissueState()
+        } catch (error: HttpException) {
+            when (error.code()) {
+                404, 503 -> _errorSate.value = State.SERVER_FAIL
             }
         } catch (e: Exception) {
-            _errorState.value = State.NETWORK_FAIL
+            _errorSate.value = State.NETWORK_FAIL
         } finally {
-            _errorState.value = State.SUCCESS
+            _errorSate.value = State.SUCCESS
         }
     }
 
+}
+
+class ReissueViewModelFactory(
+    private val reissueRepository: ReissueRepository
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return ReissueViewModel(reissueRepository) as T
+    }
 }

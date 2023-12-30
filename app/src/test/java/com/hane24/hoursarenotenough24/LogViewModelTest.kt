@@ -10,7 +10,6 @@ import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
-import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtilss
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -32,7 +31,7 @@ class LogViewModelTest {
     private lateinit var timeDBRepository: TimeDBRepository
     private lateinit var getLogsUseCase: GetLogsUseCase
     private lateinit var viewModel: LogViewModel
-    private lateinit var sharedPreferenceUtils: SharedPreferenceUtilss
+    private lateinit var sharedPreferenceUtils: SharedPreferenceUtils
 
     @Mock
     private lateinit var mockHane24Api: Hane24Api
@@ -43,7 +42,7 @@ class LogViewModelTest {
         MockitoAnnotations.openMocks(this)
         context = InstrumentationRegistry.getInstrumentation().context
         db = Room.inMemoryDatabaseBuilder(context, TimeDatabase::class.java).build()
-        sharedPreferenceUtils = SharedPreferenceUtilss.initialize(context)
+        sharedPreferenceUtils = SharedPreferenceUtils.initialize(context)
         timeServerRepository = TimeServerRepository(mockHane24Api, sharedPreferenceUtils)
         timeDBRepository = TimeDBRepository(db)
         getLogsUseCase = GetLogsUseCase(timeServerRepository, timeDBRepository)
@@ -90,8 +89,8 @@ class LogViewModelTest {
         `when`(mockHane24Api.getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 10))
             .thenAnswer { MonthLogsData.data202311 }
 
-        viewModel.reloadLogs(2023, 11)
-        viewModel.reloadLogs(2023, 10)
+        viewModel.reloadLogs()
+        viewModel.reloadLogs()
 
         val result = viewModel.tagLogs
 

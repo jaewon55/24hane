@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hane24.hoursarenotenough24.R
 import com.hane24.hoursarenotenough24.utils.clickableWithoutRipple
+import com.hane24.hoursarenotenough24.utils.getCurrentUTCTimeInMillis
 import kotlinx.coroutines.delay
 
 
@@ -344,19 +345,19 @@ fun TimeCardView(
     fundInfoNotice: Pair<String, String>, /* v3에서 추가된 fundInfoNotice 서버에서 받아온 title to content */
     saveTargetTimeListener: (Int) -> Unit, /* targetTime 저장 함수 */
 ) {
-    var durationSecond by remember {
+    var durationSecond by remember(inTimeStamp) {
         val ms = if (inTimeStamp != null) {
-            System.currentTimeMillis() - inTimeStamp + todayAccumulationTime
+            getCurrentUTCTimeInMillis() - inTimeStamp + todayAccumulationTime
         } else {
             todayAccumulationTime
         }
         mutableLongStateOf(ms / 1000)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(inTimeStamp) {
         while (inTimeStamp != null) {
             durationSecond =
-                (System.currentTimeMillis() - inTimeStamp + todayAccumulationTime) / 1000
+                (getCurrentUTCTimeInMillis() - inTimeStamp + todayAccumulationTime) / 1000
             delay((60 - durationSecond % 60) * 1000)
         }
     }
