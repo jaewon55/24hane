@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -213,9 +214,10 @@ fun ReissueScreen(
     backButtonOnClick: () -> Unit,
 ) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-    fun openWebpage(url: String): Intent {
-        return Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    fun openWebpage(url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     Column(
@@ -241,7 +243,7 @@ fun ReissueScreen(
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.log_list_background),
             modifier = Modifier
-                .clickableWithoutRipple {
+                .clickable {
                     openWebpage(BASE_URL + "redirect/reissuance_guidelines")
                 }
                 .fillMaxWidth()

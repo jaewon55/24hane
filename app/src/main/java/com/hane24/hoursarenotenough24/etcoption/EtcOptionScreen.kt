@@ -85,13 +85,14 @@ fun EtcOptionScreen(
     reissueOnClick: () -> Unit,
 ) {
     var openLicenseDialog by remember { mutableStateOf(false) }
-
-    fun openWebpage(url: String): Intent {
-        return Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    }
+    val context = LocalContext.current
 
     if (openLicenseDialog) {
         LicenseDialog(onDismissRequest = { openLicenseDialog = false })
+    }
+
+    fun openWebpage(url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     Column(
@@ -162,6 +163,4 @@ private fun EtcOptionItemPreview() {
         onClick = {}
     )
 }
-
-
 
