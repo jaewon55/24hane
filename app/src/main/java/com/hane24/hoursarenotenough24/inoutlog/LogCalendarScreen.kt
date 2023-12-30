@@ -455,7 +455,7 @@ private fun LogTableOfDay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp),
         contentPadding = PaddingValues(vertical = 2.dp),
-        modifier = modifier.height(250.dp)
+        modifier = modifier.height(210.dp)
     ) {
         items(logs) { log ->
             val inTimeText = parseInOutTimeStamp(log.inTimeStamp)
