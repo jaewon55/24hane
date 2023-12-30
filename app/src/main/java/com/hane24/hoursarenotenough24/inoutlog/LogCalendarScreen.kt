@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -454,7 +456,7 @@ private fun LogTableOfDay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp),
         contentPadding = PaddingValues(vertical = 2.dp),
-        modifier = modifier
+        modifier = modifier.height(250.dp)
     ) {
         items(logs) { log ->
             val inTimeText = parseInOutTimeStamp(log.inTimeStamp)
@@ -506,8 +508,10 @@ private fun LogTableOfDay(
 @Composable
 fun LogCalendarScreen(modifier: Modifier = Modifier, viewModel: LogViewModel) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
 
-    Column(modifier = modifier.padding(horizontal = 20.dp)) {
+    Column(modifier = modifier.padding(horizontal = 20.dp)
+        .verticalScroll(scrollState)) {
         CalendarPageHeader(
             year = viewModel.year,
             month = viewModel.month,

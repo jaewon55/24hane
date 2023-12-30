@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -215,6 +217,7 @@ fun ReissueScreen(
 ) {
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     fun openWebpage(url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
@@ -225,7 +228,7 @@ fun ReissueScreen(
         modifier = Modifier.padding(
             horizontal = 30.dp,
             vertical = 20.dp
-        )
+        ).verticalScroll(scrollState)
     ) {
         ReissueHeader(backButtonOnClick = backButtonOnClick)
         Text(

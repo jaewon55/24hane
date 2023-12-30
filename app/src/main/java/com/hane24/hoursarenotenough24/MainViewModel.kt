@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val overViewRefresh: suspend () -> Unit,
-    ): ViewModel() {
+    private val logCalendarRefresh: suspend () -> Unit,
+    private val reissueRefresh: suspend () -> Unit
+) : ViewModel() {
 
     private val _errorHandler = MutableStateFlow<ExceptionHandler?>(null)
     val errorHandler = _errorHandler.asStateFlow()
@@ -23,6 +25,8 @@ class MainViewModel(
         try {
             _loading.value = true
             overViewRefresh()
+            logCalendarRefresh()
+            reissueRefresh()
         } catch (err: Exception) {
 
             _errorHandler.value = ExceptionHandlerFactory.create(err)
@@ -33,9 +37,14 @@ class MainViewModel(
     }
 }
 
-class MainViewModelFactory(private val overViewRefresh: suspend () -> Unit): ViewModelProvider.Factory {
+class MainViewModelFactory(
+    private val overViewRefresh: suspend () -> Unit,
+    private val logCalendarRefresh: suspend () -> Unit,
+    private val reissueRefresh: suspend () -> Unit
+) :
+    ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(overViewRefresh) as T
+        return MainViewModel(overViewRefresh, logCalendarRefresh, reissueRefresh) as T
     }
 }

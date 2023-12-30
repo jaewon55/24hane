@@ -89,8 +89,8 @@ class LogViewModelTest {
         `when`(mockHane24Api.getAllTagPerMonth(sharedPreferenceUtils.getAccessToken(), 2023, 10))
             .thenAnswer { MonthLogsData.data202311 }
 
-        viewModel.reloadLogs(2023, 11)
-        viewModel.reloadLogs(2023, 10)
+        viewModel.reloadLogs()
+        viewModel.reloadLogs()
 
         val result = viewModel.tagLogs
 

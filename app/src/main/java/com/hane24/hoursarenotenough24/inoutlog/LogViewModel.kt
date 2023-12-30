@@ -81,7 +81,7 @@ class LogViewModel(
         }
     }
 
-    suspend fun reloadLogs(year: Int, month: Int) {
+    suspend fun reloadLogs() {
         getLogs(year, month, day)
     }
 

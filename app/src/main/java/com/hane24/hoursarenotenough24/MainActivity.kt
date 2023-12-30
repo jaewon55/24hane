@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
     }
-    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(overViewViewModel::refresh) }
+    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(overViewViewModel::refresh, logViewModel::reloadLogs, reissueViewModel::reload) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,14 +119,11 @@ fun Hane24(
 
     fun refresh() = refreshScope.launch {
         mainViewModel.refresh()
-        reissueViewModel.reload()
     }
 
     val navController = rememberNavController()
-    val scrollState = rememberScrollState()
     val mainLoading by mainViewModel.loading.collectAsState()
-    val reissueLoading by reissueViewModel.loadingState.collectAsState()
-    val state = rememberPullRefreshState(mainLoading && reissueLoading, ::refresh)
+    val state = rememberPullRefreshState(mainLoading, ::refresh)
     val inOut by overViewModel.inOutState.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -169,7 +166,7 @@ fun Hane24(
                     reissueViewModel = reissueViewModel
                 )
                 PullRefreshIndicator(
-                    refreshing = mainLoading && reissueLoading,
+                    refreshing = mainLoading,
                     state = state,
                     modifier = Modifier.align(Alignment.TopCenter),
                 )
