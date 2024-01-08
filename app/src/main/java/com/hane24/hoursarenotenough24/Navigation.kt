@@ -25,7 +25,7 @@ import com.hane24.hoursarenotenough24.ui.home.OverviewScreen
 import com.hane24.hoursarenotenough24.ui.reissue.ReissueScreen
 import com.hane24.hoursarenotenough24.ui.reissue.ReissueViewModel
 
-const val OVERVIEW = "overview"
+const val OVERVIEW = "home"
 const val LOG_CALENDAR = "log_calendar"
 const val OPTION = "option"
 const val REISSUE = "reissue"
@@ -35,7 +35,7 @@ sealed class Navigation(
     @DrawableRes val defaultIcon: Int,
     @DrawableRes val selectedIcon: Int
 ) {
-    object Overview : Navigation(OVERVIEW, R.drawable.ic_home, R.drawable.ic_home_selected)
+    object Home : Navigation(OVERVIEW, R.drawable.ic_home, R.drawable.ic_home_selected)
     object LogCalendar :
         Navigation(LOG_CALENDAR, R.drawable.ic_calendar, R.drawable.ic_calendar_selected)
 
@@ -62,8 +62,8 @@ fun NavigationGraph(
         context.startActivity(intent).also { context.finish() }
     }
 
-    NavHost(navController = navController, startDestination = Navigation.Overview.route) {
-        composable(Navigation.Overview.route) {
+    NavHost(navController = navController, startDestination = Navigation.Home.route) {
+        composable(Navigation.Home.route) {
             OverviewScreen(viewModel = overViewViewModel)
         }
         composable(Navigation.LogCalendar.route) {
@@ -87,7 +87,7 @@ fun BottomNav(navController: NavHostController, setCalendarToday: () -> Unit) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val items = listOf<Navigation>(
-        Navigation.Overview,
+        Navigation.Home,
         Navigation.LogCalendar,
         Navigation.Option
     )
