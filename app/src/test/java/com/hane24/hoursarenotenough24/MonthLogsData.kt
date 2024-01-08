@@ -17,6 +17,161 @@ const val jsonString202311 = """
   "profileImage": "https://cdn.intra.42.fr/users/8a9ee5d6fd23de4811bdb73c73cf8d5e/jaewchoi.jpg",
   "inOutLogs": [
     {
+      "inTimeStamp": 1701339400,
+      "outTimeStamp": 1701346077,
+      "durationSecond": 6677
+    },
+    {
+      "inTimeStamp": 1701329101,
+      "outTimeStamp": 1701339104,
+      "durationSecond": 10003
+    },
+    {
+      "inTimeStamp": 1701327023,
+      "outTimeStamp": 1701328761,
+      "durationSecond": 1738
+    },
+    {
+      "inTimeStamp": 1701317180,
+      "outTimeStamp": 1701326018,
+      "durationSecond": 8838
+    },
+    {
+      "inTimeStamp": 1701307628,
+      "outTimeStamp": 1701309724,
+      "durationSecond": 2096
+    },
+    {
+      "inTimeStamp": 1701253640,
+      "outTimeStamp": 1701259718,
+      "durationSecond": 6078
+    },
+    {
+      "inTimeStamp": 1701247877,
+      "outTimeStamp": 1701253365,
+      "durationSecond": 5488
+    },
+    {
+      "inTimeStamp": 1701237914,
+      "outTimeStamp": 1701247606,
+      "durationSecond": 9692
+    },
+    {
+      "inTimeStamp": 1701232523,
+      "outTimeStamp": 1701236599,
+      "durationSecond": 4076
+    },
+    {
+      "inTimeStamp": 1701165146,
+      "outTimeStamp": 1701169000,
+      "durationSecond": 3854
+    },
+    {
+      "inTimeStamp": 1701163472,
+      "outTimeStamp": 1701164828,
+      "durationSecond": 1356
+    },
+    {
+      "inTimeStamp": 1701160816,
+      "outTimeStamp": 1701163449,
+      "durationSecond": 2633
+    },
+    {
+      "inTimeStamp": 1701145988,
+      "outTimeStamp": 1701160507,
+      "durationSecond": 14519
+    },
+    {
+      "inTimeStamp": 1701141545,
+      "outTimeStamp": 1701142742,
+      "durationSecond": 1197
+    },
+    {
+      "inTimeStamp": 1701134034,
+      "outTimeStamp": 1701141287,
+      "durationSecond": 7253
+    },
+    {
+      "inTimeStamp": 1700733321,
+      "outTimeStamp": 1700741444,
+      "durationSecond": 8123
+    },
+    {
+      "inTimeStamp": 1700724155,
+      "outTimeStamp": 1700733054,
+      "durationSecond": 8899
+    },
+    {
+      "inTimeStamp": 1700714984,
+      "outTimeStamp": 1700723803,
+      "durationSecond": 8819
+    },
+    {
+      "inTimeStamp": 1700713968,
+      "outTimeStamp": 1700714313,
+      "durationSecond": 345
+    },
+    {
+      "inTimeStamp": 1700654669,
+      "outTimeStamp": 1700654769,
+      "durationSecond": 100
+    },
+    {
+      "inTimeStamp": 1700650295,
+      "outTimeStamp": 1700654656,
+      "durationSecond": 4361
+    },
+    {
+      "inTimeStamp": 1700643628,
+      "outTimeStamp": 1700649876,
+      "durationSecond": 6248
+    },
+    {
+      "inTimeStamp": 1700639816,
+      "outTimeStamp": 1700643284,
+      "durationSecond": 3468
+    },
+    {
+      "inTimeStamp": 1700637437,
+      "outTimeStamp": 1700639532,
+      "durationSecond": 2095
+    },
+    {
+      "inTimeStamp": 1700042030,
+      "outTimeStamp": 1700042123,
+      "durationSecond": 93
+    },
+    {
+      "inTimeStamp": 1700040114,
+      "outTimeStamp": 1700041724,
+      "durationSecond": 1610
+    },
+    {
+      "inTimeStamp": 1700032716,
+      "outTimeStamp": 1700039138,
+      "durationSecond": 6422
+    },
+    {
+      "inTimeStamp": 1700026237,
+      "outTimeStamp": 1700032446,
+      "durationSecond": 6209
+    },
+    {
+      "inTimeStamp": 1700022432,
+      "outTimeStamp": 1700025327,
+      "durationSecond": 2895
+    },
+    {
+      "inTimeStamp": 1699591183,
+      "outTimeStamp": 1699601415,
+      "durationSecond": 10232
+    },
+    {
+      "inTimeStamp": 1699583244,
+      "outTimeStamp": 1699590861,
+      "durationSecond": 7617
+    },
+    {
       "inTimeStamp": 1698925447,
       "outTimeStamp": 1698928450,
       "durationSecond": 3003
@@ -46,9 +201,12 @@ const val jsonString202311 = """
       "outTimeStamp": 1698906701,
       "durationSecond": 2914
     }
-  ]
+  ],
+  "totalAccumulationTime": 186169,
+  "acceptedAccumulationTime": 186169
 }
 """
+
 const val jsonString202310 = """
     {
   "login": "jaewchoi",
@@ -399,12 +557,13 @@ const val jsonString202310 = """
       "outTimeStamp": 1696565282,
       "durationSecond": 35
     }
-  ]
+  ],
+  "totalAccumulationTime": 285442,
+  "acceptedAccumulationTime": 285442
 }
 """
 
-const val jsonString202211 = """
-    {
+const val jsonString202211 = """{
   "login": "jaewchoi",
   "profileImage": "https://cdn.intra.42.fr/users/8a9ee5d6fd23de4811bdb73c73cf8d5e/jaewchoi.jpg",
   "inOutLogs": [
@@ -1068,6 +1227,8 @@ const val jsonString202211 = """
       "outTimeStamp": 1667280490,
       "durationSecond": 5230
     }
-  ]
+  ],
+  "totalAccumulationTime": 616113,
+  "acceptedAccumulationTime": 612467
 }
 """

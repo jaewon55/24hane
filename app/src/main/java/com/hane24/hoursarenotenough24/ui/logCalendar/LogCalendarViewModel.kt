@@ -76,7 +76,7 @@ class LogCalendarViewModel(
     var inOutState by mutableStateOf(false)
         private set
 
-    var tagAtTimeStamp : Long? = null
+    var tagAtTimeStamp: Long? = null
         private set
 
     init {
@@ -95,11 +95,9 @@ class LogCalendarViewModel(
 
     fun updateLogs(year: Int, month: Int, day: Int = 1) {
         if (year == 2022 && month < 8) return
-        if (year > TodayCalendarUtils.year ||
-            (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month)
-        ) {
-            return
-        }
+        if (year > TodayCalendarUtils.year) return
+        if (year == TodayCalendarUtils.year && month > TodayCalendarUtils.month) return
+
         viewModelScope.launch {
             getLogs(year, month, day)
         }
