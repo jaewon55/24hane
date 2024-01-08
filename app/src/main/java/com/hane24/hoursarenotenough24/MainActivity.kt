@@ -146,7 +146,7 @@ fun Hane24(
             .fillMaxSize()
             .background(colorResource(R.color.overview_in_color))
     ) {
-        if (inOut && navBackStackEntry?.destination?.route == Navigation.Overview.route) {
+        if (inOut && navBackStackEntry?.destination?.route == Navigation.Home.route) {
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(R.drawable.in_background),

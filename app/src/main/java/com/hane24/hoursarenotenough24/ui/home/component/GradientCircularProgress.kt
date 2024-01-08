@@ -1,4 +1,4 @@
-package com.hane24.hoursarenotenough24.ui.home
+package com.hane24.hoursarenotenough24.ui.home.component
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
