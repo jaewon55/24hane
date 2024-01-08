@@ -7,7 +7,6 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -16,15 +15,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.hane24.hoursarenotenough24.etcoption.EtcOptionScreen
-import com.hane24.hoursarenotenough24.inoutlog.LogCalendarScreen
-import com.hane24.hoursarenotenough24.inoutlog.LogViewModel
-import com.hane24.hoursarenotenough24.login.LoginActivity
-import com.hane24.hoursarenotenough24.login.State
-import com.hane24.hoursarenotenough24.overview.OverViewViewModel
-import com.hane24.hoursarenotenough24.overview.OverviewScreen
-import com.hane24.hoursarenotenough24.reissue.ReissueScreen
-import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
+import com.hane24.hoursarenotenough24.ui.option.OptionScreen
+import com.hane24.hoursarenotenough24.ui.logCalendar.LogCalendarScreen
+import com.hane24.hoursarenotenough24.ui.logCalendar.LogCalendarViewModel
+import com.hane24.hoursarenotenough24.ui.login.LoginActivity
+import com.hane24.hoursarenotenough24.ui.login.State
+import com.hane24.hoursarenotenough24.ui.home.OverViewViewModel
+import com.hane24.hoursarenotenough24.ui.home.OverviewScreen
+import com.hane24.hoursarenotenough24.ui.reissue.ReissueScreen
+import com.hane24.hoursarenotenough24.ui.reissue.ReissueViewModel
 
 const val OVERVIEW = "overview"
 const val LOG_CALENDAR = "log_calendar"
@@ -48,14 +47,14 @@ sealed class Navigation(
 fun NavigationGraph(
     navController: NavHostController,
     overViewViewModel: OverViewViewModel,
-    logViewModel: LogViewModel,
+    logCalendarViewModel: LogCalendarViewModel,
     reissueViewModel: ReissueViewModel
 ) {
     val context = LocalContext.current as FragmentActivity
 
     fun logOutOnClick() {
         App.sharedPreferenceUtils.saveAccessToken("")
-        logViewModel.deleteAllLogsInDatabase()
+        logCalendarViewModel.deleteAllLogsInDatabase()
 
         val intent = Intent(context, LoginActivity::class.java)
             .putExtra("loginState", State.LOGIN_FAIL)
@@ -68,10 +67,10 @@ fun NavigationGraph(
             OverviewScreen(viewModel = overViewViewModel)
         }
         composable(Navigation.LogCalendar.route) {
-            LogCalendarScreen(viewModel = logViewModel)
+            LogCalendarScreen(viewModel = logCalendarViewModel)
         }
         composable(Navigation.Option.route) {
-            EtcOptionScreen(logoutOnClick = ::logOutOnClick, reissueOnClick = {
+            OptionScreen(logoutOnClick = ::logOutOnClick, reissueOnClick = {
                 navController.navigate(Navigation.Reissue.route)
             })
         }

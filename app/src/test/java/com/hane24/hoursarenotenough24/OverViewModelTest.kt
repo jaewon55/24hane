@@ -7,8 +7,8 @@ import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.network.InfoMessage
 import com.hane24.hoursarenotenough24.network.InfoMessages
 import com.hane24.hoursarenotenough24.network.MainInfo
-import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
-import com.hane24.hoursarenotenough24.overview.OverViewViewModel
+import com.hane24.hoursarenotenough24.ui.home.OverViewModelFactory
+import com.hane24.hoursarenotenough24.ui.home.OverViewViewModel
 import com.hane24.hoursarenotenough24.repository.UserRepository
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi

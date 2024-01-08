@@ -12,8 +12,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -36,13 +34,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hane24.hoursarenotenough24.database.createDatabase
-import com.hane24.hoursarenotenough24.inoutlog.LogViewModel
-import com.hane24.hoursarenotenough24.inoutlog.LogViewModelFactory
+import com.hane24.hoursarenotenough24.ui.logCalendar.LogCalendarViewModel
+import com.hane24.hoursarenotenough24.ui.logCalendar.LogViewModelFactory
 import com.hane24.hoursarenotenough24.network.Hane24Apis
-import com.hane24.hoursarenotenough24.overview.OverViewModelFactory
-import com.hane24.hoursarenotenough24.overview.OverViewViewModel
-import com.hane24.hoursarenotenough24.reissue.ReissueViewModelFactory
-import com.hane24.hoursarenotenough24.reissue.ReissueViewModel
+import com.hane24.hoursarenotenough24.ui.home.OverViewModelFactory
+import com.hane24.hoursarenotenough24.ui.home.OverViewViewModel
+import com.hane24.hoursarenotenough24.ui.reissue.ReissueViewModelFactory
+import com.hane24.hoursarenotenough24.ui.reissue.ReissueViewModel
 import com.hane24.hoursarenotenough24.repository.ReissueRepository
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
@@ -59,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private val logViewModel: LogViewModel by viewModels {
+    private val logCalendarViewModel: LogCalendarViewModel by viewModels {
         LogViewModelFactory(
             TimeServerRepository(Hane24Apis.hane24ApiService, App.sharedPreferenceUtils),
             TimeDBRepository(createDatabase())
@@ -76,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModelFactory(
             overViewViewModel::refresh,
-            logViewModel::reloadLogs,
+            logCalendarViewModel::reloadLogs,
             reissueViewModel::reload
         )
     }
@@ -86,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             Hane24(
                 overViewModel = overViewViewModel,
-                logViewModel = logViewModel,
+                logCalendarViewModel = logCalendarViewModel,
                 mainViewModel = mainViewModel,
                 reissueViewModel = reissueViewModel
             )
@@ -114,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 overViewViewModel.mainInfo.collect {
-                    logViewModel.updateInOutState(it.inoutState == "IN", it.tagAt)
+                    logCalendarViewModel.updateInOutState(it.inoutState == "IN", it.tagAt)
                 }
             }
         }
@@ -127,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun Hane24(
     overViewModel: OverViewViewModel,
-    logViewModel: LogViewModel,
+    logCalendarViewModel: LogCalendarViewModel,
     mainViewModel: MainViewModel,
     reissueViewModel: ReissueViewModel
 ) {
@@ -161,7 +159,7 @@ fun Hane24(
                 BottomNav(
                     navController
                 ) {
-                    logViewModel.updateLogs(
+                    logCalendarViewModel.updateLogs(
                         TodayCalendarUtils.year,
                         TodayCalendarUtils.month,
                         TodayCalendarUtils.day
@@ -178,7 +176,7 @@ fun Hane24(
                 NavigationGraph(
                     navController = navController,
                     overViewViewModel = overViewModel,
-                    logViewModel = logViewModel,
+                    logCalendarViewModel = logCalendarViewModel,
                     reissueViewModel = reissueViewModel
                 )
                 PullRefreshIndicator(

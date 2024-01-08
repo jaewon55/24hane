@@ -2,7 +2,7 @@ package com.hane24.hoursarenotenough24.widget
 
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.Hane24Api
-import com.hane24.hoursarenotenough24.overview.ParseTimeUseCase
+import com.hane24.hoursarenotenough24.ui.home.ParseTimeUseCase
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -2,7 +2,7 @@ package com.hane24.hoursarenotenough24
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.hane24.hoursarenotenough24.overview.GraphInfo
+import com.hane24.hoursarenotenough24.ui.home.GraphInfo
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

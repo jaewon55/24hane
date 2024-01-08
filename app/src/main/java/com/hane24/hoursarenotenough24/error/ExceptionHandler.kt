@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import com.hane24.hoursarenotenough24.login.LoginActivity
+import com.hane24.hoursarenotenough24.ui.login.LoginActivity
 
 abstract class ExceptionHandler(protected val exception: Exception) {
     abstract fun handle(context: Context)

@@ -31,29 +31,3 @@ data class AccumulationTimeDto(
     @ColumnInfo
     val acceptedAccumulationTime: Long?,
 )
-
-fun List<TagLogDto>.asDomainModel(): List<TimeLogItem> {
-    val format = SimpleDateFormat("dd HH mm ss", Locale("ko", "KR"))
-    return map { log ->
-        val day = log.date.substring(6..7).toInt()
-        val inString = log.inTimeStamp.let { timeNumber ->
-            if (timeNumber == 0L) {
-                "-"
-            } else {
-                format.format(timeNumber * 1000).split(' ').let { list ->
-                    "${list[1]}:${list[2]}:${list[3]}"
-                }
-            }
-        }
-        val outString = log.outTimeStamp.let { timeNumber ->
-            if (timeNumber == 0L) {
-                "-"
-            } else {
-                format.format(timeNumber * 1000).split(' ').let { list ->
-                    "${list[1]}:${list[2]}:${list[3]}"
-                }
-            }
-        }
-        TimeLogItem(day, inString, outString, log.duration)
-    }
-}

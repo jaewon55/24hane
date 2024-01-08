@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hane24.hoursarenotenough24.database.TimeDatabase
-import com.hane24.hoursarenotenough24.inoutlog.GetLogsUseCase
-import com.hane24.hoursarenotenough24.inoutlog.LogViewModel
+import com.hane24.hoursarenotenough24.ui.logCalendar.GetLogsUseCase
+import com.hane24.hoursarenotenough24.ui.logCalendar.LogCalendarViewModel
 import com.hane24.hoursarenotenough24.network.Hane24Api
 import com.hane24.hoursarenotenough24.repository.TimeDBRepository
 import com.hane24.hoursarenotenough24.repository.TimeServerRepository
@@ -30,7 +30,7 @@ class LogViewModelTest {
     private lateinit var timeServerRepository: TimeServerRepository
     private lateinit var timeDBRepository: TimeDBRepository
     private lateinit var getLogsUseCase: GetLogsUseCase
-    private lateinit var viewModel: LogViewModel
+    private lateinit var viewModel: LogCalendarViewModel
     private lateinit var sharedPreferenceUtils: SharedPreferenceUtils
 
     @Mock
@@ -46,7 +46,7 @@ class LogViewModelTest {
         timeServerRepository = TimeServerRepository(mockHane24Api, sharedPreferenceUtils)
         timeDBRepository = TimeDBRepository(db)
         getLogsUseCase = GetLogsUseCase(timeServerRepository, timeDBRepository)
-        viewModel = LogViewModel(timeServerRepository, timeDBRepository)
+        viewModel = LogCalendarViewModel(timeServerRepository, timeDBRepository)
     }
 
     @Test
