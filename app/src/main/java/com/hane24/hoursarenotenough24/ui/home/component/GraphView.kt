@@ -1,4 +1,4 @@
-package com.hane24.hoursarenotenough24.ui.home
+package com.hane24.hoursarenotenough24.ui.home.component
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.ui.home.GraphInfo
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.math.floor

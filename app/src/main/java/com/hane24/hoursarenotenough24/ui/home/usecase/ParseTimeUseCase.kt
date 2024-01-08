@@ -1,4 +1,4 @@
-package com.hane24.hoursarenotenough24.ui.home
+package com.hane24.hoursarenotenough24.ui.home.usecase
 
 class ParseTimeUseCase {
     fun parseTargetTime(time: Int): Int {

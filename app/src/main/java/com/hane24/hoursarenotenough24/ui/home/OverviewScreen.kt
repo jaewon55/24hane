@@ -29,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.hane24.hoursarenotenough24.R
+import com.hane24.hoursarenotenough24.ui.home.component.PopulationCard
+import com.hane24.hoursarenotenough24.ui.home.component.TimeCardView
+import com.hane24.hoursarenotenough24.ui.home.component.TimeGraphViewPager
 import java.util.Calendar
 import java.util.TimeZone
 

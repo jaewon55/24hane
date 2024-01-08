@@ -7,6 +7,10 @@ import com.hane24.hoursarenotenough24.network.InfoMessage
 import com.hane24.hoursarenotenough24.network.InfoMessages
 import com.hane24.hoursarenotenough24.network.MainInfo
 import com.hane24.hoursarenotenough24.repository.UserRepository
+import com.hane24.hoursarenotenough24.ui.home.usecase.CalculateProgressUseCase
+import com.hane24.hoursarenotenough24.ui.home.usecase.ChangeTargetTimeUseCase
+import com.hane24.hoursarenotenough24.ui.home.usecase.GetUserInfoUseCase
+import com.hane24.hoursarenotenough24.ui.home.usecase.ParseTimeUseCase
 import com.hane24.hoursarenotenough24.utils.SharedPreferenceUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

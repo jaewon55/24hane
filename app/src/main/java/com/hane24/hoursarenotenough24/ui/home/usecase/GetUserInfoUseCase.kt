@@ -1,4 +1,4 @@
-package com.hane24.hoursarenotenough24.ui.home
+package com.hane24.hoursarenotenough24.ui.home.usecase
 
 import com.hane24.hoursarenotenough24.network.AccumulationTimeInfo
 import com.hane24.hoursarenotenough24.network.MainInfo
