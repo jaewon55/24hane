@@ -7,6 +7,9 @@
 
 # 프로젝트 소개
 
+### 웹사이트
+- https://24hoursarenotenough.42seoul.kr/
+
 "24 Hane" (24 hours are not enough) 은 Cadet 여러분의 클러스터 출입 여부와 출입 누적 시간을 직접 확인할 수 있도록 개발된 서비스 입니다.
 
 ```
