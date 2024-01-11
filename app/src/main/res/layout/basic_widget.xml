@@ -11,56 +11,32 @@
     android:backgroundTint="@color/white">
 
 
-    <TextView
-        android:id="@+id/widget_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="24HANE"
-        android:textColor="@color/dialog_color"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/refresh_time_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/widget_title"
-        android:layout_alignStart="@+id/widget_title"
-        android:text="12.25 12:00 기준"
-        android:textColor="@color/sub_info_text_color"
-        android:textSize="10sp" />
-
     <ImageView
         android:id="@+id/refresh_btn"
         android:layout_width="16dp"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/widget_title"
-        android:layout_marginStart="60dp"
-        android:layout_toEndOf="@+id/widget_title"
+        android:layout_marginStart="32dp"
+        android:layout_alignTop="@+id/widget_accepted_title"
+        android:layout_toEndOf="@+id/widget_accepted_title"
         android:src="@drawable/ic_widget_refresh" />
 
     <ImageView
         android:id="@+id/widget_divider"
         android:layout_width="2dp"
         android:layout_height="32dp"
-        android:layout_below="@+id/refresh_time_text"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/widget_divider" />
+        android:src="@drawable/widget_divider_purple" />
 
     <TextView
-        android:id="@+id/widget_month_title"
+        android:id="@+id/widget_accepted_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/refresh_time_text"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_toEndOf="@+id/widget_divider"
-        android:text="월 누적 시간"
+        android:layout_marginTop="6dp"
+        android:layout_toEndOf="@+id/widget_divider_purple"
+        android:text="인정 시간"
         android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -69,8 +45,8 @@
         android:id="@+id/widget_month_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/widget_month_title"
-        android:layout_alignStart="@+id/widget_month_title"
+        android:layout_below="@+id/widget_accepted_title"
+        android:layout_alignStart="@+id/widget_accepted_title"
         android:text="160시간 0분"
         android:textSize="12sp" />
 
@@ -81,18 +57,18 @@
         android:layout_below="@+id/widget_divider"
         android:layout_alignParentStart="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/widget_divider_purple" />
+        android:layout_marginTop="12dp"
+        android:src="@drawable/widget_divider" />
 
     <TextView
-        android:id="@+id/widget_accepted_title"
+        android:id="@+id/widget_month_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/widget_divider"
-        android:layout_toEndOf="@+id/widget_divider_purple"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="16dp"
-        android:text="인정 시간"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/widget_divider_purple"
+        android:text="월 누적 시간"
         android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -101,7 +77,7 @@
         android:id="@+id/widget_accepted_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/widget_accepted_title"
+        android:layout_below="@+id/widget_month_title"
         android:layout_marginStart="6dp"
         android:layout_toEndOf="@+id/widget_divider_purple"
         android:text="160시간 0분"
