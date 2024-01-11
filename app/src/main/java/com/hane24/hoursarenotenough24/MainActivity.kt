@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
                 reissueViewModel = reissueViewModel
             )
         }
+        setViewModelObserver()
         setStatusAndNavigationBar()
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
