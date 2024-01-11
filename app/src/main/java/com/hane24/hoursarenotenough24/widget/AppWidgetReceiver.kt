@@ -74,7 +74,7 @@ fun WidgetUI(viewModel: WidgetViewModel) {
         actionRunCallback<RefreshAction>()
 
     when (state) {
-        WidgetState.INIT, WidgetState.LOADING, WidgetState.COMPLETE -> WidgetCompletePage(
+        WidgetState.INIT, WidgetState.LOADING, WidgetState.COMPLETE -> WidgetCompletePageV2(
             onClick = onClick,
             state = state,
             monthTime = monthTime,
