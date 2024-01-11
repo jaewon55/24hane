@@ -123,7 +123,7 @@ fun WidgetCompletePageV2(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(modifier = GlanceModifier.fillMaxWidth()) {
-            WidgetContent(title = "월 누적 시간", time = monthTime, isChecked = false)
+            WidgetContent(title = "인정 시간", time = acceptedTime, isChecked = true)
             if (state == WidgetState.LOADING || state == WidgetState.INIT) {
                 Box(modifier = GlanceModifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
                     CircularProgressIndicator(modifier = GlanceModifier.size(16.dp))
@@ -142,7 +142,7 @@ fun WidgetCompletePageV2(
             }
         }
         Spacer(modifier = GlanceModifier.height(4.dp))
-        WidgetContent(title = "인정 시간", time = acceptedTime, isChecked = true)
+        WidgetContent(title = "월 누적 시간", time = monthTime, isChecked = false)
     }
 }
 
