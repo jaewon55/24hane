@@ -343,7 +343,8 @@ fun TimeCardView(
     fundInfoNotice: Pair<String, String>, /* v3에서 추가된 fundInfoNotice 서버에서 받아온 title to content */
     saveTargetTimeListener: (Int) -> Unit, /* targetTime 저장 함수 */
 ) {
-    var durationSecond by remember(inTimeStamp) {
+
+    var durationSecond by remember(inTimeStamp, todayAccumulationTime) {
         val ms = if (inTimeStamp != null) {
             getCurrentUTCTimeInMillis() - inTimeStamp + todayAccumulationTime
         } else {
