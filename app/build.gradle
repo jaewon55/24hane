@@ -16,7 +16,7 @@ android {
         minSdk 21
         targetSdk 33
         versionCode 8
-        versionName "2.1.1"
+        versionName "3.0.1"
         buildConfigField "String", "LOGIN_URL", properties['login_url']
         buildConfigField "String", "BASE_URL", properties['base_url']
         buildConfigField "String", "PAGE_GUIDE", properties['page_guide']
