@@ -71,7 +71,7 @@ fun OverviewScreen(viewModel: OverViewViewModel) {
         )
         Column {
             TimeCardView(
-                todayAccumulationTime = accumulationTimeInfo?.todayAccumulationTime ?: 0L,
+                todayAccumulationTime = (accumulationTimeInfo?.todayAccumulationTime ?: 0L) * 1000,
                 dayTargetTime = dayTargetTime,
                 inTimeStamp = if (inOut) tagAt else null,
                 monthAccumulationTime = monthAccumulationTime,
